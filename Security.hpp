@@ -10,7 +10,8 @@ private:
 
 public:
 	Security();
-	Security();
+	Security(const Security&);
+	Security(Security&&);
 	virtual ~Security();
 	virtual void FromData(const std::string&) = 0;
 	Security& operator=(const Security&);

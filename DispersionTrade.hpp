@@ -10,7 +10,4 @@ class DispersionTrade : public Trade
 };
 
 
-
-
-
 #endif
