@@ -125,6 +125,15 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Derivative.hpp" />
+    <ClInclude Include="DispersionTrade.hpp" />
+    <ClInclude Include="Equity.hpp" />
+    <ClInclude Include="EquityIndex.hpp" />
+    <ClInclude Include="Option.hpp" />
+    <ClInclude Include="Security.hpp" />
+    <ClInclude Include="Trade.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
