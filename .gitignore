@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/04_09_2020/04_09_2020/exp_01_14_2021
+/04_09_2020/04_09_2020

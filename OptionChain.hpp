@@ -12,6 +12,7 @@ private:
 public:
 	OptionChain();
 	virtual ~OptionChain();
+	void GetData(const std::string& path);
 
 };
 
