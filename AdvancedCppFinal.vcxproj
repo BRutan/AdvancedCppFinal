@@ -76,6 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,7 +125,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="OptionChain.cpp" />
     <ClCompile Include="OptionChainPathGenerator.cpp" />
+    <ClCompile Include="OptionChainRow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Derivative.hpp" />
@@ -135,6 +138,8 @@
     <ClInclude Include="Option.hpp" />
     <ClInclude Include="OptionChain.hpp" />
     <ClInclude Include="OptionChainPathGenerator.hpp" />
+    <ClInclude Include="OptionChainRow.hpp" />
+    <ClInclude Include="OptionChains.hpp" />
     <ClInclude Include="Security.hpp" />
     <ClInclude Include="Trade.hpp" />
   </ItemGroup>

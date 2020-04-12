@@ -1,5 +1,5 @@
-#ifndef OPTIONCHAINPATH_HPP
-#define OPTIONCHAINPATH_HPP
+#ifndef OPTIONCHAINPATHGENERATOR_HPP
+#define OPTIONCHAINPATHGENERATOR_HPP
 
 #include <iostream>
 #include <filesystem>
@@ -11,34 +11,27 @@ class OptionChainPathGenerator
 private:
 	// Expiration date attributes:
 	unsigned _Month, _Day, _Year;
-	std::string _ValueDateFolder, _Ticker;
+	std::string _ValueDateFolder;
 public:
 	// Constructors/Destructor:
 	OptionChainPathGenerator();
-	OptionChainPathGenerator(unsigned month, unsigned day, unsigned year, const std::string& valueDateFolder, const std::string & ticker);
+	OptionChainPathGenerator(unsigned month, unsigned day, unsigned year, const std::string& valueDateFolder);
 	~OptionChainPathGenerator();
 	// Accessors:
 	unsigned Month() const;
 	unsigned Day() const;
 	unsigned Year() const;
-	const std::string& Ticker() const;
 	const std::string& ValueDateFolder() const;
 	// Mutators:
 	void Month(unsigned);
 	void Day(unsigned);
 	void Year(unsigned);
-	void Ticker(const std::string&);
 	void ValueDateFolder(const std::string&);
 	// Interface Methods:
-	bool PathExists() const;
-	std::string Path() const;
+	bool PathExists(const std::string &ticker) const;
+	std::string Path(const std::string &ticker) const;
 	// Overloaded Operators:
 	const OptionChainPathGenerator& operator=(const OptionChainPathGenerator&);
-	friend std::ostream& operator<<(std::ostream &stream, OptionChainPathGenerator& obj)
-	{
-		stream << obj.Path();
-		return stream;
-	}
 };
 
 #endif

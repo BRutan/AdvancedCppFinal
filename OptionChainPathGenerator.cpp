@@ -4,13 +4,13 @@
 #include <string>
 #include "OptionChainPathGenerator.hpp"
 
-OptionChainPathGenerator::OptionChainPathGenerator() : _Month(0), _Day(0), _Year(0), _ValueDateFolder(""), _Ticker("")
+OptionChainPathGenerator::OptionChainPathGenerator() : _Month(0), _Day(0), _Year(0), _ValueDateFolder("")
 {
 
 }
 OptionChainPathGenerator::OptionChainPathGenerator(unsigned month, unsigned day, unsigned year, 
-	const std::string& valueDateFolder, const std::string &ticker) : 
-	_Month(month), _Day(day), _Year(year), _ValueDateFolder(valueDateFolder), _Ticker(ticker)
+	const std::string& valueDateFolder) : 
+	_Month(month), _Day(day), _Year(year), _ValueDateFolder(valueDateFolder)
 {
 
 }
@@ -48,21 +48,16 @@ void OptionChainPathGenerator::Year(unsigned year)
 {
 	this->_Year = year;
 }
-void OptionChainPathGenerator::Ticker(const std::string &ticker)
-{
-	this->_Ticker = ticker;
-}
 void OptionChainPathGenerator::ValueDateFolder(const std::string &folderPath)
 {
 	this->_ValueDateFolder = folderPath;
 }
 // Interface Methods:
-
-bool OptionChainPathGenerator::PathExists() const
+bool OptionChainPathGenerator::PathExists(const std::string &ticker) const
 {
-	return std::filesystem::exists(this->Path());
+	return std::filesystem::exists(this->Path(ticker));
 }
-std::string OptionChainPathGenerator::Path() const
+std::string OptionChainPathGenerator::Path(const std::string &ticker) const
 {
 	std::stringstream s(this->_ValueDateFolder);
 	s << "//" << "";
