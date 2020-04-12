@@ -124,7 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="OptionChainPath.cpp" />
+    <ClCompile Include="OptionChainPathGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Derivative.hpp" />
@@ -134,7 +134,7 @@
     <ClInclude Include="Observer.hpp" />
     <ClInclude Include="Option.hpp" />
     <ClInclude Include="OptionChain.hpp" />
-    <ClInclude Include="OptionChainPath.hpp" />
+    <ClInclude Include="OptionChainPathGenerator.hpp" />
     <ClInclude Include="Security.hpp" />
     <ClInclude Include="Trade.hpp" />
   </ItemGroup>

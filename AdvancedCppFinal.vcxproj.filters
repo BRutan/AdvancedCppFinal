@@ -18,7 +18,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OptionChainPath.cpp">
+    <ClCompile Include="OptionChainPathGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,10 +47,10 @@
     <ClInclude Include="OptionChain.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OptionChainPath.hpp">
+    <ClInclude Include="Observer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Observer.hpp">
+    <ClInclude Include="OptionChainPathGenerator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
