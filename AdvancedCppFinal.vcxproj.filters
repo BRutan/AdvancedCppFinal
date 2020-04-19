@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\FileTypes">
+      <UniqueIdentifier>{234daeeb-a23f-4dad-98a3-09d756060652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Assets">
+      <UniqueIdentifier>{2fcccf4d-6c02-4f23-8066-8588f6113f6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -21,49 +27,58 @@
     <ClCompile Include="OptionChainPathGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OptionChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OptionChainRow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Security.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Equity.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assets</Filter>
     </ClInclude>
     <ClInclude Include="EquityIndex.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Derivative.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Option.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Trade.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DispersionTrade.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OptionChain.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Observer.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionChain.hpp">
+      <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
     <ClInclude Include="OptionChainPathGenerator.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OptionChains.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
     <ClInclude Include="OptionChainRow.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Security.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="TickersFile.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionChains.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Trade.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="FileType.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="FileRow.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Derivative.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="DispersionTrade.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="TradeFactory.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="FileTypeContainer.hpp">
+      <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

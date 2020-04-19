@@ -10,17 +10,17 @@ class OptionChainPathGenerator
 {
 private:
 	// Expiration date attributes:
-	unsigned _Month, _Day, _Year;
+	unsigned _ExpMonth, _ExpDay, _ExpYear;
 	std::string _ValueDateFolder;
 public:
 	// Constructors/Destructor:
 	OptionChainPathGenerator();
-	OptionChainPathGenerator(unsigned month, unsigned day, unsigned year, const std::string& valueDateFolder);
-	~OptionChainPathGenerator();
+	OptionChainPathGenerator(unsigned expMonth, unsigned expDay, unsigned expYear, const std::string& valueDateFolder);
+	virtual ~OptionChainPathGenerator();
 	// Accessors:
-	unsigned Month() const;
-	unsigned Day() const;
-	unsigned Year() const;
+	unsigned ExpMonth() const;
+	unsigned ExpDay() const;
+	unsigned ExpYear() const;
 	const std::string& ValueDateFolder() const;
 	// Mutators:
 	void Month(unsigned);
@@ -28,8 +28,10 @@ public:
 	void Year(unsigned);
 	void ValueDateFolder(const std::string&);
 	// Interface Methods:
+	std::string ExtractTicker(const std::string &chainpath);
+	bool IsExpDate(const std::string &path) const;
 	bool PathExists(const std::string &ticker) const;
-	std::string Path(const std::string &ticker) const;
+	std::string TickerPath(const std::string &ticker) const;
 	// Overloaded Operators:
 	const OptionChainPathGenerator& operator=(const OptionChainPathGenerator&);
 };
