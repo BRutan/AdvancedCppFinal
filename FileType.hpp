@@ -9,9 +9,10 @@
 class FileType
 {
 protected:
-	std::unordered_map<std::string, FileRow*> _Data;
+	std::unordered_map<float, FileRow*> _Data;
 public:
-	FileType()
+	// Constructors/Destructor:
+	FileType(): _Data()
 	{
 
 	}
@@ -27,12 +28,21 @@ public:
 	// Mutators:
 	virtual void ParseFile(const std::string &path) = 0;
 	// Interface Methods:
-	virtual bool PathExists(const std::string &path)
+	virtual bool PathExists(const std::string &path) const
 	{
 		if (!std::filesystem::exists(path))
 		{
 			throw std::exception("valueDateFolder does not exist.");
 		}
+	}
+	// Overloaded Operators:
+	FileType& operator=(const FileType &file)
+	{
+		if (this != &file)
+		{
+			this->_Data = file._Data;
+		}
+		return *this;
 	}
 };
 

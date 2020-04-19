@@ -7,7 +7,6 @@
 #include <string>
 #include "FileRow.hpp"
 
-
 class OptionChainRow : public FileRow
 {
 private:
@@ -75,7 +74,8 @@ public:
 		while (std::getline(line, cell, ',') && index < 12)
 		{
 			if (index > 1)
-				this->_ParseCell(cell, index++);
+				this->_ParseCell(cell, index);
+			++index;
 		}
 	}
 	/////////////////////////////
@@ -109,7 +109,7 @@ private:
 			this->_Bid = (stream >> val) ? val : 0;
 			break;
 		case 6:
-			this->_Change = (stream >> val) ? val : 0;
+			this->_Ask = (stream >> val) ? val : 0;
 			break;
 		case 7:
 			this->_Change = (stream >> val) ? val : 0;

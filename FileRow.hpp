@@ -15,5 +15,4 @@ public:
 	virtual void ParseRow(const std::string& row) = 0;
 };
 
-
 #endif

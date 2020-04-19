@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <limits>
 #include <sstream>
 #include <string>
 #include "OptionChainPathGenerator.hpp"
@@ -38,17 +39,25 @@ const std::string& OptionChainPathGenerator::ValueDateFolder() const
 	return this->_ValueDateFolder;
 }
 // Mutators:
-void OptionChainPathGenerator::Month(unsigned month)
+void OptionChainPathGenerator::ExpMonth(unsigned month)
 {
 	this->_ExpMonth = month;
 }
-void OptionChainPathGenerator::Day(unsigned day)
+void OptionChainPathGenerator::ExpDay(unsigned day)
 {
 	this->_ExpDay = day;
 }
-void OptionChainPathGenerator::Year(unsigned year)
+void OptionChainPathGenerator::ExpYear(unsigned year)
 {
 	this->_ExpYear = year;
+}
+std::string OptionChainPathGenerator::ExpDateString() const
+{
+	std::stringstream str;
+	str << ((this->_ExpMonth < 10) ? "0" : "") << this->_ExpMonth << "\\";
+	str << ((this->_ExpDay < 10) ? "0" : "") << this->_ExpDay << "\\";
+	str << this->_ExpYear;
+	return str.str();
 }
 void OptionChainPathGenerator::ValueDateFolder(const std::string &folderPath)
 {
@@ -57,13 +66,17 @@ void OptionChainPathGenerator::ValueDateFolder(const std::string &folderPath)
 // Interface Methods:
 std::string OptionChainPathGenerator::ExtractTicker(const std::string &chainpath)
 {
-	auto filepath = chainpath.substr(chainpath.find_last_of("\\", 0));
+	auto index = chainpath.rfind('\\');
+	auto filepath = (index != chainpath.npos) ? chainpath.substr(index + 1) : chainpath;
 	return filepath.substr(0, filepath.find_first_of('_'));
 }
 bool OptionChainPathGenerator::IsExpDate(const std::string &folderPath) const
 {
-	auto endPath = folderPath.substr(folderPath.find_last_of('\\', 0));
-	if (this->_ExpMonth == std::stoi(endPath.substr(4, 2)) && this->_ExpDay == std::stoi(endPath.substr(6, 2)) && this->_ExpYear == std::stoi(endPath.substr(8, 4)))
+	auto index = folderPath.rfind('\\');
+	std::string endPath((index != folderPath.npos) ? folderPath.substr(index + 1) : folderPath);
+	if (this->_ExpMonth == std::stoul(endPath.substr(4, 2)) 
+		&& this->_ExpDay == std::stoul(endPath.substr(7, 2)) 
+		&& this->_ExpYear == std::stoul(endPath.substr(10, 4)))
 	{
 		return true;
 	}

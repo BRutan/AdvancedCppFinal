@@ -21,11 +21,12 @@ public:
 	unsigned ExpMonth() const;
 	unsigned ExpDay() const;
 	unsigned ExpYear() const;
+	std::string ExpDateString() const;
 	const std::string& ValueDateFolder() const;
 	// Mutators:
-	void Month(unsigned);
-	void Day(unsigned);
-	void Year(unsigned);
+	void ExpMonth(unsigned);
+	void ExpDay(unsigned);
+	void ExpYear(unsigned);
 	void ValueDateFolder(const std::string&);
 	// Interface Methods:
 	std::string ExtractTicker(const std::string &chainpath);
