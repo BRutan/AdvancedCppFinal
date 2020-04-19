@@ -61,7 +61,7 @@ public:
 			if (this->_Generator.PathExists(ticker))
 			{
 				auto path = this->_Generator.TickerPath(ticker);
-				FileTypeContainer::_Files.emplace(ticker, &OptionChain(path));
+				FileTypeContainer::_Files.emplace(ticker, new OptionChain(path));
 			}
 		}
 	}
@@ -84,7 +84,7 @@ public:
 				for (const auto &file : std::filesystem::directory_iterator(entry.path().string()))
 				{
 					auto ticker = this->_Generator.ExtractTicker(file.path().string());
-					FileTypeContainer::_Files.emplace(ticker, &OptionChain(file.path().string()));
+					FileTypeContainer::_Files.emplace(ticker, new OptionChain(file.path().string()));
 				}				
 			}
 		}
@@ -94,6 +94,7 @@ public:
 	{
 		if (this != &chains)
 		{
+			this->_Generator = chains._Generator;
 			FileTypeContainer::operator=(chains);
 		}
 		return *this;
@@ -104,8 +105,9 @@ public:
 		for (auto &chain_pair : chains._Files)
 		{
 			stream << "Ticker: " << chain_pair.first << '\n';
-			stream << chain_pair.second << '\n';
+			stream << *((OptionChain*)chain_pair.second) << '\n';
 		}
+		return stream;
 	}
 };
 

@@ -44,6 +44,14 @@ public:
 		}
 		return *this;
 	}
+	friend std::ostream& operator<<(std::ostream &stream, const FileType *file)
+	{
+		for (auto &row : file->_Data)
+		{
+			stream << row.second << '\n';
+		}
+		return stream;
+	}
 };
 
 #endif
