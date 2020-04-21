@@ -128,6 +128,7 @@
     <ClCompile Include="OptionChainPathGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bond.hpp" />
     <ClInclude Include="Derivative.hpp" />
     <ClInclude Include="DispersionTrade.hpp" />
     <ClInclude Include="Equity.hpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="FileRow.hpp" />
     <ClInclude Include="FileType.hpp" />
     <ClInclude Include="FileTypeContainer.hpp" />
+    <ClInclude Include="Portfolio.hpp" />
     <ClInclude Include="TradeFactory.hpp" />
     <ClInclude Include="Observer.hpp" />
     <ClInclude Include="Option.hpp" />
@@ -145,6 +147,7 @@
     <ClInclude Include="Security.hpp" />
     <ClInclude Include="TickersFile.hpp" />
     <ClInclude Include="Trade.hpp" />
+    <ClInclude Include="ZeroCurve.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="04_08_2020.zip" />

@@ -6,8 +6,13 @@
 
 class Option : public Derivative
 {
+private:
 
+public:
+	Option();
+	virtual ~OptionChain();
 
+	Option& operator=(const Option&);
 };
 
 

@@ -80,6 +80,15 @@
     <ClInclude Include="FileTypeContainer.hpp">
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
+    <ClInclude Include="Portfolio.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Bond.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="ZeroCurve.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="04_08_2020.zip" />
