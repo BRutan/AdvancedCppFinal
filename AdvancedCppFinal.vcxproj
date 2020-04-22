@@ -139,8 +139,8 @@
     <ClCompile Include="OptionChains.cpp" />
     <ClCompile Include="Stats.cpp" />
     <ClCompile Include="StockPricesFileRow.cpp" />
-    <ClCompile Include="TickersFile.cpp" />
-    <ClCompile Include="TickersFileRow.cpp" />
+    <ClCompile Include="ComponentWeightsFile.cpp" />
+    <ClCompile Include="ComponentWeightsFileRow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bond.hpp" />
@@ -157,7 +157,7 @@
     <ClInclude Include="Stats.hpp" />
     <ClInclude Include="StockPricesFile.hpp" />
     <ClInclude Include="StockPricesFileRow.hpp" />
-    <ClInclude Include="TickersFileRow.hpp" />
+    <ClInclude Include="ComponentWeightsFileRow.hpp" />
     <ClInclude Include="TradeFactory.hpp" />
     <ClInclude Include="Observer.hpp" />
     <ClInclude Include="Option.hpp" />
@@ -166,7 +166,7 @@
     <ClInclude Include="OptionChainRow.hpp" />
     <ClInclude Include="OptionChains.hpp" />
     <ClInclude Include="Security.hpp" />
-    <ClInclude Include="TickersFile.hpp" />
+    <ClInclude Include="ComponentWeightsFile.hpp" />
     <ClInclude Include="Trade.hpp" />
     <ClInclude Include="ZeroCurve.hpp" />
   </ItemGroup>

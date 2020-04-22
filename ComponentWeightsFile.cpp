@@ -1,26 +1,26 @@
-#include "TickersFile.hpp"
+#include "ComponentWeightsFile.hpp"
 
 
 // Constructors/Destructor:
-TickersFile::TickersFile(const std::string &path) : _Tickers()
+ComponentWeightsFile::ComponentWeightsFile(const std::string &path) : _Tickers()
 {
 	this->ParseFile(path);
 }
-TickersFile::TickersFile(const TickersFile &file) : _Tickers(file._Tickers)
+ComponentWeightsFile::ComponentWeightsFile(const ComponentWeightsFile &file) : _Tickers(file._Tickers)
 {
 
 }
-TickersFile::~TickersFile()
+ComponentWeightsFile::~ComponentWeightsFile()
 {
 
 }
 // Accessors:
-const std::unordered_map<std::string, TickersFileRow>& TickersFile::Tickers() const
+const std::unordered_map<std::string, ComponentWeightsFileRow>& ComponentWeightsFile::Tickers() const
 {
 	return this->_Tickers;
 }
 // Interface Methods:
-void TickersFile::ParseFile(const std::string &path)
+void ComponentWeightsFile::ParseFile(const std::string &path)
 {
 	if (!this->PathExists(path))
 	{
@@ -36,13 +36,13 @@ void TickersFile::ParseFile(const std::string &path)
 	while (!file.eof())
 	{
 		std::getline(file, line);
-		auto row = TickersFileRow(line);
+		auto row = ComponentWeightsFileRow(line);
 		this->_Tickers.emplace(row.Ticker(), row);
 	}
 	file.close();
 }
 // Overloaded Operators:
-TickersFile& TickersFile::operator=(const TickersFile &file)
+ComponentWeightsFile& ComponentWeightsFile::operator=(const ComponentWeightsFile &file)
 {
 	if (this != &file)
 	{

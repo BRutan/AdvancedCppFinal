@@ -11,7 +11,7 @@ Description:
 #include <string>
 #include "OptionChains.hpp"
 
-#include "TickersFile.hpp"
+#include "ComponentWeightsFile.hpp"
 
 // TODO:
 // 1. Implement gregorian_date as key in FileType.
@@ -20,7 +20,7 @@ Description:
 int main()
 {
 	// 1) Pull in S&P 100 tickers and weights from local file:
-	TickersFile tickerFile("");
+	ComponentWeightsFile tickerFile("SP_100.csv");
 	// 2) Determine trade that finds most out-of-line DispersionTrade (implied correlation outside of [-1, 1]):
 	
 	// 3) Pull in option chains for optimal value date:

@@ -1,8 +1,7 @@
 #include "OptionChains.hpp"
 
 OptionChains::OptionChains(const std::string &valueDateFolder, unsigned expMonth, unsigned expDay, unsigned expYear) :
-	_Generator(expMonth, expDay, expYear, valueDateFolder),
-	FileTypeContainer()
+	_Generator(expMonth, expDay, expYear, valueDateFolder), FileTypeContainer()
 {
 	this->ParseFiles(valueDateFolder);
 }

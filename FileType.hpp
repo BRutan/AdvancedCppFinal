@@ -12,7 +12,7 @@ class FileType
 protected:
 	std::unordered_map<double, FileRow*> _Data;
 	unsigned _ValYear, _ValMonth, _ValDay;
-	void _ExtractAttributes(unsigned firstIDX, const std::string &fileName);
+	void _ExtractAttributes(std::size_t firstIDX, const std::string &fileName);
 public:
 	// Constructors/Destructor:
 	FileType();

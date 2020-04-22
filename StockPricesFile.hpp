@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include "FileType.hpp"
 
-class StockPricesFile : FileType
+class StockPricesFile : public FileType
 {
 
 public:

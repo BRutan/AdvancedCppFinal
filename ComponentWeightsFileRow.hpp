@@ -5,23 +5,23 @@
 #include <string>
 #include "FileRow.hpp"
 
-class TickersFileRow : public FileRow
+class ComponentWeightsFileRow : public FileRow
 {
 private:
 	std::string _Ticker;
 	double _Weight;
 public:
 	// Constructors/Destructor:
-	TickersFileRow(const std::string &row);
-	TickersFileRow(const TickersFileRow&);
-	virtual ~TickersFileRow();
+	ComponentWeightsFileRow(const std::string &row);
+	ComponentWeightsFileRow(const ComponentWeightsFileRow&);
+	virtual ~ComponentWeightsFileRow();
 	// Accessors:
 	const std::string& Ticker() const;
 	double Weight() const;
 	// Mutators:
 	void ParseRow(const std::string& row);
 	// Overloaded Operators:
-	TickersFileRow& operator=(const TickersFileRow &row);
+	ComponentWeightsFileRow& operator=(const ComponentWeightsFileRow &row);
 };
 
 #endif

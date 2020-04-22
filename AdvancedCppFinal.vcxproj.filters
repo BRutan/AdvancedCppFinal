@@ -57,12 +57,6 @@
     <ClCompile Include="OptionChains.cpp">
       <Filter>Source Files\FileTypes</Filter>
     </ClCompile>
-    <ClCompile Include="TickersFile.cpp">
-      <Filter>Source Files\FileTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="TickersFileRow.cpp">
-      <Filter>Source Files\FileTypes</Filter>
-    </ClCompile>
     <ClCompile Include="Bond.cpp">
       <Filter>Source Files\Assets_</Filter>
     </ClCompile>
@@ -76,6 +70,12 @@
       <Filter>Source Files\FileTypes</Filter>
     </ClCompile>
     <ClCompile Include="StockPricesFileRow.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentWeightsFile.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentWeightsFileRow.cpp">
       <Filter>Source Files\FileTypes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -100,9 +100,6 @@
     </ClInclude>
     <ClInclude Include="Security.hpp">
       <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="TickersFile.hpp">
-      <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
     <ClInclude Include="Option.hpp">
       <Filter>Header Files\Assets</Filter>
@@ -140,9 +137,6 @@
     <ClInclude Include="ZeroCurve.hpp">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="TickersFileRow.hpp">
-      <Filter>Header Files\FileTypes</Filter>
-    </ClInclude>
     <ClInclude Include="Stats.hpp">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
@@ -156,6 +150,12 @@
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
     <ClInclude Include="StockPricesFileRow.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentWeightsFile.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentWeightsFileRow.hpp">
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
   </ItemGroup>

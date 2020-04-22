@@ -5,7 +5,7 @@
 #include <string>
 #include "FileRow.hpp"
 
-class BondFileRow : FileRow
+class BondFileRow : public FileRow
 {
 private:
 	std::string _Name;

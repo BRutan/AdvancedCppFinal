@@ -10,7 +10,7 @@ double FileType::DateSerial(double dt)
 }*/
 
 // Private Helpers:
-void FileType::_ExtractAttributes(unsigned firstIDX, const std::string &fileName)
+void FileType::_ExtractAttributes(std::size_t firstIDX, const std::string &fileName)
 {
 	this->_ValMonth = std::stoul(fileName.substr(firstIDX + 1, 2));
 	this->_ValDay = std::stoul(fileName.substr(firstIDX + 4, 2));

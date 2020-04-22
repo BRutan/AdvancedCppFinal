@@ -7,7 +7,7 @@
 #include "BondFileRow.hpp"
 #include "FileType.hpp"
 
-class BondFile : FileType
+class BondFile : public FileType
 {
 private:
 	static std::string _HeaderRow;
@@ -19,10 +19,14 @@ public:
 	virtual void ParseFile(const std::string &path);
 	// Overloaded Operators:
 	BondFile& operator=(const BondFile&);
+	
 	friend std::ostream& operator<<(std::ostream &stream, const BondFile &file)
 	{
 		stream << BondFile::_HeaderRow << '\n';
-		stream << BondFile::FileType;
+		for (auto &row : file._Data)
+		{
+			stream << (const BondFileRow*)(row.second) << '\n';
+		}
 		return stream;
 	}
 };

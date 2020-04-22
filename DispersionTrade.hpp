@@ -2,6 +2,7 @@
 #define DISPERSIONTRADE_HPP
 
 #include <string>
+#include <tuple>
 #include <unordered_map>
 #include "Option.hpp"
 #include "Trade.hpp"
@@ -16,8 +17,13 @@ public:
 	DispersionTrade();
 	DispersionTrade(const DispersionTrade&);
 	virtual ~DispersionTrade();
-	// 
+	// Accessors:
 
+	// Mutators:
+
+	// Interface Methods:
+	static std::pair<double, double> OptimalValueDate();
+	
 	DispersionTrade& operator=(const DispersionTrade&);
 };
 
