@@ -9,41 +9,20 @@
 class FileType
 {
 protected:
-	std::unordered_map<float, FileRow*> _Data;
+	std::unordered_map<double, FileRow*> _Data;
 public:
 	// Constructors/Destructor:
-	FileType(): _Data()
-	{
-
-	}
-	virtual ~FileType()
-	{
-
-	}
+	FileType();
+	FileType(const std::unordered_map<double, FileRow*> data);
+	virtual ~FileType();
 	// Accessors:
-	std::size_t NumRows() const
-	{
-		return this->_Data.size();
-	}
+	std::size_t NumRows() const;
 	// Mutators:
 	virtual void ParseFile(const std::string &path) = 0;
 	// Interface Methods:
-	virtual bool PathExists(const std::string &path) const
-	{
-		if (!std::filesystem::exists(path))
-		{
-			throw std::exception("valueDateFolder does not exist.");
-		}
-	}
+	virtual bool PathExists(const std::string &path) const;
 	// Overloaded Operators:
-	FileType& operator=(const FileType &file)
-	{
-		if (this != &file)
-		{
-			this->_Data = file._Data;
-		}
-		return *this;
-	}
+	FileType& operator=(const FileType &file);
 	friend std::ostream& operator<<(std::ostream &stream, const FileType *file)
 	{
 		for (auto &row : file->_Data)

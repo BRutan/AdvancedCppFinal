@@ -19,13 +19,61 @@
     <Filter Include="Header Files\Assets">
       <UniqueIdentifier>{2fcccf4d-6c02-4f23-8066-8588f6113f6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Misc">
+      <UniqueIdentifier>{ff1a0fe3-fb3e-4e66-9e69-bd27d4eafc1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Assets_">
+      <UniqueIdentifier>{837df728-181e-4920-a655-3218467f0538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FileTypes">
+      <UniqueIdentifier>{812e6ba0-ad76-42a8-9b4a-c187dca4ec97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OptionChainPathGenerator.cpp">
+    <ClCompile Include="Stats.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileRow.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="FileType.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="FileTypeContainer.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionChain.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionChainPathGenerator.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionChainRow.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionChains.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="TickersFile.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="TickersFileRow.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Bond.cpp">
+      <Filter>Source Files\Assets_</Filter>
+    </ClCompile>
+    <ClCompile Include="Derivative.cpp">
+      <Filter>Source Files\Assets_</Filter>
+    </ClCompile>
+    <ClCompile Include="BondFile.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="BondFileRow.cpp">
+      <Filter>Source Files\FileTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +136,18 @@
     </ClInclude>
     <ClInclude Include="ZeroCurve.hpp">
       <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="TickersFileRow.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Stats.hpp">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="BondFile.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="BondFileRow.hpp">
+      <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

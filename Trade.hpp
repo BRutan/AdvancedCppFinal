@@ -1,7 +1,9 @@
 #ifndef TRADE_HPP
 #define TRADE_HPP
 
+#include <memory>
 #include <string>
+#include "Security.hpp"
 
 enum class TradeType
 {
@@ -13,6 +15,15 @@ enum class TradeType
 
 class Trade
 {
+private:
+	std::shared_ptr<Security> _Security;
+public:
+	// Constructor/Destructor:
+	Trade(Security*);
+	virtual ~Trade();
+	// Interface Methods:
+	virtual void CalculatePNL(const SecurityAttributes*) = 0;
+	// Overloaded Operators:
 
 };
 

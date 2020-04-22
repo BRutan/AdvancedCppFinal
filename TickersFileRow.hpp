@@ -1,0 +1,7 @@
+#ifndef TICKERSFILEROW_HPP
+#define TICKERSFILEROW_HPP
+
+
+
+
+#endif

@@ -88,6 +88,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,11 +125,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bond.cpp" />
+    <ClCompile Include="BondFile.cpp" />
+    <ClCompile Include="BondFileRow.cpp" />
+    <ClCompile Include="Derivative.cpp" />
+    <ClCompile Include="FileRow.cpp" />
+    <ClCompile Include="FileType.cpp" />
+    <ClCompile Include="FileTypeContainer.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="OptionChain.cpp" />
     <ClCompile Include="OptionChainPathGenerator.cpp" />
+    <ClCompile Include="OptionChainRow.cpp" />
+    <ClCompile Include="OptionChains.cpp" />
+    <ClCompile Include="Stats.cpp" />
+    <ClCompile Include="TickersFile.cpp" />
+    <ClCompile Include="TickersFileRow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bond.hpp" />
+    <ClInclude Include="BondFile.hpp" />
+    <ClInclude Include="BondFileRow.hpp" />
     <ClInclude Include="Derivative.hpp" />
     <ClInclude Include="DispersionTrade.hpp" />
     <ClInclude Include="Equity.hpp" />
@@ -137,6 +153,8 @@
     <ClInclude Include="FileType.hpp" />
     <ClInclude Include="FileTypeContainer.hpp" />
     <ClInclude Include="Portfolio.hpp" />
+    <ClInclude Include="Stats.hpp" />
+    <ClInclude Include="TickersFileRow.hpp" />
     <ClInclude Include="TradeFactory.hpp" />
     <ClInclude Include="Observer.hpp" />
     <ClInclude Include="Option.hpp" />

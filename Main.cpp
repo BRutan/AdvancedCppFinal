@@ -5,6 +5,8 @@ Description:
 
 */
 
+// NOTE: Need to set "/std:c++latest" as compiler flag to compile the <filesystem> library.
+
 #include <fstream>
 #include <string>
 #include "OptionChains.hpp"
