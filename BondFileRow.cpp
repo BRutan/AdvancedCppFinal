@@ -16,6 +16,14 @@ BondFileRow::~BondFileRow()
 
 }
 // Accessors:
+double BondFileRow::Coupon() const
+{
+	return this->_Coupon;
+}
+double BondFileRow::PresentValue() const
+{
+	return this->_PresentValue;
+}
 double BondFileRow::Tenor() const
 {
 	return this->_Tenor;

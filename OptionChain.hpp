@@ -11,7 +11,6 @@ class OptionChain : public FileType
 {
 private:
 	unsigned _ExpYear, _ExpMonth, _ExpDay;
-	unsigned _ValYear, _ValMonth, _ValDay;
 	std::string _Ticker;
 	bool _IsCalls;
 	void _ExtractAttributes(const std::string &path);
@@ -30,7 +29,6 @@ public:
 	void ParseFile(const std::string & filepath);
 	// Interface Methods:
 	std::string ExpDateStr() const;
-	std::string ValueDateStr() const;
 	// Overloaded Operators:
 	friend std::ostream& operator<<(std::ostream &stream, const OptionChain &chain)
 	{
@@ -43,7 +41,5 @@ public:
 	}
 	OptionChain& operator=(const OptionChain &chain);
 };
-
-std::string OptionChain::_HeaderString = "Strike,LastPrice,Bid,Ask,Change,PercentChange,Volume,OpenInterest,ImpliedVol";
 
 #endif

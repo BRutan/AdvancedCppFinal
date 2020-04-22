@@ -8,13 +8,16 @@
 class BondFileRow : FileRow
 {
 private:
-	double _Tenor, _Yield;
+	std::string _Name;
+	double _Tenor, _Yield, _PresentValue, _Coupon;
 public:
 	// Constructors/Destructor:
 	BondFileRow(const std::string& row);
 	BondFileRow(const BondFileRow&);
 	virtual ~BondFileRow();
 	// Accessors:
+	double Coupon() const;
+	double PresentValue() const;
 	double Tenor() const;
 	double Yield() const;
 	// Interface Methods:

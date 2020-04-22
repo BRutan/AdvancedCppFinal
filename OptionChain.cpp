@@ -1,28 +1,26 @@
 #include "OptionChain.hpp"
 
+std::string OptionChain::_HeaderString = "Strike,LastPrice,Bid,Ask,Change,PercentChange,Volume,OpenInterest,ImpliedVol";
+
 // Private Helpers:
 void OptionChain::_ExtractAttributes(const std::string &path)
-{
+{	
 	auto index = path.rfind('\\');
 	std::string fileName((index != path.npos) ? path.substr(index + 1) : path);
 	auto firstIDX = fileName.find_first_of('_');
+	FileType::_ExtractAttributes(firstIDX, fileName);
 	this->_Ticker = fileName.substr(0, firstIDX);
-	this->_ValMonth = std::stoul(fileName.substr(firstIDX + 1, 2));
-	this->_ValDay = std::stoul(fileName.substr(firstIDX + 4, 2));
-	this->_ValYear = std::stoul(fileName.substr(firstIDX + 7, 4));
 	this->_ExpMonth = std::stoul(fileName.substr(firstIDX + 12, 2));
 	this->_ExpDay = std::stoul(fileName.substr(firstIDX + 15, 2));
 	this->_ExpYear = std::stoul(fileName.substr(firstIDX + 18, 4));
 }
 // Constructors/Destructor:
-OptionChain::OptionChain(const std::string &path) : FileType(), _ExpYear(), _ExpMonth(), _ExpDay(),
-	_ValYear(), _ValMonth(), _ValDay(), _Ticker()
+OptionChain::OptionChain(const std::string &path) : FileType(), _ExpYear(), _ExpMonth(), _ExpDay(), _Ticker()
 {
 	this->ParseFile(path);
-	this->_ExtractAttributes(path);
 }
-OptionChain::OptionChain(const OptionChain &chain) : FileType(chain._Data), _ExpYear(chain._ExpYear), _ExpMonth(chain._ExpMonth), 
-_ExpDay(chain._ExpDay), _ValYear(chain._ValYear), _ValMonth(chain._ValMonth), _ValDay(chain._ValDay), _Ticker(chain._Ticker)
+OptionChain::OptionChain(const OptionChain &chain) : FileType(&chain), _ExpYear(chain._ExpYear), _ExpMonth(chain._ExpMonth), 
+_ExpDay(chain._ExpDay),  _Ticker(chain._Ticker)
 {
 	
 }
@@ -73,6 +71,7 @@ void OptionChain::ParseFile(const std::string & filepath)
 		this->_Data.emplace(newRow->Strike(), newRow);
 	}
 	file.close();
+	this->_ExtractAttributes(filepath);
 }
 // Interface Methods:
 std::string OptionChain::ExpDateStr() const
@@ -80,13 +79,6 @@ std::string OptionChain::ExpDateStr() const
 	std::ostringstream out;
 	out << ((this->_ExpMonth < 10) ? "0" : "") << this->_ExpMonth << "//" <<
 		((this->_ExpDay < 10) ? "0" : "") << this->_ExpDay << "//" << this->_ExpYear;
-	return out.str();
-}
-std::string OptionChain::ValueDateStr() const
-{
-	std::ostringstream out;
-	out << ((this->_ValMonth < 10) ? "0" : "") << this->_ValMonth << "//" <<
-		((this->_ValDay < 10) ? "0" : "") << this->_ValDay << "//" << this->_ValYear;
 	return out.str();
 }
 // Overloaded Operators:
@@ -103,6 +95,3 @@ OptionChain& OptionChain::operator=(const OptionChain &chain)
 	}
 	return *this;
 }
-
-
-std::string OptionChain::_HeaderString = "Strike,LastPrice,Bid,Ask,Change,PercentChange,Volume,OpenInterest,ImpliedVol";
