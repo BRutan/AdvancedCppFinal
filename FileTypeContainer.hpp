@@ -13,7 +13,7 @@ protected:
 public:
 	// Constructor/Destructor:
 	FileTypeContainer();
-	FileTypeContainer(std::unordered_map<std::string, FileType*> files);
+	FileTypeContainer(const std::unordered_map<std::string, FileType*> &files);
 	FileTypeContainer(const FileTypeContainer& cont);
 	virtual ~FileTypeContainer();
 	// Interface Methods:

@@ -75,6 +75,9 @@
     <ClCompile Include="BondFileRow.cpp">
       <Filter>Source Files\FileTypes</Filter>
     </ClCompile>
+    <ClCompile Include="StockPricesFileRow.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Equity.hpp">
@@ -147,6 +150,12 @@
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
     <ClInclude Include="BondFileRow.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="StockPricesFile.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="StockPricesFileRow.hpp">
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
   </ItemGroup>

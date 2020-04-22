@@ -1,5 +1,14 @@
 #include "FileType.hpp"
 
+/*
+double FileType::DateSerial(double dt)
+{
+	double a = (14 - dt.Month) / 12;
+	double m = dt.Month + 12 * a - 3;
+	double y = dt.Year + 4800 - a;
+
+}*/
+
 // Private Helpers:
 void FileType::_ExtractAttributes(unsigned firstIDX, const std::string &fileName)
 {
@@ -45,10 +54,7 @@ unsigned FileType::ValueDay() const
 // Interface Methods:
 bool FileType::PathExists(const std::string &path) const
 {
-	if (!std::filesystem::exists(path))
-	{
-		throw std::exception("valueDateFolder does not exist.");
-	}
+	return std::filesystem::exists(path);
 }
 std::string FileType::ValueDateStr() const
 {

@@ -9,7 +9,7 @@ FileTypeContainer::FileTypeContainer(const FileTypeContainer& cont) : _Files(con
 {
 
 }
-FileTypeContainer::FileTypeContainer(std::unordered_map<std::string, FileType*> files) : _Files(files)
+FileTypeContainer::FileTypeContainer(const std::unordered_map<std::string, FileType*> &files) : _Files(files)
 {
 
 }

@@ -29,6 +29,7 @@ public:
 	// Interface Methods:
 	virtual bool PathExists(const std::string &path) const;
 	std::string ValueDateStr() const;
+	static double DateSerial(double);
 	// Overloaded Operators:
 	FileType& operator=(const FileType * const file);
 	friend std::ostream& operator<<(std::ostream &stream, const FileType *file)

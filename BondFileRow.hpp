@@ -24,8 +24,12 @@ public:
 	virtual void ParseRow(const std::string& row);
 	// Overloaded Operators:
 	BondFileRow& operator=(const BondFileRow&);
+	friend std::ostream& operator<<(std::ostream &stream, const BondFileRow &row)
+	{
+		stream << row._Name << ',' << row._Tenor << ',' << row._Yield << ',';
+		stream << row._PresentValue << ',' << row._Coupon;
+		return stream;
+	}
 };
 
 #endif
-
-

@@ -19,6 +19,12 @@ public:
 	virtual void ParseFile(const std::string &path);
 	// Overloaded Operators:
 	BondFile& operator=(const BondFile&);
+	friend std::ostream& operator<<(std::ostream &stream, const BondFile &file)
+	{
+		stream << BondFile::_HeaderRow << '\n';
+		stream << BondFile::FileType;
+		return stream;
+	}
 };
 
 
