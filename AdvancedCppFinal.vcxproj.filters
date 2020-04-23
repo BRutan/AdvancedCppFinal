@@ -78,6 +78,15 @@
     <ClCompile Include="ComponentWeightsFileRow.cpp">
       <Filter>Source Files\FileTypes</Filter>
     </ClCompile>
+    <ClCompile Include="DispersionTrade.cpp">
+      <Filter>Source Files\Assets_</Filter>
+    </ClCompile>
+    <ClCompile Include="Option.cpp">
+      <Filter>Source Files\Assets_</Filter>
+    </ClCompile>
+    <ClCompile Include="Security.cpp">
+      <Filter>Source Files\Assets_</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Equity.hpp">

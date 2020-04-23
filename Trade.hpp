@@ -22,9 +22,9 @@ public:
 	Trade(Security*);
 	virtual ~Trade();
 	// Interface Methods:
-	virtual void CalculatePNL(const SecurityAttributes*) = 0;
+	virtual double CalculatePNL(const SecurityAttributes*) = 0;
 	// Overloaded Operators:
-
+	Trade& operator=(const Trade&);
 };
 
 #endif

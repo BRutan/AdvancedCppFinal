@@ -11,11 +11,11 @@ class OptionChainRow : public FileRow
 {
 private:
 	double _Strike, _LastPrice, _Bid, _Ask, _Change, _PercentChange, _Volume,
-		_OpenInterest, _ImpliedVol;
+		_OpenInterest, _ImpliedVol, _Tenor;
 	void _ParseCell(const std::string &cell, const std::size_t &index);
 public:
 	// Constructors/Destructor:
-	OptionChainRow(const std::string& row);
+	OptionChainRow(const std::string& row, double tenor);
 	OptionChainRow(const OptionChainRow&);
 	virtual ~OptionChainRow();
 	// Accessors:
@@ -28,6 +28,7 @@ public:
 	double Volume() const;
 	double OpenInterest() const;
 	double ImpliedVol() const;
+	double Tenor() const;
 	// Mutators:
 	virtual void ParseRow(const std::string& row);
 	// Overloaded Operators:

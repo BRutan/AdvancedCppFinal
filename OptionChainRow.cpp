@@ -5,12 +5,12 @@
 #include "OptionChainRow.hpp"
 
 // Constructors/Destructor:
-OptionChainRow::OptionChainRow(const std::string& row)
+OptionChainRow::OptionChainRow(const std::string& row, double tenor) : _Tenor(tenor)
 {
 	this->ParseRow(row);
 }
 OptionChainRow::OptionChainRow(const OptionChainRow &row) : _Ask(row._Ask), _Bid(row._Bid), _Change(row._Change), _PercentChange(row._PercentChange),
-	_Volume(row._Volume), _OpenInterest(row._OpenInterest), _ImpliedVol(row._ImpliedVol)
+	_Volume(row._Volume), _OpenInterest(row._OpenInterest), _ImpliedVol(row._ImpliedVol), _Tenor(row._Tenor)
 {
 
 }
@@ -55,6 +55,10 @@ double OptionChainRow::ImpliedVol() const
 {
 	return this->_ImpliedVol;
 }
+double OptionChainRow::Tenor() const
+{
+	return this->_Tenor;
+}
 // Mutators:
 void OptionChainRow::ParseRow(const std::string& row)
 {
@@ -86,6 +90,7 @@ OptionChainRow& OptionChainRow::operator=(const OptionChainRow &row)
 		this->_PercentChange = row._PercentChange;
 		this->_Strike = row._Strike;
 		this->_Volume = row._Volume;
+		this->_Tenor = row._Tenor;
 	}
 	return *this;
 }

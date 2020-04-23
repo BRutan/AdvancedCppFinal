@@ -57,21 +57,27 @@ void OptionChain::ParseFile(const std::string & filepath)
 	{
 		this->_IsCalls = true;
 	}
+	this->_ExtractAttributes(filepath);
 	std::ifstream file(filepath);
 	if (!file)
 	{
 		throw std::exception("Could not open file.");
+	}
+	// Calculate the option tenor in years:
+	double tenor = (this->_ExpYear - this->_ValYear);
+	if (this->_ExpMonth != this->_ValMonth)
+	{
+		//tenor += std::max(this->_ExpMonth - this->_ValMonth, 0) / 365.0;
 	}
 	std::string row;
 	std::getline(file, row);
 	while (!file.eof())
 	{
 		std::getline(file, row);
-		auto newRow = new OptionChainRow(row);
+		auto newRow = new OptionChainRow(row, tenor);
 		this->_Data.emplace(newRow->Strike(), newRow);
 	}
 	file.close();
-	this->_ExtractAttributes(filepath);
 }
 // Interface Methods:
 std::string OptionChain::ExpDateStr() const

@@ -129,14 +129,17 @@
     <ClCompile Include="BondFile.cpp" />
     <ClCompile Include="BondFileRow.cpp" />
     <ClCompile Include="Derivative.cpp" />
+    <ClCompile Include="DispersionTrade.cpp" />
     <ClCompile Include="FileRow.cpp" />
     <ClCompile Include="FileType.cpp" />
     <ClCompile Include="FileTypeContainer.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Option.cpp" />
     <ClCompile Include="OptionChain.cpp" />
     <ClCompile Include="OptionChainPathGenerator.cpp" />
     <ClCompile Include="OptionChainRow.cpp" />
     <ClCompile Include="OptionChains.cpp" />
+    <ClCompile Include="Security.cpp" />
     <ClCompile Include="Stats.cpp" />
     <ClCompile Include="StockPricesFileRow.cpp" />
     <ClCompile Include="ComponentWeightsFile.cpp" />
