@@ -17,6 +17,11 @@ FileTypeContainer::~FileTypeContainer()
 {
 
 }
+// Accessors:
+const std::unordered_map<std::string, FileType*>& FileTypeContainer::Files() const
+{
+	return this->_Files;
+}
 // Interface Methods:
 bool FileTypeContainer::PathExists(const std::string &path) const
 {

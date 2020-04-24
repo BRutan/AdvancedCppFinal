@@ -61,7 +61,7 @@ void OptionChains::ParseFiles(const std::string &valueDateFolder)
 			// Pull in all option chains from the folder:
 			for (const auto &file : std::filesystem::directory_iterator(entry.path().string()))
 			{
-				auto ticker = this->_Generator.ExtractTicker(file.path().string());
+				auto ticker = OptionChainPathGenerator::ExtractTicker(file.path().string());
 				FileTypeContainer::_Files.emplace(ticker, new OptionChain(file.path().string()));
 			}
 		}

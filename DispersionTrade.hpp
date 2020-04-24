@@ -10,20 +10,7 @@
 #include "Trade.hpp"
 #include "Security.hpp"
 
-class DispersionTradeAttributes : SecurityAttributes
-{
-private:
-	double _IndexPrice;
-	std::unordered_map<std::string, double> _ConstitutentPrices;
-public:
-	// Constructors/Destructor:
-	DispersionTradeAttributes(bool IsLong);
-	virtual ~DispersionTradeAttributes();
-	// Overloaded Operators:
-	DispersionTradeAttributes& operator=(const DispersionTradeAttributes&);
-};
-
-class DispersionTrade : public Trade
+class DispersionTradeAttributes : public SecurityAttributes
 {
 private:
 	std::string _IndexName;
@@ -31,16 +18,32 @@ private:
 	std::unordered_map<std::string, std::pair<Option, double>> _ConstituentOptions;
 public:
 	// Constructors/Destructor:
-	DispersionTrade(const std::string&, const Option&, const std::unordered_map<std::string, std::pair<Option, double>>&);
-	DispersionTrade(double dateSerial, const std::string &valueDateFolder);
+	DispersionTradeAttributes(bool isLong, const std::string& indexName, const Option& indexOption,
+		const std::unordered_map<std::string, std::pair<Option, double>> ConstitutentOptions);
+	DispersionTradeAttributes(const DispersionTradeAttributes&);
+	virtual ~DispersionTradeAttributes();
+	// Accessors:
+	const std::string& IndexName() const;
+	const Option& IndexOption() const;
+	const std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions() const;
+	// Overloaded Operators:
+	DispersionTradeAttributes& operator=(const DispersionTradeAttributes&);
+};
+
+class DispersionTrade : public Trade
+{
+public:
+	// Constructors/Destructor:
+	DispersionTrade(const DispersionTradeAttributes&);
 	DispersionTrade(const DispersionTrade&);
 	virtual ~DispersionTrade();
 	// Accessors:
 	const std::string& IndexName() const;
 	const Option& IndexOption() const;
-	const std::unordered_map<std::string, Option>& ConstitutentOptions() const;
+	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
 	// Interface Methods:
-	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const std::string &optionChainsPaths);
+	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const std::string &valueDateFolder, unsigned expMonth,
+			unsigned expDay, unsigned expYear, const DispersionTradeAttributes &attrs);
 	double ImpliedCorrelation() const;
 	double CalculatePNL(const SecurityAttributes*);
 	static double ImpliedCorrelation(const std::string &indexName, const OptionChains &chains);

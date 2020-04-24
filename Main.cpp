@@ -7,6 +7,7 @@ Description:
 
 // NOTE: Need to set "/std:c++latest" as compiler flag to compile the <filesystem> library.
 
+//#include "boost/date_time/gregorian/greg_date.hpp"
 #include <fstream>
 #include <string>
 #include "ComponentWeightsFile.hpp"
@@ -21,6 +22,8 @@ int main()
 {
 	// 1) Pull in S&P 100 tickers and weights from local file:
 	ComponentWeightsFile tickerFile("SP_100.csv");
+	// Find expiration date where all components and index options are trading:
+	auto result = tickerFile.AllComponentsAvailable("04_08_2020", "^OEX");
 	// 2) Determine trade that finds most out-of-line DispersionTrade 
 	// (implied correlation outside of [-1, 1], or highest absolute correlation):
 	auto optimal_trade = DispersionTrade::OptimalDispersionTrade("04_08_2020");

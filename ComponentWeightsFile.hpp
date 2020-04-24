@@ -4,8 +4,10 @@
 #include <fstream>
 #include <set>
 #include <string>
-#include "FileType.hpp"
+#include <set>
 #include "ComponentWeightsFileRow.hpp"
+#include "FileType.hpp"
+#include "OptionChainPathGenerator.hpp"
 
 class ComponentWeightsFile : public FileType
 {
@@ -21,6 +23,7 @@ public:
 	const std::unordered_map<std::string, ComponentWeightsFileRow>& Tickers() const;
 	// Interface Methods:
 	void ParseFile(const std::string &path);
+	std::pair<std::string, std::set<std::string>> AllComponentsAvailable(const std::string& valueDateFolder, const std::string& indexSymbol) const;
 	// Overloaded Operators:
 	ComponentWeightsFile& operator=(const ComponentWeightsFile&); 
 };

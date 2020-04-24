@@ -51,6 +51,10 @@ unsigned FileType::ValueDay() const
 {
 	return this->_ValDay;
 }
+const std::unordered_map<double, FileRow*> FileType::Data() const
+{
+	return this->_Data;
+}
 // Interface Methods:
 bool FileType::PathExists(const std::string &path) const
 {

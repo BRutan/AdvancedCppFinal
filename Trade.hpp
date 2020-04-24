@@ -16,11 +16,14 @@ enum class TradeType
 class Trade
 {
 private:
-	std::shared_ptr<Security> _Security;
+	std::shared_ptr<SecurityAttributes> _Attributes;
 public:
 	// Constructor/Destructor:
-	Trade(Security*);
+	Trade(const std::shared_ptr<SecurityAttributes> attr);
+	Trade(const SecurityAttributes*);
 	virtual ~Trade();
+	// Accessors:
+	std::shared_ptr<SecurityAttributes> Attributes() const;
 	// Interface Methods:
 	virtual double CalculatePNL(const SecurityAttributes*) = 0;
 	// Overloaded Operators:

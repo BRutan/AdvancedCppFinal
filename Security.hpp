@@ -14,25 +14,27 @@ public:
 	SecurityAttributes(bool IsLong);
 	virtual ~SecurityAttributes();
 	// Accessors:
-
+	bool IsLong() const;
 	// Overloaded Operators:
 	SecurityAttributes& operator=(const SecurityAttributes&);
 };
 
 class Security
 {
-private:
+protected:
 	std::shared_ptr<SecurityAttributes> _Attributes;
 public:
 	// Constructors/Destructor:
+	Security(const std::shared_ptr<SecurityAttributes>& attr);
 	Security(const SecurityAttributes*);
 	Security(const Security&);
-	Security(Security&&);
 	virtual ~Security();
 	// Accessors:
-	virtual double Price() = 0;
-	virtual double Price(const SecurityAttributes*) = 0;
+	virtual double Price() const = 0;
+	virtual double Price(const SecurityAttributes*) const = 0;
 	const std::shared_ptr<SecurityAttributes>& Attributes() const;
+	// Interface Methods:
+	double Delta() const = 0;
 	// Overloaded Operators:
 	Security& operator=(const Security&);
 };

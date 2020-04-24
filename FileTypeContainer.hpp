@@ -16,6 +16,8 @@ public:
 	FileTypeContainer(const std::unordered_map<std::string, FileType*> &files);
 	FileTypeContainer(const FileTypeContainer& cont);
 	virtual ~FileTypeContainer();
+	// Accessors:
+	const std::unordered_map<std::string, FileType*>& Files() const;
 	// Interface Methods:
 	virtual void ParseFiles(const std::string&) = 0;
 	virtual bool PathExists(const std::string &path) const;

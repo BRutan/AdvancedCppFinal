@@ -12,7 +12,7 @@ private:
 	bool _Long, _IsCall;
 public:
 	// Constructors/Destructor:
-	OptionAttributes(bool isCall, bool isLong, const OptionChainRow& row);
+	OptionAttributes(bool isCall, bool isLong, double tenor, const OptionChainRow& row);
 	virtual ~OptionAttributes();
 	// Accessors:
 	double Strike() const;
@@ -35,11 +35,10 @@ class Option : public Derivative
 public:
 	// Constructors/Destructor:
 	Option(const OptionAttributes& attr);
-	Option(bool isCall, bool isLong, const OptionChainRow& row);
 	virtual ~Option();
 	// Accessors:
-	virtual double Price();
-	virtual double Price(const SecurityAttributes*);
+	virtual double Price() const;
+	virtual double Price(const SecurityAttributes*) const;
 	// Interface Functions:
 	static double BlackScholesValuation(const OptionAttributes&);
 	static double ImpliedVolatility(const OptionAttributes&);

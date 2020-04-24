@@ -144,11 +144,13 @@
     <ClCompile Include="StockPricesFileRow.cpp" />
     <ClCompile Include="ComponentWeightsFile.cpp" />
     <ClCompile Include="ComponentWeightsFileRow.cpp" />
+    <ClCompile Include="Trade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bond.hpp" />
     <ClInclude Include="BondFile.hpp" />
     <ClInclude Include="BondFileRow.hpp" />
+    <ClInclude Include="DateConversion.hpp" />
     <ClInclude Include="Derivative.hpp" />
     <ClInclude Include="DispersionTrade.hpp" />
     <ClInclude Include="Equity.hpp" />

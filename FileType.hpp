@@ -24,6 +24,7 @@ public:
 	unsigned ValueYear() const;
 	unsigned ValueMonth() const;
 	unsigned ValueDay() const;
+	const std::unordered_map<double, FileRow*> Data() const;
 	// Mutators:
 	virtual void ParseFile(const std::string &path) = 0;
 	// Interface Methods:

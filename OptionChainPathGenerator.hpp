@@ -29,7 +29,7 @@ public:
 	void ExpYear(unsigned);
 	void ValueDateFolder(const std::string&);
 	// Interface Methods:
-	std::string ExtractTicker(const std::string &chainpath);
+	static std::string ExtractTicker(const std::string &chainpath);
 	bool IsExpDate(const std::string &path) const;
 	bool PathExists(const std::string &ticker) const;
 	std::string TickerPath(const std::string &ticker) const;
