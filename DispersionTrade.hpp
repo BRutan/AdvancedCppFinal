@@ -42,10 +42,11 @@ public:
 	const Option& IndexOption() const;
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
 	// Interface Methods:
+	double ImpliedCorrelation() const;
 	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const std::string &valueDateFolder, unsigned expMonth,
 			unsigned expDay, unsigned expYear, const DispersionTradeAttributes &attrs);
-	double ImpliedCorrelation() const;
 	double CalculatePNL(const SecurityAttributes*);
+	virtual double Delta() const;
 	static double ImpliedCorrelation(const std::string &indexName, const OptionChains &chains);
 	DispersionTrade& operator=(const DispersionTrade&);
 };

@@ -101,6 +101,34 @@ double Option::ImpliedVolatility(const OptionAttributes &attr, double tol_approx
 	// Compute implied volatility from other parameters in OptionAttributes:
 	
 }
+double Option::Price() const
+{
+	this->
+}
+double Option::Price(const SecurityAttributes*) const
+{
+
+}
+double Option::Delta() const
+{
+	return 0;
+}
+double Option::Gamma() const
+{
+	return 0;
+}
+double Option::Theta() const
+{
+	return 0;
+}
+double Option::Vega() const
+{
+	return 0;
+}
+virtual double Option::Rho() const
+{
+
+}
 // Overloaded Operators:
 Option& Option::operator=(const Option &opt) 
 {

@@ -26,6 +26,10 @@ public:
 	void ImpliedVol(double);
 	void TimeToMaturity(double);
 	void IsCall(bool);
+	// Interface Methods:
+	virtual double Price() const;
+	virtual double Price(const SecurityAttributes*) const;
+	virtual double Delta() const;
 	// Overloaded Operators:
 	OptionAttributes& operator=(const OptionAttributes&);
 };
@@ -42,6 +46,10 @@ public:
 	// Interface Functions:
 	static double BlackScholesValuation(const OptionAttributes&);
 	static double ImpliedVolatility(const OptionAttributes&);
+	virtual double Gamma() const;
+	virtual double Theta() const;
+	virtual double Vega() const;
+	virtual double Rho() const;
 	// Overloaded Operators:
 	Option& operator=(const Option&);
 };

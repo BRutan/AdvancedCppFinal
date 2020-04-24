@@ -12,7 +12,7 @@ private:
 public:
 	// Constructors/Destructor:
 	SecurityAttributes(bool IsLong);
-	virtual ~SecurityAttributes();
+	virtual ~SecurityAttributes() = 0;
 	// Accessors:
 	bool IsLong() const;
 	// Overloaded Operators:
@@ -34,7 +34,7 @@ public:
 	virtual double Price(const SecurityAttributes*) const = 0;
 	const std::shared_ptr<SecurityAttributes>& Attributes() const;
 	// Interface Methods:
-	double Delta() const = 0;
+	virtual double Delta() const = 0;
 	// Overloaded Operators:
 	Security& operator=(const Security&);
 };

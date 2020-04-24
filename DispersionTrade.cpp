@@ -85,12 +85,24 @@ std::pair<DispersionTrade, double> DispersionTrade::OptimalDispersionTrade(const
 	auto indexChain = allchains.GetOptionChain(attrs.IndexName());
 	auto chains = allchains.GetOptionChains();
 	bool isNegative = false;
-	double absImpCorrel = 0;
-	for (auto &row : indexChain.
-	for (auto &constituentChain : attrs.ConstituentOptions())
+	double maxAbsImpCorr = 0, currAbsImpCorr = 0;
+	for (auto &row : indexChain->Data())
 	{
-
+		auto converted = dynamic_cast<OptionChainRow*>(row.second);
+		
+		currAbsImpCorr = 0;
+		for (auto &constituentChain : attrs.ConstituentOptions())
+		{
+			currAbsImpCorr += 0;
+		}
 	}
+	// Generate trade using optimal strikes:
+
+}
+double DispersionTrade::Delta() const
+{
+	double delta = 0;
+	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
 
 }
 double DispersionTrade::ImpliedCorrelation() const
