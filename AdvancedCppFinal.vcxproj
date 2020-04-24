@@ -145,6 +145,7 @@
     <ClCompile Include="ComponentWeightsFile.cpp" />
     <ClCompile Include="ComponentWeightsFileRow.cpp" />
     <ClCompile Include="Trade.cpp" />
+    <ClCompile Include="TradeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bond.hpp" />

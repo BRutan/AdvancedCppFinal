@@ -1,6 +1,10 @@
 #include "Derivative.hpp"
 
 // Constructors/Destructor:
+Derivative::Derivative() : Security()
+{
+
+}
 Derivative::Derivative(const SecurityAttributes* attr) : Security(attr)
 {
 

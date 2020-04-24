@@ -5,6 +5,7 @@
 #include <tuple>
 #include <unordered_map>
 #include <utility>
+#include "ComponentWeightsFileRow.hpp"
 #include "Option.hpp"
 #include "OptionChains.hpp"
 #include "Trade.hpp"
@@ -18,6 +19,7 @@ private:
 	std::unordered_map<std::string, std::pair<Option, double>> _ConstituentOptions;
 public:
 	// Constructors/Destructor:
+	DispersionTradeAttributes();
 	DispersionTradeAttributes(bool isLong, const std::string& indexName, const Option& indexOption,
 		const std::unordered_map<std::string, std::pair<Option, double>> ConstitutentOptions);
 	DispersionTradeAttributes(const DispersionTradeAttributes&);
@@ -26,6 +28,10 @@ public:
 	const std::string& IndexName() const;
 	const Option& IndexOption() const;
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions() const;
+	// Mutators:
+	void ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>>&);
+	void IndexName(std::string&);
+	void IndexOption(const Option&);
 	// Overloaded Operators:
 	DispersionTradeAttributes& operator=(const DispersionTradeAttributes&);
 };
@@ -43,8 +49,8 @@ public:
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
 	// Interface Methods:
 	double ImpliedCorrelation() const;
-	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const std::string &valueDateFolder, unsigned expMonth,
-			unsigned expDay, unsigned expYear, const DispersionTradeAttributes &attrs);
+	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const std::string &valueDateFolder,
+		const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs);
 	double CalculatePNL(const SecurityAttributes*);
 	virtual double Delta() const;
 	static double ImpliedCorrelation(const std::string &indexName, const OptionChains &chains);

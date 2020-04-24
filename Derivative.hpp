@@ -8,6 +8,7 @@ class Derivative : public Security
 {
 public:
 	// Constructors/Destructor:
+	Derivative();
 	Derivative(const std::shared_ptr<SecurityAttributes> &attr);
 	Derivative(const SecurityAttributes* attr);
 	Derivative(const Derivative&);

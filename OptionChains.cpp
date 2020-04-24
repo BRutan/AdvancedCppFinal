@@ -5,6 +5,11 @@ OptionChains::OptionChains(const std::string &valueDateFolder, unsigned expMonth
 {
 	this->ParseFiles(valueDateFolder);
 }
+OptionChains::OptionChains(const std::string &valueDateFolder, const OptionChainPathGenerator &gen) : 
+	_Generator(gen), FileTypeContainer()
+{
+	this->ParseFiles(valueDateFolder);
+}
 OptionChains::~OptionChains()
 {
 

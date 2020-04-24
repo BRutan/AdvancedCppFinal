@@ -5,6 +5,10 @@
 // OptionAttributes definitions:
 ////////////////////
 // Constructors/Destructor:
+OptionAttributes::OptionAttributes() : _IsCall(), SecurityAttributes(), _Strike(), _Price(), _ImpliedVol()
+{
+
+}
 OptionAttributes::OptionAttributes(bool isCall, bool isLong, double tenor, const OptionChainRow& row) : _IsCall(isCall), SecurityAttributes(isLong),
 	_Strike(row.Strike()), _Price((isLong) ? row.Ask() : row.Bid()), _ImpliedVol(row.ImpliedVol()), _TTM(tenor) 
 {
@@ -74,6 +78,10 @@ OptionAttributes& OptionAttributes::operator=(const OptionAttributes &attr)
 // Option definitions:
 ////////////////////
 // Constructors/Destructor:
+Option::Option() : Derivative()
+{
+
+}
 Option::Option(const OptionAttributes& attr) : Derivative(&attr)
 {
 
@@ -85,29 +93,17 @@ Option::~Option()
 // Accessors:
 double Option::Price() const
 {
-	return std::dynamic_cast<OptionAttributes*>(this->Attributes().get())->->Price();
+	return dynamic_cast<OptionAttributes*>(this->Attributes().get())->Price();
 }
 double Option::Price(const SecurityAttributes* attr) const
 {
 	return 0;
 }
 // Interface Functions:
-double Option::BlackScholesValuation(const OptionAttributes &attr)
+double Option::ImpliedVolatility(const OptionAttributes &attr, double tol_approx, double tol_consec)
 {
-
-}
-double Option::ImpliedVolatility(const OptionAttributes &attr, double tol_approx = e-4, double tol_consec = e-4)
-{
-	// Compute implied volatility from other parameters in OptionAttributes:
-	
-}
-double Option::Price() const
-{
-	this->
-}
-double Option::Price(const SecurityAttributes*) const
-{
-
+	// Compute implied volatility based on other parameters in OptionAttributes:
+	return 0;
 }
 double Option::Delta() const
 {
@@ -125,9 +121,29 @@ double Option::Vega() const
 {
 	return 0;
 }
-virtual double Option::Rho() const
+double Option::Rho() const
 {
-
+	return 0;
+}
+static double Delta(const OptionAttributes& attrs)
+{
+	return 0;
+}
+static double Gamma(const OptionAttributes& attrs)
+{
+	return 0;
+}
+static double Theta(const OptionAttributes& attrs)
+{
+	return 0;
+}
+static double Vega(const OptionAttributes& attrs)
+{
+	return 0;
+}
+static double Rho(const OptionAttributes& attrs)
+{
+	return 0;
 }
 // Overloaded Operators:
 Option& Option::operator=(const Option &opt) 

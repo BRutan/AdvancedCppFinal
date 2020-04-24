@@ -18,6 +18,7 @@ private:
 	OptionChainPathGenerator _Generator;
 public:
 	// Constructors/Destructor:
+	OptionChains(const std::string &valueDateFolder, const OptionChainPathGenerator &gen);
 	OptionChains(const std::string &valueDateFolder, unsigned expMonth, unsigned expDay, unsigned expYear);
 	virtual ~OptionChains();
 	// Accessors:

@@ -15,6 +15,7 @@ private:
 public:
 	// Constructors/Destructor:
 	OptionChainPathGenerator();
+	OptionChainPathGenerator(const std::string &expDateFolder, const std::string &valueDateFolder);
 	OptionChainPathGenerator(unsigned expMonth, unsigned expDay, unsigned expYear, const std::string& valueDateFolder);
 	virtual ~OptionChainPathGenerator();
 	// Accessors:
@@ -30,6 +31,8 @@ public:
 	void ValueDateFolder(const std::string&);
 	// Interface Methods:
 	static std::string ExtractTicker(const std::string &chainpath);
+	static std::tuple<unsigned, unsigned, unsigned> ExtractExpirationDate(const std::string &chainpath);
+	static std::tuple<unsigned, unsigned, unsigned> ExtractValueDate(const std::string &chainpath);
 	bool IsExpDate(const std::string &path) const;
 	bool PathExists(const std::string &ticker) const;
 	std::string TickerPath(const std::string &ticker) const;

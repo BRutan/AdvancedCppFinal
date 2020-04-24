@@ -11,6 +11,11 @@ OptionChainPathGenerator::OptionChainPathGenerator() : _ExpMonth(0), _ExpDay(0),
 {
 
 }
+OptionChainPathGenerator::OptionChainPathGenerator(const std::string &expDateFolder, const std::string &valueDateFolder) :
+	_ValueDateFolder(valueDateFolder)
+{
+
+}
 OptionChainPathGenerator::OptionChainPathGenerator(unsigned month, unsigned day, unsigned year, 
 	const std::string& valueDateFolder) : 
 	_ExpMonth(month), _ExpDay(day), _ExpYear(year), _ValueDateFolder(valueDateFolder)
@@ -69,6 +74,40 @@ std::string OptionChainPathGenerator::ExtractTicker(const std::string &chainpath
 	auto index = chainpath.rfind('\\');
 	auto filepath = (index != chainpath.npos) ? chainpath.substr(index + 1) : chainpath;
 	return filepath.substr(0, filepath.find_first_of('_'));
+}
+std::tuple<unsigned, unsigned, unsigned> OptionChainPathGenerator::ExtractExpirationDate(const std::string &chainpath)
+{
+	auto index = chainpath.rfind('\\');
+	std::string fileName((index != chainpath.npos) ? chainpath.substr(index + 1) : chainpath);
+	// OptionChains have format <Ticker>_<ValueMonth>_<ValueDay>_<ValueYear>_<ExpMonth>_<ExpDay>_<ExpYear>.csv:
+	index = fileName.rfind('_');
+	fileName = fileName.substr(0, index);
+	index = chainpath.rfind('_', index);
+	unsigned year = std::stoul(fileName.substr(index, 2));
+	fileName = fileName.substr(0, index);
+	index = chainpath.rfind('_', index);
+	unsigned day = std::stoul(fileName.substr(index, 2));
+	fileName = fileName.substr(0, index);
+	index = chainpath.rfind('_', index);
+	unsigned month = std::stoul(fileName.substr(index, 2));
+	return std::make_tuple(month, day, year);
+}
+std::tuple<unsigned, unsigned, unsigned> OptionChainPathGenerator::ExtractValueDate(const std::string &chainpath)
+{
+	auto index = chainpath.rfind('\\');
+	std::string fileName((index != chainpath.npos) ? chainpath.substr(index + 1) : chainpath);
+	// OptionChains have format <Ticker>_<ValueMonth>_<ValueDay>_<ValueYear>_<ExpMonth>_<ExpDay>_<ExpYear>.csv:	
+	index = fileName.find('_');
+	fileName = fileName.substr(0, index);
+	index = chainpath.find('_', index);
+	unsigned year = std::stoul(fileName.substr(index, 2));
+	fileName = fileName.substr(0, index);
+	index = chainpath.find('_', index);
+	unsigned day = std::stoul(fileName.substr(index, 2));
+	fileName = fileName.substr(0, index);
+	index = chainpath.find('_', index);
+	unsigned month = std::stoul(fileName.substr(index, 2));
+	return std::make_tuple(month, day, year);
 }
 bool OptionChainPathGenerator::IsExpDate(const std::string &folderPath) const
 {

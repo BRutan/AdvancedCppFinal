@@ -11,10 +11,13 @@ private:
 	bool _IsLong;
 public:
 	// Constructors/Destructor:
+	SecurityAttributes();
 	SecurityAttributes(bool IsLong);
 	virtual ~SecurityAttributes() = 0;
 	// Accessors:
 	bool IsLong() const;
+	// Mutators:
+	void IsLong(bool);
 	// Overloaded Operators:
 	SecurityAttributes& operator=(const SecurityAttributes&);
 };
@@ -25,6 +28,7 @@ protected:
 	std::shared_ptr<SecurityAttributes> _Attributes;
 public:
 	// Constructors/Destructor:
+	Security();
 	Security(const std::shared_ptr<SecurityAttributes>& attr);
 	Security(const SecurityAttributes*);
 	Security(const Security&);

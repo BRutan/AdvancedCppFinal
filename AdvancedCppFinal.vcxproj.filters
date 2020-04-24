@@ -22,11 +22,11 @@
     <Filter Include="Header Files\Misc">
       <UniqueIdentifier>{ff1a0fe3-fb3e-4e66-9e69-bd27d4eafc1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Assets_">
-      <UniqueIdentifier>{837df728-181e-4920-a655-3218467f0538}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\FileTypes">
       <UniqueIdentifier>{812e6ba0-ad76-42a8-9b4a-c187dca4ec97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Assets">
+      <UniqueIdentifier>{837df728-181e-4920-a655-3218467f0538}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,10 +58,10 @@
       <Filter>Source Files\FileTypes</Filter>
     </ClCompile>
     <ClCompile Include="Bond.cpp">
-      <Filter>Source Files\Assets_</Filter>
+      <Filter>Source Files\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Derivative.cpp">
-      <Filter>Source Files\Assets_</Filter>
+      <Filter>Source Files\Assets</Filter>
     </ClCompile>
     <ClCompile Include="BondFile.cpp">
       <Filter>Source Files\FileTypes</Filter>
@@ -79,16 +79,19 @@
       <Filter>Source Files\FileTypes</Filter>
     </ClCompile>
     <ClCompile Include="DispersionTrade.cpp">
-      <Filter>Source Files\Assets_</Filter>
+      <Filter>Source Files\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Option.cpp">
-      <Filter>Source Files\Assets_</Filter>
+      <Filter>Source Files\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Security.cpp">
-      <Filter>Source Files\Assets_</Filter>
+      <Filter>Source Files\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Trade.cpp">
-      <Filter>Source Files\Assets_</Filter>
+      <Filter>Source Files\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="TradeFactory.cpp">
+      <Filter>Source Files\Assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,1 @@
+#include "TradeFactory.hpp"

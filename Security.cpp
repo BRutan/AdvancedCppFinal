@@ -4,6 +4,10 @@
 // SecurityAttributes:
 /////////////////
 // Constructors/Destructor:
+SecurityAttributes::SecurityAttributes() : _IsLong(false)
+{
+
+}
 SecurityAttributes::SecurityAttributes(bool IsLong) : _IsLong(IsLong)
 {
 
@@ -16,6 +20,11 @@ SecurityAttributes::~SecurityAttributes()
 bool SecurityAttributes::IsLong() const
 {
 	return this->_IsLong;
+}
+// Mutators:
+void SecurityAttributes::IsLong(bool isLong)
+{
+	this->_IsLong = isLong;
 }
 // Overloaded Operators:
 SecurityAttributes& SecurityAttributes::operator=(const SecurityAttributes &attr)
@@ -31,7 +40,11 @@ SecurityAttributes& SecurityAttributes::operator=(const SecurityAttributes &attr
 // Security:
 /////////////////
 // Constructors/Destructor:
-Security::Security(const std::shared_ptr<SecurityAttributes>& attr)
+Security::Security() : _Attributes()
+{
+
+}
+Security::Security(const std::shared_ptr<SecurityAttributes>& attr) : _Attributes(attr)
 {
 
 }
