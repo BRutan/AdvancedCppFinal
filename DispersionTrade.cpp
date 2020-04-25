@@ -4,13 +4,13 @@
 // DispersionTradeAttributes definitions:
 ///////////////////////
 // Constructors/Destructor:
-DispersionTradeAttributes::DispersionTradeAttributes() : _IndexName(), _IndexOption(), _ConstituentOptions(), SecurityAttributes()
+DispersionTradeAttributes::DispersionTradeAttributes() : _IndexName(), _IndexOption(), _ConstituentOptions(), DerivativeAttributes()
 {
 
 }
 DispersionTradeAttributes::DispersionTradeAttributes(bool isLong, const std::string& indexName, const Option& indexOption,
-	const std::unordered_map<std::string, std::pair<Option, double>> constitutentOptions) : _IndexName(indexName),
-	_IndexOption(indexOption), _ConstituentOptions(constitutentOptions), SecurityAttributes(isLong)
+	const std::unordered_map<std::string, std::pair<Option, double>> constitutentOptions, const QuantLib::Date &settle, const QuantLib::Date &exp) : _IndexName(indexName),
+	_IndexOption(indexOption), _ConstituentOptions(constitutentOptions), DerivativeAttributes(isLong, settle, exp)
 {
 	// Ensure that long/short attributes are set correctly:
 	// (if long index, short constituents, vice versa):
@@ -21,7 +21,7 @@ DispersionTradeAttributes::DispersionTradeAttributes(bool isLong, const std::str
 
 }
 DispersionTradeAttributes::DispersionTradeAttributes(const DispersionTradeAttributes &attr) : _IndexName(attr._IndexName),
-	_IndexOption(attr._IndexOption), _ConstituentOptions(attr._ConstituentOptions), SecurityAttributes(attr.IsLong())
+	_IndexOption(attr._IndexOption), _ConstituentOptions(attr._ConstituentOptions), DerivativeAttributes(attr)
 {
 
 }
@@ -47,7 +47,7 @@ void DispersionTradeAttributes::ConstituentOptions(const std::unordered_map<std:
 {
 	this->_ConstituentOptions = constits;
 }
-void DispersionTradeAttributes::IndexName(std::string& indexName)
+void DispersionTradeAttributes::IndexName(const std::string& indexName)
 {
 	this->_IndexName = indexName;
 }

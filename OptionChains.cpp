@@ -1,9 +1,9 @@
 #include "OptionChains.hpp"
 
-OptionChains::OptionChains(const std::string &valueDateFolder, unsigned expMonth, unsigned expDay, unsigned expYear) :
-	_Generator(expMonth, expDay, expYear, valueDateFolder), FileTypeContainer()
+OptionChains::OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate) :
+	_Generator(expDate,valueDate), FileTypeContainer()
 {
-	this->ParseFiles(valueDateFolder);
+	this->ParseFiles(this->_Generator.ValueDateFolder());
 }
 OptionChains::OptionChains(const std::string &valueDateFolder, const OptionChainPathGenerator &gen) : 
 	_Generator(gen), FileTypeContainer()

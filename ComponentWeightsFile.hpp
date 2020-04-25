@@ -2,6 +2,7 @@
 #define TICKERSFILE_HPP
 
 #include <fstream>
+#include <ql/time/date.hpp>
 #include <set>
 #include <string>
 #include <set>
@@ -23,7 +24,8 @@ public:
 	const std::unordered_map<std::string, ComponentWeightsFileRow>& Tickers() const;
 	// Interface Methods:
 	void ParseFile(const std::string &path);
-	std::pair<OptionChainPathGenerator, std::set<std::string>> AllComponentsAvailable(const std::string& valueDateFolder, const std::string& indexSymbol) const;
+	std::pair<OptionChainPathGenerator, std::set<std::string>>
+		AllComponentsAvailable(const std::string& valueDateFolder, const std::string& indexSymbol) const;
 	// Overloaded Operators:
 	ComponentWeightsFile& operator=(const ComponentWeightsFile&); 
 };

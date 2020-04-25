@@ -2,6 +2,7 @@
 #define OPTIONCHAINS_HPP
 
 #include <filesystem>
+#include <ql/time/date.hpp>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -19,7 +20,7 @@ private:
 public:
 	// Constructors/Destructor:
 	OptionChains(const std::string &valueDateFolder, const OptionChainPathGenerator &gen);
-	OptionChains(const std::string &valueDateFolder, unsigned expMonth, unsigned expDay, unsigned expYear);
+	OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate);
 	virtual ~OptionChains();
 	// Accessors:
 	const std::unordered_map<std::string, FileType*>& GetOptionChains() const;
@@ -32,7 +33,7 @@ public:
 	OptionChains& operator=(const OptionChains &chains);
 	friend std::ostream& operator<<(std::ostream &stream, const OptionChains &chains)
 	{
-		stream << "ExpirationDate: " << chains._Generator.ExpDateString() << '\n';
+		stream << "ExpirationDate: " << OptionChainPathGenerator::DateToString(chains._Generator.ExpirationDate(),'\\') << '\n';
 		for (auto &chain_pair : chains._Files)
 		{
 			stream << "Ticker: " << chain_pair.first << '\n';

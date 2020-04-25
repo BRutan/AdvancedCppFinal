@@ -1,18 +1,30 @@
 #include "Option.hpp"
 
+using QQuote = QuantLib::Quote;
+using QPricingEngine = QuantLib::PricingEngine;
+using QBSMP = QuantLib::BlackScholesMertonProcess;
+using QYTS = QuantLib::YieldTermStructure;
+using QSimpleQuote = QuantLib::SimpleQuote;
+using QFlatForward = QuantLib::FlatForward;
+using QBAWEngine = QuantLib::BaroneAdesiWhaleyApproximationEngine;
+using QAmericanExercise = QuantLib::AmericanExercise;
+using QBlackVolTS = QuantLib::BlackVolTermStructure;
+using QBlackConstantVol = QuantLib::BlackConstantVol;
 
 ////////////////////
 // OptionAttributes definitions:
 ////////////////////
 // Constructors/Destructor:
-OptionAttributes::OptionAttributes() : _IsCall(false), SecurityAttributes(), _Strike(0), _Price(0), _ImpliedVol(0), _TTM(0),
-	_DivYield(0)
+OptionAttributes::OptionAttributes() : _IsCall(false), DerivativeAttributes(), _Strike(0), _Price(0), _ImpliedVol(0), _TTM(0),
+	_DivYield(0), _UnderlyingPrice(0)
 {
 
 }
-OptionAttributes::OptionAttributes(bool isCall, bool isLong, double tenor, double divYield, const OptionChainRow& row) : 
-	_IsCall(isCall), SecurityAttributes(isLong), _Strike(row.Strike()), _Price((isLong) ? row.Ask() : row.Bid()), 
-	_ImpliedVol(row.ImpliedVol()), _TTM(tenor), _DivYield(divYield)
+OptionAttributes::OptionAttributes(bool isCall, bool isLong, double riskFree, double divYield, double underlyingPrice,
+	const OptionChainRow& row, const QuantLib::Date &settle, const QuantLib::Date &exp) :
+	_IsCall(isCall), _Strike(row.Strike()), _Price((isLong) ? row.Ask() : row.Bid()), 
+	_ImpliedVol(row.ImpliedVol()), _TTM(QuantLib::Actual365Fixed().yearFraction(settle, exp)), 
+	_DivYield(divYield), _UnderlyingPrice(underlyingPrice), DerivativeAttributes(isLong, settle, exp)
 {
 
 }
@@ -45,6 +57,10 @@ bool OptionAttributes::IsCall() const
 {
 	return this->_IsCall;
 }
+double OptionAttributes::UnderlyingPrice() const
+{
+	return this->_UnderlyingPrice;
+}
 // Mutators:
 void OptionAttributes::DividendYield(double yield)
 {
@@ -70,6 +86,10 @@ void OptionAttributes::IsCall(bool isCall)
 {
 	this->_IsCall = isCall;
 }
+void OptionAttributes::UnderlyingPrice(double price)
+{
+	this->_UnderlyingPrice = price;
+}
 // Overloaded Operators:
 OptionAttributes& OptionAttributes::operator=(const OptionAttributes &attr)
 {
@@ -82,6 +102,7 @@ OptionAttributes& OptionAttributes::operator=(const OptionAttributes &attr)
 		this->_Price = attr._Price;
 		this->_Strike = attr._Strike;
 		this->_TTM = attr._TTM;
+		this->_UnderlyingPrice = attr._UnderlyingPrice;
 	}
 	return *this;
 }
@@ -93,9 +114,10 @@ Option::Option() : Derivative()
 {
 
 }
-Option::Option(const OptionAttributes& attr) : Derivative(std::make_shared<OptionAttributes>(attr))
+Option::Option(const OptionAttributes& attr) : Derivative(std::make_shared<OptionAttributes>(attr)), 
+	_OptionObj(&Option::GenerateOptionObj(attr))
 {
-
+	
 }
 Option::~Option()
 {
@@ -108,148 +130,74 @@ double Option::Price() const
 }
 double Option::Price(const std::shared_ptr<SecurityAttributes>& attr) const
 {
-	return 0;
+	return Option::GenerateOptionObj(dynamic_cast<OptionAttributes*>(attr.get)).NPV();
 }
 // Interface Functions:
 double Option::ImpliedVolatility(const OptionAttributes &attr, double tol_approx, double tol_consec)
 {
-	// Compute implied volatility based on other parameters in OptionAttributes:
 	return 0;
 }
 double Option::Delta() const
 {
-	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
-	if (attr->IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return 0;
+	return this->_OptionObj->delta();
 }
 double Option::Gamma() const
 {
-	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
-	double gamma = 0;
-	if (attr->IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return gamma;
-}
-double Option::Theta() const
-{
-	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
-	double theta = 0;
-	if (attr->IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return theta;
-}
-double Option::Vega() const
-{
-	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
-	double vega = 0;
-	if (attr->IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return vega;
+	return this->_OptionObj->gamma();
 }
 double Option::Rho() const
 {
-	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
-	double rho = 0;
-	if (attr->IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return rho;
+	return this->_OptionObj->rho();
+}
+double Option::Theta() const
+{
+	return this->_OptionObj->theta();
+}
+double Option::Vega() const
+{
+	return this->_OptionObj->vega();
 }
 // Static Methods:
 double Option::Delta(const OptionAttributes& attrs)
 {
-	double delta = 0;
-	if (attrs.IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return delta;
+	return Option::GenerateOptionObj(attrs).delta();
 }
 double Option::Gamma(const OptionAttributes& attrs)
 {
-	double gamma = 0;
-	if (attrs.IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return gamma;
-}
-double Option::Theta(const OptionAttributes& attrs)
-{
-	double theta = 0;
-	if (attrs.IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return theta;
-}
-double Option::Vega(const OptionAttributes& attrs)
-{
-	double vega = 0;
-	if (attrs.IsCall())
-	{
-
-	}
-	else
-	{
-
-	}
-	return vega;
+	return Option::GenerateOptionObj(attrs).gamma();
 }
 double Option::Rho(const OptionAttributes& attrs)
 {
-	double rho = 0;
-	if (attrs.IsCall())
-	{
+	return Option::GenerateOptionObj(attrs).rho();
+}
+double Option::Theta(const OptionAttributes& attrs)
+{
+	return Option::GenerateOptionObj(attrs).theta();
+}
+double Option::Vega(const OptionAttributes& attrs)
+{
+	return Option::GenerateOptionObj(attrs).vega();
+}
+QuantLib::VanillaOption Option::GenerateOptionObj(const OptionAttributes &attr)
+{
+	auto dayCount = QuantLib::Actual365Fixed();
+	auto type = (attr.IsCall()) ? QuantLib::Option::Call : QuantLib::Option::Put;
+	auto calendar = QuantLib::UnitedStates();
+	auto payoff = boost::shared_ptr<QuantLib::PlainVanillaPayoff>(new QuantLib::PlainVanillaPayoff(type, attr.Strike()));
+	auto exercise = boost::shared_ptr<QAmericanExercise>(new QAmericanExercise(attr.SettlementDate(), attr.ExpirationDate()));
 
-	}
-	else
-	{
+	QuantLib::Handle<QQuote> underlying(boost::shared_ptr<QQuote>(new QSimpleQuote(attr.UnderlyingPrice())));
+	QuantLib::Handle<QYTS> divTermStruct(boost::shared_ptr<QYTS>(new QFlatForward(attr.SettlementDate(),attr.DividendYield(),dayCount)));
+	QuantLib::Handle<QYTS> rfTermStruct(boost::shared_ptr<QYTS>(new QFlatForward(attr.SettlementDate(), attr.RiskFreeRate(), dayCount)));
+	QuantLib::Handle<QBlackVolTS> volTermStruct(boost::shared_ptr<QBlackVolTS>(new QBlackConstantVol(attr.SettlementDate(),
+		calendar,attr.ImpliedVol(),dayCount)));
+	
+	auto stochProcess = boost::shared_ptr<QBSMP>(new QBSMP(underlying,divTermStruct,rfTermStruct,volTermStruct));
+	auto engine = boost::shared_ptr<QPricingEngine>(new QBAWEngine(stochProcess));
+	QuantLib::VanillaOption option(payoff, exercise);
+	option.setPricingEngine(engine);
 
-	}
-	return rho;
+	return option;
 }
 // Overloaded Operators:
 Option& Option::operator=(const Option &opt) 

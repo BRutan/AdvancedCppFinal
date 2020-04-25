@@ -69,7 +69,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\QuantLib-1.18\;C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\boost_1_72_0;C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\Boost\include\boost-1_72;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\QuantLib-1.18\build\v141\Win32\Debug;C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\QuantLib-1.18\lib;C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\Boost\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -89,6 +92,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\QuantLib-1.18\;C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\Boost\include\boost-1_72;C:\Users\rutan\OneDrive\Desktop\Repos\C++\Libraries\boost_1_72_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,7 +145,6 @@
     <ClCompile Include="OptionChainRow.cpp" />
     <ClCompile Include="OptionChains.cpp" />
     <ClCompile Include="Security.cpp" />
-    <ClCompile Include="BjerksundStenslandPricing.cpp" />
     <ClCompile Include="Stats.cpp" />
     <ClCompile Include="StockPricesFileRow.cpp" />
     <ClCompile Include="ComponentWeightsFile.cpp" />
@@ -149,12 +153,9 @@
     <ClCompile Include="TradeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BjerksundStenslandPricing.hpp" />
-    <ClInclude Include="BlackScholesPricing.hpp" />
     <ClInclude Include="Bond.hpp" />
     <ClInclude Include="BondFile.hpp" />
     <ClInclude Include="BondFileRow.hpp" />
-    <ClInclude Include="DateConversion.hpp" />
     <ClInclude Include="Derivative.hpp" />
     <ClInclude Include="DispersionTrade.hpp" />
     <ClInclude Include="Equity.hpp" />

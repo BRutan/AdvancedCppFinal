@@ -1,6 +1,7 @@
 #ifndef DISPERSIONTRADE_HPP
 #define DISPERSIONTRADE_HPP
 
+#include <ql/time/date.hpp>
 #include <string>
 #include <tuple>
 #include <unordered_map>
@@ -11,7 +12,7 @@
 #include "Trade.hpp"
 #include "Security.hpp"
 
-class DispersionTradeAttributes : public SecurityAttributes
+class DispersionTradeAttributes : public DerivativeAttributes
 {
 private:
 	std::string _IndexName;
@@ -21,7 +22,8 @@ public:
 	// Constructors/Destructor:
 	DispersionTradeAttributes();
 	DispersionTradeAttributes(bool isLong, const std::string& indexName, const Option& indexOption,
-		const std::unordered_map<std::string, std::pair<Option, double>> ConstitutentOptions);
+		const std::unordered_map<std::string, std::pair<Option, double>> ConstitutentOptions, 
+		const QuantLib::Date &settle, const QuantLib::Date &exp);
 	DispersionTradeAttributes(const DispersionTradeAttributes&);
 	virtual ~DispersionTradeAttributes();
 	// Accessors:
@@ -30,7 +32,7 @@ public:
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions() const;
 	// Mutators:
 	void ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>>&);
-	void IndexName(std::string&);
+	void IndexName(const std::string&);
 	void IndexOption(const Option&);
 	// Overloaded Operators:
 	DispersionTradeAttributes& operator=(const DispersionTradeAttributes&);

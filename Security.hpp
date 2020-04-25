@@ -1,6 +1,7 @@
 #ifndef SECURITY_HPP
 #define SECURITY_HPP
 
+#include <ql/time/date.hpp>
 #include <memory>
 #include <iostream>
 #include <string>
@@ -8,16 +9,19 @@
 class SecurityAttributes
 {
 private:
+	QuantLib::Date _SettlementDate;
 	bool _IsLong;
 public:
 	// Constructors/Destructor:
 	SecurityAttributes();
-	SecurityAttributes(bool IsLong);
+	SecurityAttributes(const QuantLib::Date& settle, bool IsLong);
 	virtual ~SecurityAttributes() = 0;
 	// Accessors:
 	bool IsLong() const;
+	const QuantLib::Date& SettlementDate() const;
 	// Mutators:
 	void IsLong(bool);
+	void SettlementDate(const QuantLib::Date&);
 	// Overloaded Operators:
 	SecurityAttributes& operator=(const SecurityAttributes&);
 };

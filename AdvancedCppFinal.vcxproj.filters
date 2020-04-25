@@ -96,9 +96,6 @@
     <ClCompile Include="TradeFactory.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="BjerksundStenslandPricing.cpp">
-      <Filter>Source Files\Misc</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Equity.hpp">
@@ -178,15 +175,6 @@
     </ClInclude>
     <ClInclude Include="ComponentWeightsFileRow.hpp">
       <Filter>Header Files\FileTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="DateConversion.hpp">
-      <Filter>Header Files\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="BjerksundStenslandPricing.hpp">
-      <Filter>Header Files\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="BlackScholesPricing.hpp">
-      <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
