@@ -1,4 +1,4 @@
-#include"Barone-Whaleyt.h"
+#include"Barone-Whaleyt.hpp"
 
 double _standardNormalPDF(double x)
 {
