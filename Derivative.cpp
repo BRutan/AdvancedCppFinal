@@ -12,6 +12,10 @@ DerivativeAttributes::DerivativeAttributes(bool isLong, const QuantLib::Date& se
 {
 	
 }
+DerivativeAttributes::~DerivativeAttributes()
+{
+
+}
 // Accessors:
 const QuantLib::Date& DerivativeAttributes::ExpirationDate() const
 {

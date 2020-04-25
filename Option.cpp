@@ -49,6 +49,10 @@ double OptionAttributes::ImpliedVol() const
 {
 	return this->_ImpliedVol;
 }
+double OptionAttributes::RiskFreeRate() const
+{
+	return this->_RiskFreeRate;
+}
 double OptionAttributes::TimeToMaturity() const
 {
 	return this->_TTM;
@@ -77,6 +81,10 @@ void OptionAttributes::Price(double price)
 void OptionAttributes::ImpliedVol(double iv)
 {
 	this->_ImpliedVol = iv;
+}
+void OptionAttributes::RiskFreeRate(double rf)
+{
+	this->_RiskFreeRate = rf;
 }
 void OptionAttributes::TimeToMaturity(double ttm)
 {
@@ -130,7 +138,8 @@ double Option::Price() const
 }
 double Option::Price(const std::shared_ptr<SecurityAttributes>& attr) const
 {
-	return Option::GenerateOptionObj(dynamic_cast<OptionAttributes*>(attr.get)).NPV();
+	auto opt_attr = dynamic_cast<OptionAttributes*>(attr.get());
+	return Option::GenerateOptionObj(*opt_attr).NPV();
 }
 // Interface Functions:
 double Option::ImpliedVolatility(const OptionAttributes &attr, double tol_approx, double tol_consec)

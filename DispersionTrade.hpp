@@ -51,8 +51,7 @@ public:
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
 	// Interface Methods:
 	double ImpliedCorrelation() const;
-	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const std::string &valueDateFolder,
-		const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs);
+	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs);
 	virtual double CalculatePNL(const std::shared_ptr<SecurityAttributes>&);
 	virtual double Delta() const;
 	virtual double Gamma() const;

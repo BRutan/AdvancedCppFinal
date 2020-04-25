@@ -5,10 +5,10 @@ OptionChains::OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &
 {
 	this->ParseFiles(this->_Generator.ValueDateFolder());
 }
-OptionChains::OptionChains(const std::string &valueDateFolder, const OptionChainPathGenerator &gen) : 
+OptionChains::OptionChains(const OptionChainPathGenerator &gen) : 
 	_Generator(gen), FileTypeContainer()
 {
-	this->ParseFiles(valueDateFolder);
+	this->ParseFiles(this->_Generator.ValueDateFolder());
 }
 OptionChains::~OptionChains()
 {

@@ -98,10 +98,9 @@ const std::unordered_map<std::string, std::pair<Option, double>>& DispersionTrad
 	return dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get())->ConstituentOptions();
 }
 // Interface Methods:
-std::pair<DispersionTrade, double> DispersionTrade::OptimalDispersionTrade(const std::string &valueDateFolder, 
-	const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs)
+std::pair<DispersionTrade, double> DispersionTrade::OptimalDispersionTrade(const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs)
 {
-	OptionChains allchains(valueDateFolder, gen);
+	OptionChains allchains(gen);
 	auto indexChain = allchains.GetOptionChain(attrs.IndexName());
 	auto chains = allchains.GetOptionChains();
 	bool isNegative = false;

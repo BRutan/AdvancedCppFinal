@@ -176,6 +176,9 @@
     <ClInclude Include="ComponentWeightsFileRow.hpp">
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
+    <ClInclude Include="PricingGUI.hpp">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="04_08_2020.zip" />

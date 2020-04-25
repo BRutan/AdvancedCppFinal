@@ -25,7 +25,7 @@ public:
 	// Interface Methods:
 	void ParseFile(const std::string &path);
 	std::pair<OptionChainPathGenerator, std::set<std::string>>
-		AllComponentsAvailable(const std::string& valueDateFolder, const std::string& indexSymbol) const;
+		AllComponentsAvailable(const OptionChainPathGenerator &gen, const std::string& indexSymbol) const;
 	// Overloaded Operators:
 	ComponentWeightsFile& operator=(const ComponentWeightsFile&); 
 };

@@ -13,7 +13,7 @@ public:
 	// Constructors/Destructor:
 	DerivativeAttributes();
 	DerivativeAttributes(bool isLong, const QuantLib::Date& settle, const QuantLib::Date& exp);
-	virtual ~DerivativeAttributes() = 0;
+	virtual ~DerivativeAttributes();
 	// Accessors:
 	const QuantLib::Date& ExpirationDate() const;
 	// Mutators:

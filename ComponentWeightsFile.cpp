@@ -43,12 +43,13 @@ void ComponentWeightsFile::ParseFile(const std::string &path)
 }
 
 std::pair<OptionChainPathGenerator, std::set<std::string>>
-	ComponentWeightsFile::AllComponentsAvailable(const std::string& valueDateFolder, const std::string& indexSymbol) const
+	ComponentWeightsFile::AllComponentsAvailable(const OptionChainPathGenerator &gen, const std::string& indexSymbol) const
 {
 	// Search for expiration date folder(s) where all components have options trading
 	// or the greatest number of options trading:
 	std::pair<OptionChainPathGenerator, std::set<std::string>> output;
-	for (const auto &expDateFolder : std::filesystem::directory_iterator(valueDateFolder))
+	auto vdFolder = gen.ValueDateFolder();
+	for (const auto &expDateFolder : std::filesystem::directory_iterator(vdFolder))
 	{
 		std::set<std::string> curr_tickers;
 		// Pull in all option chains from the folder:
@@ -62,7 +63,7 @@ std::pair<OptionChainPathGenerator, std::set<std::string>>
 		}
 		if (curr_tickers.find(indexSymbol) != curr_tickers.end() && curr_tickers.size() > output.second.size())
 		{
-			OptionChainPathGenerator gen(expDateFolder.path().string(), valueDateFolder);
+			OptionChainPathGenerator gen(expDateFolder.path().string(), vdFolder);
 			output = std::make_pair(gen, curr_tickers);
 		}
 	}
