@@ -48,10 +48,6 @@ Security::Security(const std::shared_ptr<SecurityAttributes>& attr) : _Attribute
 {
 
 }
-Security::Security(const SecurityAttributes* attr)
-{
-
-}
 Security::Security(const Security &sec)
 {
 

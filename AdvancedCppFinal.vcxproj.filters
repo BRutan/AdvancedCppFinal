@@ -28,6 +28,9 @@
     <Filter Include="Source Files\Assets">
       <UniqueIdentifier>{837df728-181e-4920-a655-3218467f0538}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Misc">
+      <UniqueIdentifier>{7b3d8405-0506-46cf-a89a-cdeee9d13be0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="TradeFactory.cpp">
       <Filter>Source Files\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="BjerksundStenslandPricing.cpp">
+      <Filter>Source Files\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +180,12 @@
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
     <ClInclude Include="DateConversion.hpp">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="BjerksundStenslandPricing.hpp">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackScholesPricing.hpp">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>

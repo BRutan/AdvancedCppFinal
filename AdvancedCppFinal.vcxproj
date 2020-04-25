@@ -140,6 +140,7 @@
     <ClCompile Include="OptionChainRow.cpp" />
     <ClCompile Include="OptionChains.cpp" />
     <ClCompile Include="Security.cpp" />
+    <ClCompile Include="BjerksundStenslandPricing.cpp" />
     <ClCompile Include="Stats.cpp" />
     <ClCompile Include="StockPricesFileRow.cpp" />
     <ClCompile Include="ComponentWeightsFile.cpp" />
@@ -148,6 +149,8 @@
     <ClCompile Include="TradeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BjerksundStenslandPricing.hpp" />
+    <ClInclude Include="BlackScholesPricing.hpp" />
     <ClInclude Include="Bond.hpp" />
     <ClInclude Include="BondFile.hpp" />
     <ClInclude Include="BondFileRow.hpp" />

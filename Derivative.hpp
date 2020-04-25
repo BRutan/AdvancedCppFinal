@@ -10,7 +10,6 @@ public:
 	// Constructors/Destructor:
 	Derivative();
 	Derivative(const std::shared_ptr<SecurityAttributes> &attr);
-	Derivative(const SecurityAttributes* attr);
 	Derivative(const Derivative&);
 	virtual ~Derivative();
 	// Interface Methods:

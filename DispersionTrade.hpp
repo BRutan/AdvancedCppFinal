@@ -51,8 +51,12 @@ public:
 	double ImpliedCorrelation() const;
 	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const std::string &valueDateFolder,
 		const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs);
-	double CalculatePNL(const SecurityAttributes*);
+	virtual double CalculatePNL(const std::shared_ptr<SecurityAttributes>&);
 	virtual double Delta() const;
+	virtual double Gamma() const;
+	virtual double Theta() const;
+	virtual double Vega() const;
+	virtual double Rho() const;
 	static double ImpliedCorrelation(const std::string &indexName, const OptionChains &chains);
 	DispersionTrade& operator=(const DispersionTrade&);
 };

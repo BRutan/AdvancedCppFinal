@@ -20,12 +20,15 @@ private:
 public:
 	// Constructor/Destructor:
 	Trade(const std::shared_ptr<SecurityAttributes> attr);
-	Trade(const SecurityAttributes*);
 	virtual ~Trade();
 	// Accessors:
 	std::shared_ptr<SecurityAttributes> Attributes() const;
 	// Interface Methods:
-	virtual double CalculatePNL(const SecurityAttributes*) = 0;
+	virtual double CalculatePNL(const std::shared_ptr<SecurityAttributes>&) = 0;
+	virtual double Delta() const = 0;
+	virtual double Gamma() const = 0;
+	virtual double Theta() const = 0;
+	virtual double Vega() const = 0;
 	// Overloaded Operators:
 	Trade& operator=(const Trade&);
 };

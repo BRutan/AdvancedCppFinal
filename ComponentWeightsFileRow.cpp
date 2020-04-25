@@ -14,6 +14,10 @@ ComponentWeightsFileRow::~ComponentWeightsFileRow()
 
 }
 // Accessors:
+double ComponentWeightsFileRow::DividendYield() const
+{
+	return this->_DivYield;
+}
 const std::string& ComponentWeightsFileRow::Ticker() const
 {
 	return this->_Ticker;
@@ -28,17 +32,20 @@ void ComponentWeightsFileRow::ParseRow(const std::string& row)
 	std::istringstream row_str(row);
 	std::string cell;
 	std::size_t index = 0;
-	double weight;
-	while (std::getline(row_str, cell, ',') && index < 2)
+	double val;
+	while (std::getline(row_str, cell, ',') && index < 3)
 	{
+		std::istringstream str(cell);
 		switch (index)
 		{
 		case 0:
 			this->_Ticker = cell;
 			break;
 		case 1:
-			std::istringstream str(cell);
-			this->_Weight = ((str >> weight) ? weight : 0);
+			this->_Weight = ((str >> val) ? val : 0);
+			break;
+		case 2:
+			this->_DivYield = ((str >> val) ? val : 0);
 			break;
 		}
 		++index;

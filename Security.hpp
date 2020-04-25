@@ -30,12 +30,11 @@ public:
 	// Constructors/Destructor:
 	Security();
 	Security(const std::shared_ptr<SecurityAttributes>& attr);
-	Security(const SecurityAttributes*);
 	Security(const Security&);
 	virtual ~Security();
 	// Accessors:
 	virtual double Price() const = 0;
-	virtual double Price(const SecurityAttributes*) const = 0;
+	virtual double Price(const std::shared_ptr<SecurityAttributes>&) const = 0;
 	const std::shared_ptr<SecurityAttributes>& Attributes() const;
 	// Interface Methods:
 	virtual double Delta() const = 0;

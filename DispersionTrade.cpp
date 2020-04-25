@@ -72,7 +72,7 @@ DispersionTradeAttributes& DispersionTradeAttributes::operator=(const Dispersion
 // DispersionTrade definitions:
 /////////////////////
 // Constructors/Destructor:
-DispersionTrade::DispersionTrade(const DispersionTradeAttributes &attr) : Trade(&attr)
+DispersionTrade::DispersionTrade(const DispersionTradeAttributes &attr) : Trade(std::make_shared<DispersionTradeAttributes>(attr))
 {
 
 }
@@ -128,18 +128,57 @@ std::pair<DispersionTrade, double> DispersionTrade::OptimalDispersionTrade(const
 }
 double DispersionTrade::Delta() const
 {
-	double delta = 0;
 	auto attr = dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get());
-	delta += attr->IndexOption().Delta();
+	double delta = attr->IndexOption().Delta();
 	for (auto &constituent : attr->ConstituentOptions())
 	{
 		delta += constituent.second.first.Delta() * constituent.second.second;
 	}
 	return delta;
 }
+double DispersionTrade::Gamma() const
+{
+	auto attr = dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get());
+	double gamma = attr->IndexOption().Gamma();
+	for (auto &constituent : attr->ConstituentOptions())
+	{
+		gamma += constituent.second.first.Gamma() * constituent.second.second;
+	}
+	return gamma;
+}
+double DispersionTrade::Theta() const
+{
+	auto attr = dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get());
+	double theta = attr->IndexOption().Gamma();
+	for (auto &constituent : attr->ConstituentOptions())
+	{
+		theta += constituent.second.first.Theta() * constituent.second.second;
+	}
+	return theta;
+}
+double DispersionTrade::Vega() const
+{
+	auto attr = dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get());
+	double vega = attr->IndexOption().Vega();
+	for (auto &constituent : attr->ConstituentOptions())
+	{
+		vega += constituent.second.first.Vega() * constituent.second.second;
+	}
+	return vega;
+}
+double DispersionTrade::Rho() const
+{
+	auto attr = dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get());
+	double rho = attr->IndexOption().Rho();
+	for (auto &constituent : attr->ConstituentOptions())
+	{
+		rho += constituent.second.first.Rho() * constituent.second.second;
+	}
+	return rho;
+}
 double DispersionTrade::ImpliedCorrelation() const
 {
-	 std::size_t index = 0;
+	std::size_t index = 0;
 	double numerator = 0, denominator = 0;
 	double curr_risk_entry = 0, sub_risk_entry = 0, iv = 0;
 	auto attr = dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get());
@@ -167,6 +206,19 @@ double DispersionTrade::ImpliedCorrelation() const
 double DispersionTrade::ImpliedCorrelation(const std::string &indexName, const OptionChains &chains)
 {
 	return 0;
+}
+double DispersionTrade::CalculatePNL(const std::shared_ptr<SecurityAttributes> &attr)
+{
+	auto new_attr = dynamic_cast<const DispersionTradeAttributes*>(attr.get());
+	auto this_attr = dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get());
+	double index_price_diff = this_attr->IndexOption().Price() - new_attr->IndexOption().Price();
+	double constituent_price_diff = 0;
+	for (auto &constituent : this_attr->ConstituentOptions())
+	{
+		auto match = new_attr->ConstituentOptions().find(constituent.first);
+		constituent_price_diff += (constituent.second.first.Price() - match->second.first.Price()) * constituent.second.second;
+	}
+	return index_price_diff + constituent_price_diff;
 }
 DispersionTrade& DispersionTrade::operator=(const DispersionTrade &trade)
 {

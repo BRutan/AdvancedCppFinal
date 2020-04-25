@@ -5,12 +5,14 @@
 // OptionAttributes definitions:
 ////////////////////
 // Constructors/Destructor:
-OptionAttributes::OptionAttributes() : _IsCall(), SecurityAttributes(), _Strike(), _Price(), _ImpliedVol()
+OptionAttributes::OptionAttributes() : _IsCall(false), SecurityAttributes(), _Strike(0), _Price(0), _ImpliedVol(0), _TTM(0),
+	_DivYield(0)
 {
 
 }
-OptionAttributes::OptionAttributes(bool isCall, bool isLong, double tenor, const OptionChainRow& row) : _IsCall(isCall), SecurityAttributes(isLong),
-	_Strike(row.Strike()), _Price((isLong) ? row.Ask() : row.Bid()), _ImpliedVol(row.ImpliedVol()), _TTM(tenor) 
+OptionAttributes::OptionAttributes(bool isCall, bool isLong, double tenor, double divYield, const OptionChainRow& row) : 
+	_IsCall(isCall), SecurityAttributes(isLong), _Strike(row.Strike()), _Price((isLong) ? row.Ask() : row.Bid()), 
+	_ImpliedVol(row.ImpliedVol()), _TTM(tenor), _DivYield(divYield)
 {
 
 }
@@ -19,6 +21,10 @@ OptionAttributes::~OptionAttributes()
 
 }
 // Accessors:
+double OptionAttributes::DividendYield() const
+{
+	return this->_DivYield;
+}
 double OptionAttributes::Strike() const
 {
 	return this->_Strike;
@@ -40,6 +46,10 @@ bool OptionAttributes::IsCall() const
 	return this->_IsCall;
 }
 // Mutators:
+void OptionAttributes::DividendYield(double yield)
+{
+	this->_DivYield = yield;
+}
 void OptionAttributes::Strike(double strike)
 {
 	this->_Strike = strike;
@@ -65,6 +75,7 @@ OptionAttributes& OptionAttributes::operator=(const OptionAttributes &attr)
 {
 	if (this != &attr)
 	{
+		this->_DivYield = attr._DivYield;
 		this->_ImpliedVol = attr._ImpliedVol;
 		this->_IsCall = attr._IsCall;
 		this->_Long = attr._Long;
@@ -82,7 +93,7 @@ Option::Option() : Derivative()
 {
 
 }
-Option::Option(const OptionAttributes& attr) : Derivative(&attr)
+Option::Option(const OptionAttributes& attr) : Derivative(std::make_shared<OptionAttributes>(attr))
 {
 
 }
@@ -95,7 +106,7 @@ double Option::Price() const
 {
 	return dynamic_cast<OptionAttributes*>(this->Attributes().get())->Price();
 }
-double Option::Price(const SecurityAttributes* attr) const
+double Option::Price(const std::shared_ptr<SecurityAttributes>& attr) const
 {
 	return 0;
 }
@@ -107,43 +118,138 @@ double Option::ImpliedVolatility(const OptionAttributes &attr, double tol_approx
 }
 double Option::Delta() const
 {
+	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
+	if (attr->IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
 	return 0;
 }
 double Option::Gamma() const
 {
-	return 0;
+	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
+	double gamma = 0;
+	if (attr->IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return gamma;
 }
 double Option::Theta() const
 {
-	return 0;
+	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
+	double theta = 0;
+	if (attr->IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return theta;
 }
 double Option::Vega() const
 {
-	return 0;
+	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
+	double vega = 0;
+	if (attr->IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return vega;
 }
 double Option::Rho() const
 {
-	return 0;
+	auto attr = dynamic_cast<OptionAttributes*>(this->Attributes().get());
+	double rho = 0;
+	if (attr->IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return rho;
 }
-static double Delta(const OptionAttributes& attrs)
+// Static Methods:
+double Option::Delta(const OptionAttributes& attrs)
 {
-	return 0;
+	double delta = 0;
+	if (attrs.IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return delta;
 }
-static double Gamma(const OptionAttributes& attrs)
+double Option::Gamma(const OptionAttributes& attrs)
 {
-	return 0;
+	double gamma = 0;
+	if (attrs.IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return gamma;
 }
-static double Theta(const OptionAttributes& attrs)
+double Option::Theta(const OptionAttributes& attrs)
 {
-	return 0;
+	double theta = 0;
+	if (attrs.IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return theta;
 }
-static double Vega(const OptionAttributes& attrs)
+double Option::Vega(const OptionAttributes& attrs)
 {
-	return 0;
+	double vega = 0;
+	if (attrs.IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return vega;
 }
-static double Rho(const OptionAttributes& attrs)
+double Option::Rho(const OptionAttributes& attrs)
 {
-	return 0;
+	double rho = 0;
+	if (attrs.IsCall())
+	{
+
+	}
+	else
+	{
+
+	}
+	return rho;
 }
 // Overloaded Operators:
 Option& Option::operator=(const Option &opt) 

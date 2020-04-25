@@ -8,25 +8,27 @@
 class OptionAttributes : public SecurityAttributes
 {
 private:
-	double _Strike, _Price, _ImpliedVol, _TTM;
+	double _Strike, _Price, _ImpliedVol, _TTM, _DivYield;
 	bool _Long, _IsCall;
 public:
 	// Constructors/Destructor:
 	OptionAttributes();
-	OptionAttributes(bool isCall, bool isLong, double tenor, const OptionChainRow& row);
+	OptionAttributes(bool isCall, bool isLong, double tenor, double divYield, const OptionChainRow& row);
 	virtual ~OptionAttributes();
 	// Accessors:
+	double DividendYield() const;
+	double ImpliedVol() const;
+	bool IsCall() const;
 	double Price() const;
 	double Strike() const;
-	double ImpliedVol() const;
 	double TimeToMaturity() const;
-	bool IsCall() const;
 	// Mutators:
-	void Strike(double);
-	void Price(double);
+	void DividendYield(double);
 	void ImpliedVol(double);
-	void TimeToMaturity(double);
 	void IsCall(bool);
+	void Price(double);
+	void Strike(double);
+	void TimeToMaturity(double);
 	// Overloaded Operators:
 	OptionAttributes& operator=(const OptionAttributes&);
 };
@@ -40,7 +42,7 @@ public:
 	virtual ~Option();
 	// Accessors:
 	virtual double Price() const;
-	virtual double Price(const SecurityAttributes*) const;
+	virtual double Price(const std::shared_ptr<SecurityAttributes>&) const;
 	// Interface Functions:
 	virtual double Delta() const;
 	virtual double Gamma() const;

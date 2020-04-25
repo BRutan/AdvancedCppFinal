@@ -4,10 +4,6 @@ Trade::Trade(const std::shared_ptr<SecurityAttributes> attr) : _Attributes(attr)
 {
 
 }
-Trade::Trade(const SecurityAttributes* attr) : _Attributes(std::make_shared<SecurityAttributes>(attr))
-{
-
-}
 Trade::~Trade()
 {
 

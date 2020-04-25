@@ -5,11 +5,7 @@ Derivative::Derivative() : Security()
 {
 
 }
-Derivative::Derivative(const SecurityAttributes* attr) : Security(attr)
-{
-
-}
-Derivative::Derivative(const std::shared_ptr<SecurityAttributes> &attr) : Security(attr)
+Derivative::Derivative(const std::shared_ptr<SecurityAttributes>& attr) : Security(attr)
 {
 
 }

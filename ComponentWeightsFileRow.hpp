@@ -9,15 +9,16 @@ class ComponentWeightsFileRow : public FileRow
 {
 private:
 	std::string _Ticker;
-	double _Weight;
+	double _Weight, _DivYield;
 public:
 	// Constructors/Destructor:
 	ComponentWeightsFileRow(const std::string &row);
 	ComponentWeightsFileRow(const ComponentWeightsFileRow&);
 	virtual ~ComponentWeightsFileRow();
 	// Accessors:
-	const std::string& Ticker() const;
+	double DividendYield() const;
 	double Weight() const;
+	const std::string& Ticker() const;
 	// Mutators:
 	void ParseRow(const std::string& row);
 	// Overloaded Operators:
