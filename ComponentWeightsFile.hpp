@@ -14,19 +14,21 @@ class ComponentWeightsFile : public FileType
 {
 private:
 	static std::string _Headers;
+	std::string _IndexSymbol;
 	std::unordered_map<std::string, ComponentWeightsFileRow> _Tickers;
 public:
 	// Constructors/Destructor:
-	ComponentWeightsFile();
-	ComponentWeightsFile(const std::string &path);
+	ComponentWeightsFile(const std::string &indexSymbol);
+	ComponentWeightsFile(const std::string &indexSymbol, const std::string &path);
 	ComponentWeightsFile(const ComponentWeightsFile&);
 	virtual ~ComponentWeightsFile();
 	// Accessors:
 	const std::unordered_map<std::string, ComponentWeightsFileRow>& Tickers() const;
+	const std::string& IndexSymbol() const;
 	// Interface Methods:
 	virtual void ParseFile(const std::string &path);
-	std::pair<OptionChainPathGenerator, std::set<std::string>>
-		AllComponentsAvailable(OptionChainPathGenerator &gen, const std::string& indexSymbol) const;
+	std::pair<OptionChainPathGenerator, std::set<std::string>> 
+		AllComponentsAvailable(const OptionChainPathGenerator &gen, QuantLib::Date *afterDate = nullptr) const;
 	// Overloaded Operators:
 	ComponentWeightsFile& operator=(const ComponentWeightsFile&); 
 	friend std::ostream& operator<<(std::ostream &stream, const ComponentWeightsFile &file)

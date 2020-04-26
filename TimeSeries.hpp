@@ -129,7 +129,7 @@ public:
 		stream << '\n';
 		for (auto &line : series._Values)
 		{
-			stream << FileType::DateToString(line.first, '//') << line.second << '\n';
+			stream << FileType::DateToString(line.first, '//') << ',' << line.second << '\n';
 		}
 		return stream;
 	}

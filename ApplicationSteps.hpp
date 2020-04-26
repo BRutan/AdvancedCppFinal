@@ -16,6 +16,7 @@
 
 using AllChainMap = std::unordered_map<QuantLib::Date, std::unordered_map<QuantLib::Date, OptionChains, QDateHash>, QDateHash>;
 using SubChainMap = std::unordered_map<QuantLib::Date, OptionChains, QDateHash>;
+
 // Central application controller:
 class ApplicationSteps
 {
@@ -24,7 +25,9 @@ private:
 	std::string _AllChainFolder;
 	ComponentWeightsFile _WeightsFile;
 	// Map ValueDate -> ExpirationDate -> OptionChains:
-	AllChainMap _Chains;
+	AllChainMap _AllChains;
+	SubChainMap _ValueDateChains;
+	OptionChains _TradeChains;
 	OptionChainPathGenerator _Gen;
 	Portfolio _Portfolio;
 	PricingGUI _GUI;
@@ -33,6 +36,8 @@ private:
 	explicit ApplicationSteps(const ApplicationSteps&) = delete;
 	ApplicationSteps& operator=(const ApplicationSteps&) = delete;
 	void _GetAllOptionChains();
+	bool _GetOptionChains_ValueDate(const QuantLib::Date &valueDate);
+	bool _GetOptionChains_Expiry(const QuantLib::Date &expiry);
 	void _EnsureAllPathsPresent();
 public:
 	// Constructors/Destructor:
@@ -60,6 +65,5 @@ public:
 		this->_GUI.EndValueDate(dt);
 	}
 };
-
 
 #endif

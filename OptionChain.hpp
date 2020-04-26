@@ -19,8 +19,9 @@ private:
 	static std::string _HeaderString;
 public:
 	// Constructors/Destructor:
+	OptionChain();
 	OptionChain(const std::string &path);
-	OptionChain(const OptionChain &chain);
+	explicit OptionChain(const OptionChain &chain);
 	virtual ~OptionChain();
 	// Accessors:
 	const QuantLib::Date& ExpirationDate() const;

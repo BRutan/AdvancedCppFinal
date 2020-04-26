@@ -1,6 +1,38 @@
 #include "ApplicationSteps.hpp"
 
 // Private Functions:
+bool ApplicationSteps::_GetOptionChains_Expiry(const QuantLib::Date &expiry)
+{
+	OptionChainPathGenerator gen(this->_Gen);
+	gen.ExpirationDate(expiry);
+	if (!FileType::PathExists(gen.ExpirationDateFolder()))
+	{
+		return false;
+	}
+	this->_TradeChains = OptionChains(gen);
+	return true;
+}
+bool ApplicationSteps::_GetOptionChains_ValueDate(const QuantLib::Date &valueDate)
+{
+	OptionChainPathGenerator gen(this->_AllChainFolder);
+	gen.ValueDate(valueDate);
+	auto vdFolder = gen.ValueDateFolder();
+	if (FileType::PathExists(vdFolder))
+	{
+		// Pull all option chains for all expiration dates:
+		for (const auto &expDateFolder : std::filesystem::directory_iterator(vdFolder))
+		{
+			auto expDate = OptionChainPathGenerator::ExtractExpirationDate_Folder(expDateFolder.path().string());
+			gen.ExpirationDate(expDate);
+			this->_ValueDateChains.emplace(expDate, OptionChains(gen));
+		}
+	}
+	else
+	{
+		return false;
+	}
+	return true;
+}
 void ApplicationSteps::_GetAllOptionChains()
 {
 	// Pull all option chains for all value dates:
@@ -9,18 +41,18 @@ void ApplicationSteps::_GetAllOptionChains()
 	// Pull in option chains for value date:
 	while (valueDate <= this->_GUI.EndValueDate())
 	{
-		this->_Chains.emplace(valueDate, SubChainMap());
-		auto vdFolder = FileType::DateToString(valueDate, '_');
 		gen.ValueDate(valueDate);
-		auto fullPath = this->_AllChainFolder + "\\" + vdFolder;
-		if (FileType::PathExists(fullPath))
+		auto vdFolder = gen.ValueDateFolder();
+		if (FileType::PathExists(vdFolder))
 		{
-			// Pull all option chains for expiration date:
-			for (const auto &expDateFolder : std::filesystem::directory_iterator(fullPath))
+			// Pull all option chains for all expiration dates:
+			this->_AllChains.emplace(valueDate, SubChainMap());
+			// Pull in all chains for each expiration date (one OptionChains object per expiration date):
+			for (const auto &expDateFolder : std::filesystem::directory_iterator(vdFolder))
 			{
 				auto expDate = OptionChainPathGenerator::ExtractExpirationDate_Folder(expDateFolder.path().string());
 				gen.ExpirationDate(expDate);
-				this->_Chains[valueDate].emplace(expDate, OptionChains(gen));
+				this->_AllChains[valueDate].emplace(expDate, OptionChains(gen));
 			}
 		}
 		valueDate += 1;
@@ -51,7 +83,7 @@ void ApplicationSteps::_EnsureAllPathsPresent()
 }
 // Constructors/Destructor:
 ApplicationSteps::ApplicationSteps(const std::string &allChainFolder) : _AllChainFolder(allChainFolder),
-	_Chains(), _EquityTimeSeries(), _GUI(), _Gen(allChainFolder), _Portfolio(), _WeightsFile()
+	_AllChains(), _EquityTimeSeries(), _GUI(), _Gen(allChainFolder), _Portfolio(), _TradeChains(), _ValueDateChains(), _WeightsFile("^OEX")
 {
 
 }
@@ -79,31 +111,27 @@ void ApplicationSteps::AcquireAllData()
 	// Ensure all files and folders are present:
 	this->_EnsureAllPathsPresent();
 	// Parse all files used in application:
+	std::cout << "^OEX (S&P 100) tickers, weightings, dividend rates (SP_100.csv)..." << std::endl;
 	this->_WeightsFile.ParseFile("SP_100.csv");
+	std::cout << "^OEX and component time series..." << std::endl;
 	this->_EquityTimeSeries.ParseFile("TimeSeries.csv");
 	this->_Gen.ValueDate(this->_GUI.StartValueDate());
-	// Pull all option chains:
-	this->_GetAllOptionChains();
-	// **Testing: Print out all files:
-	std::ofstream out("WeightsFile_Out.csv");
-	out << this->_WeightsFile;
-	out.close();
-	std::ofstream out_2("TimeSeries_Out.csv");
-	out_2 << this->_EquityTimeSeries;
-	out_2.close();
-	
-
 }
 void ApplicationSteps::FindOptimalDispersionTrade()
 {
 	// Find expiration with greatest # of options available:
-	std::cout << "----- Finding optimal disperion trade for " << FileType::DateToString(this->_Gen.ValueDate(),'\\') << "----" << std::endl;
-	auto result = this->_WeightsFile.AllComponentsAvailable(this->_Gen, "^OEX");
+	std::cout << "----- Finding expiration with greatest # of component options for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << " value date----" << std::endl;
+	auto result = this->_WeightsFile.AllComponentsAvailable(this->_Gen, &QuantLib::Date(17, QuantLib::April, 2020));
 	std::cout << "Using expiration date: " << FileType::DateToString(result.first.ExpirationDate(), '\\') << std::endl;
 	std::cout << "with " << result.second.size() << " total options." << std::endl;
-	// Find the optimal strikes for the dispersion trade:
-	std::cout << "Optimal strike: " << std::endl;
+	std::cout << "----- Finding optimal disperion trade for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << "----" << std::endl;
+	
+	// Pull all option chains for expiration date:
 
+	// Find the optimal strikes for the dispersion trade:
+	//IndexDispersion::OptimalDispersionTrade(this->_Gen, );
+	std::cout << "Optimal strike: " << std::endl;
+	
 }
 void ApplicationSteps::CalculatePNLForTradePeriod()
 {

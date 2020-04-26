@@ -22,15 +22,15 @@ public:
 	OptionChains(const std::string &containerFolder = "");
 	OptionChains(const OptionChainPathGenerator &gen);
 	OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder = "");
-	OptionChains(const OptionChains&);
+	explicit OptionChains(const OptionChains&);
 	virtual ~OptionChains();
 	// Accessors:
 	const std::unordered_map<std::string, FileType*>& GetOptionChains() const;
 	bool HasOptionChain(const std::string &ticker) const;
 	const FileType* const GetOptionChain(const std::string &ticker) const;
 	// Mutators:
-	void ParseFiles(const std::vector<std::string> &tickers);
-	void ParseFiles(const QuantLib::Date &valueDate);
+	void ParseFiles(const std::vector<std::string> &tickers, const QuantLib::Date &expDate);
+	void ParseFiles(const QuantLib::Date &expDate);
 	// Overloaded Operators:
 	OptionChains& operator=(const OptionChains &chains);
 	friend std::ostream& operator<<(std::ostream &stream, const OptionChains &chains)

@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include "FileType.hpp"
+#include "OptionChainPathGenerator.hpp"
 
 class FileTypeContainer
 {
@@ -20,7 +21,7 @@ public:
 	// Accessors:
 	const std::unordered_map<std::string, FileType*>& Files() const;
 	// Interface Methods:
-	virtual void ParseFiles(const QuantLib::Date&) = 0;
+	virtual void ParseFiles(const QuantLib::Date &dt) = 0;
 	bool PathExists(const std::string &path) const;
 	// Overloaded Operators:
 	FileTypeContainer& operator=(const FileTypeContainer &cont);

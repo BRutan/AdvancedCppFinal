@@ -4,27 +4,30 @@
 #include <iostream>
 #include <filesystem>
 #include <ql/time/date.hpp>
+#include <ql/utilities/dataparsers.hpp>
 #include <sstream>
 #include <string>
+#include "FileType.hpp"
 
 class OptionChainPathGenerator
 {
 private:
 	static std::unordered_map<unsigned, QuantLib::Month> _MonthToEnum;
 	QuantLib::Date _ExpirationDate, _ValueDate;
-	std::string _ValueDateFolder, _ExpirationDateFolder, _ContainerFolder;
+	std::string _ContainerFolder;
 public:
 	// Constructors/Destructor:
 	OptionChainPathGenerator(const std::string &containerFolder = "");
 	OptionChainPathGenerator(const std::string &expDateFolder, const std::string &valueDateFolder, const std::string &containerFolder = "");
 	OptionChainPathGenerator(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder = "");
+	OptionChainPathGenerator(const OptionChainPathGenerator&);
 	virtual ~OptionChainPathGenerator();
 	// Accessors:
 	const std::string& ContainerFolder() const;
-	const std::string& ExpirationDateFolder() const;
+	std::string ExpirationDateFolder() const;
 	const QuantLib::Date& ExpirationDate() const;
 	const QuantLib::Date& ValueDate() const;
-	const std::string& ValueDateFolder() const;
+	std::string ValueDateFolder() const;
 	// Mutators:
 	void ContainerFolder(const std::string&);
 	void ExpirationDate(const QuantLib::Date&);
@@ -41,7 +44,7 @@ public:
 	bool PathExists(const std::string &ticker) const;
 	std::string TickerPath(const std::string &ticker) const;
 	// Overloaded Operators:
-	const OptionChainPathGenerator& operator=(const OptionChainPathGenerator&);
+	OptionChainPathGenerator& operator=(const OptionChainPathGenerator&);
 };
 
 #endif

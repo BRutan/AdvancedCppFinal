@@ -16,6 +16,10 @@ void OptionChain::_ExtractAttributes(const std::string &path)
 	this->_ExpDate = QuantLib::Date(day, FileType::MonthToEnum(month), year);
 }
 // Constructors/Destructor:
+OptionChain::OptionChain() : FileType(), _ExpDate(), _Ticker()
+{
+
+}
 OptionChain::OptionChain(const std::string &path) : FileType(), _ExpDate(), _Ticker()
 {
 	this->ParseFile(path);

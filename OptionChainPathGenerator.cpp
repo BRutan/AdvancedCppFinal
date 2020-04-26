@@ -15,18 +15,22 @@ std::unordered_map<unsigned, QuantLib::Month> OptionChainPathGenerator::_MonthTo
 
 // Constructors/Destructor:
 OptionChainPathGenerator::OptionChainPathGenerator(const std::string &containerFolder) : _ExpirationDate(), _ValueDate(),
-	_ExpirationDateFolder(), _ValueDateFolder(), _ContainerFolder(containerFolder)
+	_ContainerFolder(containerFolder)
 {
 
 }
 OptionChainPathGenerator::OptionChainPathGenerator(const std::string &expDateFolder, const std::string &valueDateFolder, const std::string &containerFolder) :
-	_ExpirationDateFolder(expDateFolder), _ValueDateFolder(valueDateFolder), _ContainerFolder(containerFolder)
+	_ContainerFolder(containerFolder)
 {
 
 }
 OptionChainPathGenerator::OptionChainPathGenerator(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder) :
-	_ExpirationDate(expDate), _ValueDate(valueDate), _ExpirationDateFolder(OptionChainPathGenerator::DateToString(expDate, '_')),
-	_ValueDateFolder(OptionChainPathGenerator::DateToString(valueDate,'_')), _ContainerFolder(containerFolder)
+	_ExpirationDate(expDate), _ValueDate(valueDate), _ContainerFolder(containerFolder)
+{
+
+}
+OptionChainPathGenerator::OptionChainPathGenerator(const OptionChainPathGenerator &chain) : _ExpirationDate(chain._ExpirationDate), 
+	_ValueDate(chain._ValueDate), _ContainerFolder(chain._ContainerFolder)
 {
 
 }
@@ -47,24 +51,26 @@ const QuantLib::Date& OptionChainPathGenerator::ValueDate() const
 {
 	return this->_ValueDate;
 }
-const std::string& OptionChainPathGenerator::ExpirationDateFolder() const
+std::string OptionChainPathGenerator::ExpirationDateFolder() const
 {
-	return this->_ValueDateFolder + this->_ExpirationDateFolder;
+	std::ostringstream stream(this->ValueDateFolder(), std::ios_base::ate);
+	stream << "exp_" << FileType::DateToString(this->_ExpirationDate, '_') << '\\';
+	return stream.str().c_str();
 }
-const std::string& OptionChainPathGenerator::ValueDateFolder() const
+std::string OptionChainPathGenerator::ValueDateFolder() const
 {
-	return this->_ContainerFolder + '\\' + this->_ValueDateFolder + '\\';
+	std::ostringstream stream(this->_ContainerFolder, std::ios_base::ate);
+	stream << '\\' << FileType::DateToString(this->_ValueDate, '_') << '\\';
+	return stream.str().c_str();
 }
 // Mutators:
 void OptionChainPathGenerator::ExpirationDate(const QuantLib::Date &exp)
 {
 	this->_ExpirationDate = exp;
-	this->_ExpirationDateFolder = OptionChainPathGenerator::DateToString(exp, '_');
 }
 void OptionChainPathGenerator::ValueDate(const QuantLib::Date &vd)
 {
 	this->_ValueDate = vd;
-	this->_ValueDateFolder = this->_ContainerFolder + OptionChainPathGenerator::DateToString(vd, '_');
 }
 void OptionChainPathGenerator::ContainerFolder(const std::string &folder)
 {
@@ -136,7 +142,7 @@ bool OptionChainPathGenerator::IsExpDate(const std::string &folderPath) const
 }
 std::string OptionChainPathGenerator::DateToString(const QuantLib::Date &dt, char delim)
 {
-	std::stringstream str;
+	std::ostringstream str(std::ios_base::app);
 	str << ((dt.month() < 10) ? "0" : "") << unsigned(dt.month()) << delim;
 	str << ((dt.dayOfMonth() < 10) ? "0" : "") << unsigned(dt.dayOfMonth()) << delim;
 	str << ((dt.year() < 1000) ? "0" : "") << unsigned(dt.year());
@@ -159,21 +165,20 @@ bool OptionChainPathGenerator::PathExists(const std::string &ticker) const
 }
 std::string OptionChainPathGenerator::TickerPath(const std::string &ticker) const
 {
-	std::stringstream s(this->_ValueDateFolder);
-	s << "\\" << this->_ExpirationDateFolder << "\\";
+	std::ostringstream s(this->_ContainerFolder, std::ios_base::ate);
+	s << this->ExpirationDateFolder();
 	s << ticker << "_" << OptionChainPathGenerator::DateToString(this->_ValueDate, '_') << "_";
 	s << OptionChainPathGenerator::DateToString(this->_ExpirationDate, '_') << ".csv";
-	return s.str();
+	return s.str().c_str();
 }
 // Overloaded Operators:
-const OptionChainPathGenerator& OptionChainPathGenerator::operator=(const OptionChainPathGenerator& oc)
+OptionChainPathGenerator& OptionChainPathGenerator::operator=(const OptionChainPathGenerator& oc)
 {
 	if (this != &oc)
 	{
+		this->_ContainerFolder = oc._ContainerFolder;
 		this->_ExpirationDate = oc._ExpirationDate;
-		this->_ExpirationDateFolder = oc._ExpirationDateFolder;
-		this->_ValueDate = oc._ValueDate;
-		this->_ValueDateFolder = oc._ValueDateFolder;
+		this->_ValueDate = oc._ValueDate;		
 	}
 	return *this;
 }

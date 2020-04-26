@@ -12,8 +12,10 @@ private:
 	double _Weight, _DivYield;
 public:
 	// Constructors/Destructor:
+	ComponentWeightsFileRow();
 	ComponentWeightsFileRow(const std::string &row);
 	ComponentWeightsFileRow(const ComponentWeightsFileRow&);
+	ComponentWeightsFileRow(const std::string &ticker, double weight, double yield);
 	virtual ~ComponentWeightsFileRow();
 	// Accessors:
 	double DividendYield() const;

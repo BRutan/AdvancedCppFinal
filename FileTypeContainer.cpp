@@ -25,10 +25,7 @@ const std::unordered_map<std::string, FileType*>& FileTypeContainer::Files() con
 // Interface Methods:
 bool FileTypeContainer::PathExists(const std::string &path) const
 {
-	if (!std::filesystem::exists(path))
-	{
-		throw std::exception("valueDateFolder does not exist.");
-	}
+	return std::filesystem::exists(path);
 }
 // Overloaded Operators:
 FileTypeContainer& FileTypeContainer::operator=(const FileTypeContainer &cont)

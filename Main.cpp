@@ -23,9 +23,9 @@ int main()
 	// ****
 	steps.AcquireAllData();
 	steps.FindOptimalDispersionTrade();
-	steps.CalculatePNLForTradePeriod();
-	steps.OutputFiles();
-	steps.PrintResultSummary();
+	//steps.CalculatePNLForTradePeriod();
+	//steps.OutputFiles();
+	//steps.PrintResultSummary();
 	/*
 	// Find expiration date where all components and index options are trading:
 	// 2) Determine trade that finds most out-of-line IndexDispersion 

@@ -57,10 +57,10 @@ std::string FileType::ValueDateStr() const
 }
 std::string FileType::DateToString(const QuantLib::Date &dt, char delim)
 {
-	std::stringstream str;
+	std::ostringstream str(std::ios_base::app);
 	str << ((unsigned(dt.month()) < 10) ? "0" : "") << unsigned(dt.month()) << delim;
-	str << ((dt.dayOfMonth() < 10) ? "0" : "") << dt.dayOfMonth() << delim;
-	str << ((dt.year() < 1000) ? "0" : "") << unsigned(dt.year());
+	str << ((unsigned(dt.dayOfMonth()) < 10) ? "0" : "") << dt.dayOfMonth() << delim;
+	str << ((unsigned(dt.year()) < 1000) ? "0" : "") << unsigned(dt.year());
 	return str.str().c_str();
 }
 QuantLib::Date FileType::StringToDate(const std::string &str, char delim)
