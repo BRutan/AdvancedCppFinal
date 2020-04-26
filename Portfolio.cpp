@@ -1,13 +1,15 @@
 #include "Portfolio.hpp"
 
+// Constructors/Destructor:
 Portfolio::Portfolio() : _Securities()
 {
 	
 }
-Portfolio::Portfolio(const Portfolio&)
+Portfolio::Portfolio(const Portfolio &port) : _Securities(port._Securities)
 {
 
 }
+// Interface Methods:
 double Portfolio::Price() const
 {
 	double price = 0;
@@ -74,6 +76,10 @@ double Portfolio::Rho() const
 		rho += entry.second->Rho();
 	}
 	return rho;
+}
+Portfolio Portfolio::CreateCopy() const
+{
+	return Portfolio(*this);
 }
 // Overloaded Operators:
 Portfolio& Portfolio::operator=(const Portfolio &port)

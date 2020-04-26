@@ -1,6 +1,7 @@
 /* Main.cpp
 Description:
-	*
+	* Query user to determine starting value date and ending value date.
+	Find expiration date with greatest number of 
 
 
 */
@@ -12,11 +13,21 @@ Description:
 #include <string>
 #include "ComponentWeightsFile.hpp"
 #include "IndexDispersion.hpp"
+#include "Option.hpp"
 #include "OptionChains.hpp"
+#include "PricingGUI.hpp"
+#include "TimeSeries.hpp"
 
 int main()
 {
-	QuantLib::Date ValueDate(8, QuantLib::April, 2020);
+	// Get start and end value date from user:
+	PricingGUI args;
+	args.DisplayStartScreen();
+	args.GetStartValueDate();
+	args.GetEndValueDate();
+	args.GetOutputPath();
+	auto ValueDate = args.StartValueDate();
+	// QuantLib::Date ValueDate(8, QuantLib::April, 2020);
 	OptionChainPathGenerator gen;
 	gen.ValueDate(ValueDate);
 	// 1) Pull in S&P 100 tickers and weights from local file:
@@ -40,10 +51,7 @@ int main()
 	
 	// 4) Calculate profit-and-loss, trade "greeks" for each available revalue date,
 	// Print to file:
-	OptionChains chains(result.first);
-	std::ofstream testFile("option_chains.csv");
-	testFile << chains;
-	testFile.close();
+	
 
 	return 0;
 }

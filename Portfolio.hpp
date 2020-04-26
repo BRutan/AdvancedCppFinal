@@ -20,6 +20,7 @@ public:
 	virtual double Theta() const;
 	virtual double Vega() const;
 	virtual double Rho() const;
+	Portfolio CreateCopy() const;
 	// Overloaded Operators:
 	Portfolio& operator=(const Portfolio&);
 };

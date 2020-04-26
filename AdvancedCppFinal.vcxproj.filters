@@ -173,6 +173,12 @@
     <ClInclude Include="IndexDispersion.hpp">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="TimeSeries.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeSeriesRow.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="04_08_2020.zip" />

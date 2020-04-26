@@ -177,6 +177,8 @@
     <ClInclude Include="OptionChains.hpp" />
     <ClInclude Include="Security.hpp" />
     <ClInclude Include="ComponentWeightsFile.hpp" />
+    <ClInclude Include="TimeSeries.hpp" />
+    <ClInclude Include="TimeSeriesRow.hpp" />
     <ClInclude Include="ZeroCurve.hpp" />
   </ItemGroup>
   <ItemGroup>

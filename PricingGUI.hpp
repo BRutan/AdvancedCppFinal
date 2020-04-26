@@ -10,7 +10,8 @@
 class PricingGUI
 {
 private:
-	QuantLib::Date _ValueDate;
+	QuantLib::Date _StartValueDate;
+	QuantLib::Date _EndValueDate;
 	std::string _OutputPath;
 	PricingGUI& operator=(const PricingGUI&) = delete;
 	PricingGUI(const PricingGUI&) = delete;
@@ -19,13 +20,15 @@ public:
 	PricingGUI();
 	virtual ~PricingGUI();
 	// Accessors:
-	const QuantLib::Date ValueDate() const;
+	const QuantLib::Date& StartValueDate() const;
+	const QuantLib::Date& EndValueDate() const;
 	const std::string& OutputPath() const;
 	// Mutators:
 	void GetOutputPath();
-	void GetValueDate();
+	void GetEndValueDate();
+	void GetStartValueDate();
+	// Interface Methods:
+	void DisplayStartScreen() const;
 };
-
-
 
 #endif
