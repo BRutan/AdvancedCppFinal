@@ -18,6 +18,7 @@ private:
 	std::string _IndexName;
 	Option _IndexOption;
 	std::unordered_map<std::string, std::pair<Option, double>> _ConstituentOptions;
+	void _SetAttributesCorrectly();
 public:
 	// Constructors/Destructor:
 	DispersionTradeAttributes();
@@ -51,6 +52,7 @@ public:
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
 	// Interface Methods:
 	double ImpliedCorrelation() const;
+	static double ImpliedCorrelation(const DispersionTradeAttributes &attr);
 	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs);
 	virtual double CalculatePNL(const std::shared_ptr<SecurityAttributes>&);
 	virtual double Delta() const;
@@ -58,7 +60,6 @@ public:
 	virtual double Theta() const;
 	virtual double Vega() const;
 	virtual double Rho() const;
-	static double ImpliedCorrelation(const std::string &indexName, const OptionChains &chains);
 	DispersionTrade& operator=(const DispersionTrade&);
 };
 

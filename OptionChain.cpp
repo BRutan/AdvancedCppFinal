@@ -10,17 +10,17 @@ void OptionChain::_ExtractAttributes(const std::string &path)
 	auto firstIDX = fileName.find_first_of('_');
 	FileType::_ExtractAttributes(firstIDX, fileName);
 	this->_Ticker = fileName.substr(0, firstIDX);
-	this->_ExpMonth = std::stoul(fileName.substr(firstIDX + 12, 2));
-	this->_ExpDay = std::stoul(fileName.substr(firstIDX + 15, 2));
-	this->_ExpYear = std::stoul(fileName.substr(firstIDX + 18, 4));
+	auto month = std::stoul(fileName.substr(firstIDX + 12, 2));
+	auto day = std::stoul(fileName.substr(firstIDX + 15, 2));
+	auto year = std::stoul(fileName.substr(firstIDX + 18, 4));
+	this->_ExpDate = QuantLib::Date(day, FileType::MonthToEnum(month), year);
 }
 // Constructors/Destructor:
-OptionChain::OptionChain(const std::string &path) : FileType(), _ExpYear(), _ExpMonth(), _ExpDay(), _Ticker()
+OptionChain::OptionChain(const std::string &path) : FileType(), _ExpDate(), _Ticker()
 {
 	this->ParseFile(path);
 }
-OptionChain::OptionChain(const OptionChain &chain) : FileType(&chain), _ExpYear(chain._ExpYear), _ExpMonth(chain._ExpMonth), 
-_ExpDay(chain._ExpDay),  _Ticker(chain._Ticker)
+OptionChain::OptionChain(const OptionChain &chain) : FileType(&chain), _ExpDate(chain._ExpDate), _Ticker(chain._Ticker)
 {
 	
 }
@@ -29,17 +29,9 @@ OptionChain::~OptionChain()
 
 }
 // Accessors:
-unsigned OptionChain::ExpYear() const
+const QuantLib::Date& OptionChain::ExpirationDate() const
 {
-	return this->_ExpYear;
-}
-unsigned OptionChain::ExpDay() const
-{
-	return this->_ExpDay;
-}
-unsigned OptionChain::ExpMonth() const
-{
-	return this->_ExpMonth;
+	return this->_ExpDate;
 }
 const std::string& OptionChain::Ticker() const
 {
@@ -64,11 +56,7 @@ void OptionChain::ParseFile(const std::string & filepath)
 		throw std::exception("Could not open file.");
 	}
 	// Calculate the option tenor in years:
-	double tenor = (this->_ExpYear - this->_ValYear);
-	if (this->_ExpMonth != this->_ValMonth)
-	{
-		//tenor += std::max(this->_ExpMonth - this->_ValMonth, 0) / 365.0;
-	}
+	double tenor = (QuantLib::Actual365Fixed().yearFraction(this->_ValueDate, this->_ExpDate));
 	std::string row;
 	std::getline(file, row);
 	while (!file.eof())
@@ -82,19 +70,14 @@ void OptionChain::ParseFile(const std::string & filepath)
 // Interface Methods:
 std::string OptionChain::ExpDateStr() const
 {
-	std::ostringstream out;
-	out << ((this->_ExpMonth < 10) ? "0" : "") << this->_ExpMonth << "//" <<
-		((this->_ExpDay < 10) ? "0" : "") << this->_ExpDay << "//" << this->_ExpYear;
-	return out.str();
+	return FileType::DateToString(this->_ExpDate, '//');
 }
 // Overloaded Operators:
 OptionChain& OptionChain::operator=(const OptionChain &chain)
 {
 	if (this != &chain)
 	{
-		this->_ExpDay = chain._ExpDay;
-		this->_ExpMonth = chain._ExpMonth;
-		this->_ExpYear = chain._ExpYear;
+		this->_ExpDate = chain._ExpDate;
 		this->_IsCalls = chain._IsCalls;
 		this->_Ticker = chain._Ticker;
 		FileType::operator=(chain);

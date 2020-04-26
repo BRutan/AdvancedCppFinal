@@ -1,9 +1,27 @@
 #include "DispersionTrade.hpp"
 
-///////////////////////
-// DispersionTradeAttributes definitions:
-///////////////////////
-// Constructors/Destructor:
+#pragma region DispersionTradeAttributes:
+#pragma region Private Methods:
+void DispersionTradeAttributes::_SetAttributesCorrectly()
+{
+	// Ensure that long/short attributes are set correctly:
+	// (if long index, short constituents, vice versa):
+	bool indexIsLong = this->_IndexOption.Attributes()->IsLong();
+	bool constIsLong = !indexIsLong;
+	auto attr = dynamic_cast<OptionAttributes*>(this->_IndexOption.Attributes().get());
+	attr->IsLong(indexIsLong);
+	const std::shared_ptr<OptionAttributes> ptr(attr);
+	this->_IndexOption.SetAttributes(ptr);
+	for (auto &pair : this->_ConstituentOptions)
+	{
+		auto attr = dynamic_cast<OptionAttributes*>(pair.second.first.Attributes().get());
+		attr->IsLong(constIsLong);
+		const std::shared_ptr<OptionAttributes> ptr(attr);
+		pair.second.first.SetAttributes(ptr);
+	}
+}
+#pragma endregion
+#pragma region Constructors/Destructor:
 DispersionTradeAttributes::DispersionTradeAttributes() : _IndexName(), _IndexOption(), _ConstituentOptions(), DerivativeAttributes()
 {
 
@@ -12,24 +30,22 @@ DispersionTradeAttributes::DispersionTradeAttributes(bool isLong, const std::str
 	const std::unordered_map<std::string, std::pair<Option, double>> constitutentOptions, const QuantLib::Date &settle, const QuantLib::Date &exp) : _IndexName(indexName),
 	_IndexOption(indexOption), _ConstituentOptions(constitutentOptions), DerivativeAttributes(isLong, settle, exp)
 {
-	// Ensure that long/short attributes are set correctly:
-	// (if long index, short constituents, vice versa):
-	if (isLong)
-	{
-		
-	}
-
+	this->_IndexOption.Attributes()->IsLong(isLong);
+	// Ensure attributes set correctly:
+	this->_SetAttributesCorrectly();
 }
 DispersionTradeAttributes::DispersionTradeAttributes(const DispersionTradeAttributes &attr) : _IndexName(attr._IndexName),
 	_IndexOption(attr._IndexOption), _ConstituentOptions(attr._ConstituentOptions), DerivativeAttributes(attr)
 {
-
+	// Ensure attributes set correctly:
+	this->_SetAttributesCorrectly();
 }
 DispersionTradeAttributes::~DispersionTradeAttributes()
 {
 
 }
-// Accessors:
+#pragma endregion
+#pragma region Accessors
 const std::string& DispersionTradeAttributes::IndexName() const
 {
 	return this->_IndexName;
@@ -42,10 +58,13 @@ const std::unordered_map<std::string, std::pair<Option, double>>& DispersionTrad
 {
 	return this->_ConstituentOptions;
 }
-// Mutators:
+#pragma endregion
+#pragma region Mutators
 void DispersionTradeAttributes::ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>> &constits)
 {
 	this->_ConstituentOptions = constits;
+	// Ensure attributes set correctly:
+	this->_SetAttributesCorrectly();
 }
 void DispersionTradeAttributes::IndexName(const std::string& indexName)
 {
@@ -54,8 +73,11 @@ void DispersionTradeAttributes::IndexName(const std::string& indexName)
 void DispersionTradeAttributes::IndexOption(const Option& indexOpt)
 {
 	this->_IndexOption = indexOpt;
+	// Ensure attributes set correctly:
+	this->_SetAttributesCorrectly();
 }
-// Overloaded Operators:
+#pragma endregion
+#pragma region Overloaded Operators
 DispersionTradeAttributes& DispersionTradeAttributes::operator=(const DispersionTradeAttributes &attr)
 {
 	if (this != &attr)
@@ -67,11 +89,10 @@ DispersionTradeAttributes& DispersionTradeAttributes::operator=(const Dispersion
 	}
 	return *this;
 }
-
-/////////////////////
-// DispersionTrade definitions:
-/////////////////////
-// Constructors/Destructor:
+#pragma endregion
+#pragma endregion
+#pragma region DispersionTrade
+#pragma region Constructors/Destructor
 DispersionTrade::DispersionTrade(const DispersionTradeAttributes &attr) : Trade(std::make_shared<DispersionTradeAttributes>(attr))
 {
 
@@ -84,7 +105,8 @@ DispersionTrade::~DispersionTrade()
 {
 
 }
-// Accessors:
+#pragma endregion
+#pragma region Accessors
 const std::string& DispersionTrade::IndexName() const
 {
 	return dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get())->IndexName();
@@ -97,7 +119,8 @@ const std::unordered_map<std::string, std::pair<Option, double>>& DispersionTrad
 {
 	return dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get())->ConstituentOptions();
 }
-// Interface Methods:
+#pragma endregion
+#pragma region Interface Methods
 std::pair<DispersionTrade, double> DispersionTrade::OptimalDispersionTrade(const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs)
 {
 	OptionChains allchains(gen);
@@ -107,7 +130,7 @@ std::pair<DispersionTrade, double> DispersionTrade::OptimalDispersionTrade(const
 	double maxAbsImpCorr = 0, currImpCorr = 0;
 	for (auto &row : indexChain->Data())
 	{
-		auto converted = dynamic_cast<OptionChainRow*>(row.second);		
+		auto converted = dynamic_cast<OptionChainRow*>(row.second);
 		currImpCorr = 0;
 		for (auto &constituentChain : attrs.ConstituentOptions())
 		{
@@ -116,14 +139,17 @@ std::pair<DispersionTrade, double> DispersionTrade::OptimalDispersionTrade(const
 		if (std::abs(currImpCorr) > maxAbsImpCorr)
 		{
 			maxAbsImpCorr = std::abs(currImpCorr);
-			// Strategy goes long the index option, short the components if the 
-			// 
 			bool isLong = currImpCorr < 0;
 		}
 	}
 	// Generate trade using optimal strikes:
 	DispersionTrade trade(attrs);
 	return std::make_pair(trade, maxAbsImpCorr);
+}
+double DispersionTrade::ImpliedCorrelation(const DispersionTradeAttributes &attr)
+{
+	// Find the maximum absolute correlation:
+	return 0;
 }
 double DispersionTrade::Delta() const
 {
@@ -202,13 +228,13 @@ double DispersionTrade::ImpliedCorrelation() const
 	double indexCorr = dynamic_cast<OptionAttributes*>(attr->IndexOption().Attributes().get())->ImpliedVol();
 	return (indexCorr - numerator) / denominator;
 }
-double DispersionTrade::ImpliedCorrelation(const std::string &indexName, const OptionChains &chains)
-{
-	return 0;
-}
 double DispersionTrade::CalculatePNL(const std::shared_ptr<SecurityAttributes> &attr)
 {
 	auto new_attr = dynamic_cast<const DispersionTradeAttributes*>(attr.get());
+	if (new_attr == nullptr)
+	{
+		throw std::exception("DispersionTrade::CalculatePNL(): attr is not a DispersionTradeAttributes object.");
+	}
 	auto this_attr = dynamic_cast<DispersionTradeAttributes*>(this->Attributes().get());
 	double index_price_diff = this_attr->IndexOption().Price() - new_attr->IndexOption().Price();
 	double constituent_price_diff = 0;
@@ -219,6 +245,8 @@ double DispersionTrade::CalculatePNL(const std::shared_ptr<SecurityAttributes> &
 	}
 	return index_price_diff + constituent_price_diff;
 }
+#pragma endregion
+#pragma region Overloaded Operators
 DispersionTrade& DispersionTrade::operator=(const DispersionTrade &trade)
 {
 	if (this != &trade)
@@ -227,3 +255,5 @@ DispersionTrade& DispersionTrade::operator=(const DispersionTrade &trade)
 	}
 	return *this;
 }
+#pragma endregion
+#pragma endregion

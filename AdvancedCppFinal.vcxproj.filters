@@ -96,6 +96,12 @@
     <ClCompile Include="TradeFactory.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="PricingGUI.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Portfolio.cpp">
+      <Filter>Source Files\Assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Equity.hpp">

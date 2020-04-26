@@ -144,6 +144,8 @@
     <ClCompile Include="OptionChainPathGenerator.cpp" />
     <ClCompile Include="OptionChainRow.cpp" />
     <ClCompile Include="OptionChains.cpp" />
+    <ClCompile Include="Portfolio.cpp" />
+    <ClCompile Include="PricingGUI.cpp" />
     <ClCompile Include="Security.cpp" />
     <ClCompile Include="Stats.cpp" />
     <ClCompile Include="StockPricesFileRow.cpp" />

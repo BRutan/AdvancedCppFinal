@@ -21,7 +21,9 @@ public:
 	Equity(const EquityAttributes&);
 	Equity(const Equity&);
 	virtual ~Equity();
+	// Accessors:
 
+	// Mutators:
 
 	// Overloaded Operator:
 	Equity& operator=(const Equity&);

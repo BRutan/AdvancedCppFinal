@@ -37,11 +37,14 @@ public:
 	Security(const Security&);
 	virtual ~Security();
 	// Accessors:
-	virtual double Price() const = 0;
-	virtual double Price(const std::shared_ptr<SecurityAttributes>&) const = 0;
 	const std::shared_ptr<SecurityAttributes>& Attributes() const;
 	// Interface Methods:
+	virtual double Price() const = 0;
 	virtual double Delta() const = 0;
+	virtual double Gamma() const = 0;
+	virtual double Theta() const = 0;
+	virtual double Vega() const = 0;
+	virtual double Rho() const = 0;
 	// Overloaded Operators:
 	Security& operator=(const Security&);
 };

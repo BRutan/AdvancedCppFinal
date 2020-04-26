@@ -2,6 +2,8 @@
 #define OPTIONCHAIN_HPP
 
 #include <fstream>
+#include <ql/time/date.hpp>
+#include <ql/time/daycounters/all.hpp>
 #include <string>
 #include <unordered_map>
 #include "OptionChainRow.hpp"
@@ -10,7 +12,7 @@
 class OptionChain : public FileType
 {
 private:
-	unsigned _ExpYear, _ExpMonth, _ExpDay;
+	QuantLib::Date _ExpDate;
 	std::string _Ticker;
 	bool _IsCalls;
 	void _ExtractAttributes(const std::string &path);
@@ -21,9 +23,7 @@ public:
 	OptionChain(const OptionChain &chain);
 	virtual ~OptionChain();
 	// Accessors:
-	unsigned ExpYear() const;
-	unsigned ExpDay() const;
-	unsigned ExpMonth() const;
+	const QuantLib::Date& ExpirationDate() const;
 	const std::string& Ticker() const;
 	// Mutators:
 	void ParseFile(const std::string & filepath);

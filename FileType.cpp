@@ -1,28 +1,27 @@
 #include "FileType.hpp"
 
-/*
-double FileType::DateSerial(double dt)
-{
-	double a = (14 - dt.Month) / 12;
-	double m = dt.Month + 12 * a - 3;
-	double y = dt.Year + 4800 - a;
 
-}*/
+std::unordered_map<unsigned, QuantLib::Month> FileType::_MonthToEnum =
+{
+	{1, QuantLib::January},{2, QuantLib::February},{3, QuantLib::March},{4, QuantLib::April},
+	{5, QuantLib::May},{6, QuantLib::June},{7, QuantLib::July},{8, QuantLib::August},
+	{9, QuantLib::September},{10, QuantLib::October},{11, QuantLib::November},{12, QuantLib::December}
+};
 
 // Private Helpers:
 void FileType::_ExtractAttributes(std::size_t firstIDX, const std::string &fileName)
 {
-	this->_ValMonth = std::stoul(fileName.substr(firstIDX + 1, 2));
-	this->_ValDay = std::stoul(fileName.substr(firstIDX + 4, 2));
-	this->_ValYear = std::stoul(fileName.substr(firstIDX + 7, 4));
+	auto month = std::stoul(fileName.substr(firstIDX + 1, 2));
+	auto day = std::stoul(fileName.substr(firstIDX + 4, 2));
+	auto year = std::stoul(fileName.substr(firstIDX + 7, 4));
+	this->_ValueDate = QuantLib::Date(day, FileType::_MonthToEnum[month], year);
 }
 // Constructors/Destructor:
-FileType::FileType() : _Data(), _ValYear(), _ValDay(), _ValMonth()
+FileType::FileType() : _Data(), _ValueDate()
 {
 
 }
-FileType::FileType(const FileType * const file) : _Data(file->_Data), _ValYear(file->_ValYear), 
-	_ValDay(file->_ValDay), _ValMonth(file->_ValMonth)
+FileType::FileType(const FileType * const file) : _Data(file->_Data), _ValueDate(file->_ValueDate)
 {
 
 }
@@ -39,17 +38,9 @@ std::size_t FileType::NumRows() const
 {
 	return this->_Data.size();
 }
-unsigned FileType::ValueYear() const
+const QuantLib::Date& FileType::ValueDate() const
 {
-	return this->_ValYear;
-}
-unsigned FileType::ValueMonth() const
-{
-	return this->_ValMonth;
-}
-unsigned FileType::ValueDay() const
-{
-	return this->_ValDay;
+	return this->_ValueDate;
 }
 const std::unordered_map<double, FileRow*> FileType::Data() const
 {
@@ -62,19 +53,37 @@ bool FileType::PathExists(const std::string &path) const
 }
 std::string FileType::ValueDateStr() const
 {
-	std::ostringstream out;
-	out << ((this->_ValMonth < 10) ? "0" : "") << this->_ValMonth << "//" <<
-		((this->_ValDay < 10) ? "0" : "") << this->_ValDay << "//" << this->_ValYear;
-	return out.str();
+	return FileType::DateToString(this->_ValueDate,'//');
+}
+std::string FileType::DateToString(const QuantLib::Date dt, char delim)
+{
+	std::stringstream str;
+	str << ((dt.month() < 10) ? "0" : "") << dt.month() << delim;
+	str << ((dt.dayOfMonth() < 10) ? "0" : "") << dt.dayOfMonth() << delim;
+	str << ((dt.year() < 1000) ? "0" : "") << dt.year();
+	return str.str();
+}
+QuantLib::Date FileType::StringToDate(const std::string &str, char delim)
+{
+	// Expecing MM<delim>DD<delim>YYYY:
+	auto index = str.find_first_of(delim);
+	unsigned month = std::stoul(str.substr(index, 2));
+	index = str.find_first_of(delim, index);
+	QuantLib::Integer day = std::stoul(str.substr(index, 2));
+	index = str.find_first_of(delim, index);
+	QuantLib::Integer year = std::stoul(str.substr(index, 2));
+	return QuantLib::Date(day, FileType::_MonthToEnum[month], year);
+}
+QuantLib::Month FileType::MonthToEnum(unsigned month)
+{
+	return FileType::_MonthToEnum[month];
 }
 // Overloaded Operators:
 FileType& FileType::operator=(const FileType * const file)
 {
 	if (this != file)
 	{
-		this->_ValDay = file->_ValDay;
-		this->_ValMonth = file->_ValMonth;
-		this->_ValYear = file->_ValYear;
+		this->_ValueDate = file->_ValueDate;
 		this->_Data = file->_Data;
 	}
 	return *this;

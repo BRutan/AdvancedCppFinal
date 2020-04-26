@@ -67,7 +67,8 @@ public:
 	virtual ~Option();
 	// Accessors:
 	virtual double Price() const;
-	virtual double Price(const std::shared_ptr<SecurityAttributes>&) const;
+	// Mutators:
+	void SetAttributes(const std::shared_ptr<OptionAttributes>& attr);
 	// Interface Functions:
 	virtual double Delta() const;
 	virtual double Gamma() const;

@@ -2,6 +2,7 @@
 #define FILETYPE_HPP
 
 #include <filesystem>
+#include <ql/time/date.hpp>
 #include <string>
 #include <sstream>
 #include <unordered_map>
@@ -10,8 +11,9 @@
 class FileType
 {
 protected:
+	static std::unordered_map<unsigned, QuantLib::Month> _MonthToEnum;
 	std::unordered_map<double, FileRow*> _Data;
-	unsigned _ValYear, _ValMonth, _ValDay;
+	QuantLib::Date _ValueDate;
 	void _ExtractAttributes(std::size_t firstIDX, const std::string &fileName);
 public:
 	// Constructors/Destructor:
@@ -21,16 +23,16 @@ public:
 	virtual ~FileType();
 	// Accessors:
 	std::size_t NumRows() const;
-	unsigned ValueYear() const;
-	unsigned ValueMonth() const;
-	unsigned ValueDay() const;
+	const QuantLib::Date& ValueDate() const;
 	const std::unordered_map<double, FileRow*> Data() const;
 	// Mutators:
 	virtual void ParseFile(const std::string &path) = 0;
 	// Interface Methods:
 	virtual bool PathExists(const std::string &path) const;
 	std::string ValueDateStr() const;
-	static double DateSerial(double);
+	static QuantLib::Month MonthToEnum(unsigned month);
+	static std::string DateToString(const QuantLib::Date dt, char delim);
+	static QuantLib::Date StringToDate(const std::string &str, char delim);
 	// Overloaded Operators:
 	FileType& operator=(const FileType * const file);
 	friend std::ostream& operator<<(std::ostream &stream, const FileType *file)

@@ -141,6 +141,11 @@ double Option::Price(const std::shared_ptr<SecurityAttributes>& attr) const
 	auto opt_attr = dynamic_cast<OptionAttributes*>(attr.get());
 	return Option::GenerateOptionObj(*opt_attr).NPV();
 }
+// Mutators:
+void Option::SetAttributes(const std::shared_ptr<OptionAttributes>& attr)
+{
+	this->_Attributes = attr;
+}
 // Interface Functions:
 double Option::ImpliedVolatility(const OptionAttributes &attr, double tol_approx, double tol_consec)
 {
