@@ -9,10 +9,9 @@
 #include "ComponentWeightsFileRow.hpp"
 #include "Option.hpp"
 #include "OptionChains.hpp"
-#include "Trade.hpp"
 #include "Security.hpp"
 
-class DispersionTradeAttributes : public DerivativeAttributes
+class IndexDispersionAttributes : public DerivativeAttributes
 {
 private:
 	std::string _IndexName;
@@ -21,12 +20,12 @@ private:
 	void _SetAttributesCorrectly();
 public:
 	// Constructors/Destructor:
-	DispersionTradeAttributes();
-	DispersionTradeAttributes(bool isLong, const std::string& indexName, const Option& indexOption,
+	IndexDispersionAttributes();
+	IndexDispersionAttributes(bool isLong, const std::string& indexName, const Option& indexOption,
 		const std::unordered_map<std::string, std::pair<Option, double>> ConstitutentOptions, 
 		const QuantLib::Date &settle, const QuantLib::Date &exp);
-	DispersionTradeAttributes(const DispersionTradeAttributes&);
-	virtual ~DispersionTradeAttributes();
+	IndexDispersionAttributes(const IndexDispersionAttributes&);
+	virtual ~IndexDispersionAttributes();
 	// Accessors:
 	const std::string& IndexName() const;
 	const Option& IndexOption() const;
@@ -36,31 +35,31 @@ public:
 	void IndexName(const std::string&);
 	void IndexOption(const Option&);
 	// Overloaded Operators:
-	DispersionTradeAttributes& operator=(const DispersionTradeAttributes&);
+	IndexDispersionAttributes& operator=(const IndexDispersionAttributes&);
 };
 
-class DispersionTrade : public Trade
+class IndexDispersion : public Derivative
 {
 public:
 	// Constructors/Destructor:
-	DispersionTrade(const DispersionTradeAttributes&);
-	DispersionTrade(const DispersionTrade&);
-	virtual ~DispersionTrade();
+	IndexDispersion(const IndexDispersionAttributes&);
+	IndexDispersion(const IndexDispersion&);
+	virtual ~IndexDispersion();
 	// Accessors:
 	const std::string& IndexName() const;
 	const Option& IndexOption() const;
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
 	// Interface Methods:
 	double ImpliedCorrelation() const;
-	static double ImpliedCorrelation(const DispersionTradeAttributes &attr);
-	static std::pair<DispersionTrade, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, const DispersionTradeAttributes &attrs);
-	virtual double CalculatePNL(const std::shared_ptr<SecurityAttributes>&);
+	static double ImpliedCorrelation(const IndexDispersionAttributes &attr);
+	static std::pair<IndexDispersion, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, const IndexDispersionAttributes &attrs);
+	virtual double Price() const;
 	virtual double Delta() const;
 	virtual double Gamma() const;
 	virtual double Theta() const;
 	virtual double Vega() const;
 	virtual double Rho() const;
-	DispersionTrade& operator=(const DispersionTrade&);
+	IndexDispersion& operator=(const IndexDispersion&);
 };
 
 #endif

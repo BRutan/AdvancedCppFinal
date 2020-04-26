@@ -136,11 +136,6 @@ double Option::Price() const
 {
 	return dynamic_cast<OptionAttributes*>(this->Attributes().get())->Price();
 }
-double Option::Price(const std::shared_ptr<SecurityAttributes>& attr) const
-{
-	auto opt_attr = dynamic_cast<OptionAttributes*>(attr.get());
-	return Option::GenerateOptionObj(*opt_attr).NPV();
-}
 // Mutators:
 void Option::SetAttributes(const std::shared_ptr<OptionAttributes>& attr)
 {

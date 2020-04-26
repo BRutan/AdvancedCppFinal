@@ -134,7 +134,7 @@
     <ClCompile Include="BondFile.cpp" />
     <ClCompile Include="BondFileRow.cpp" />
     <ClCompile Include="Derivative.cpp" />
-    <ClCompile Include="DispersionTrade.cpp" />
+    <ClCompile Include="IndexDispersion.cpp" />
     <ClCompile Include="FileRow.cpp" />
     <ClCompile Include="FileType.cpp" />
     <ClCompile Include="FileTypeContainer.cpp" />
@@ -151,15 +151,13 @@
     <ClCompile Include="StockPricesFileRow.cpp" />
     <ClCompile Include="ComponentWeightsFile.cpp" />
     <ClCompile Include="ComponentWeightsFileRow.cpp" />
-    <ClCompile Include="Trade.cpp" />
-    <ClCompile Include="TradeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bond.hpp" />
     <ClInclude Include="BondFile.hpp" />
     <ClInclude Include="BondFileRow.hpp" />
     <ClInclude Include="Derivative.hpp" />
-    <ClInclude Include="DispersionTrade.hpp" />
+    <ClInclude Include="IndexDispersion.hpp" />
     <ClInclude Include="Equity.hpp" />
     <ClInclude Include="EquityIndex.hpp" />
     <ClInclude Include="FileRow.hpp" />
@@ -179,7 +177,6 @@
     <ClInclude Include="OptionChains.hpp" />
     <ClInclude Include="Security.hpp" />
     <ClInclude Include="ComponentWeightsFile.hpp" />
-    <ClInclude Include="Trade.hpp" />
     <ClInclude Include="ZeroCurve.hpp" />
   </ItemGroup>
   <ItemGroup>

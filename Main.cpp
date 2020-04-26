@@ -11,7 +11,7 @@ Description:
 #include <fstream>
 #include <string>
 #include "ComponentWeightsFile.hpp"
-#include "DispersionTrade.hpp"
+#include "IndexDispersion.hpp"
 #include "OptionChains.hpp"
 
 int main()
@@ -24,9 +24,9 @@ int main()
 	ComponentWeightsFile tickerFile("SP_100.csv");
 	// Find expiration date where all components and index options are trading:
 	auto result = tickerFile.AllComponentsAvailable(gen, indexName);
-	// 2) Determine trade that finds most out-of-line DispersionTrade 
+	// 2) Determine trade that finds most out-of-line IndexDispersion 
 	// (implied correlation outside of [-1, 1], or highest absolute correlation):
-	DispersionTradeAttributes attrs;
+	IndexDispersionAttributes attrs;
 	attrs.IndexName(indexName);
 	attrs.IndexOption(Option());
 	std::unordered_map<std::string, std::pair<Option, double>> constituents;
@@ -35,7 +35,7 @@ int main()
 		constituents.emplace(entry.second.Ticker(), std::make_pair(Option(), entry.second.Weight()));
 	}
 	attrs.ConstituentOptions(constituents);
-	auto optimal_trade = DispersionTrade::OptimalDispersionTrade(result.first, attrs);
+	auto optimal_trade = IndexDispersion::OptimalDispersionTrade(result.first, attrs);
 	// 3) Pull in option chains for optimal value date:
 	
 	// 4) Calculate profit-and-loss, trade "greeks" for each available revalue date,

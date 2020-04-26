@@ -3,7 +3,6 @@
 
 #include <unordered_map>
 #include "Derivative.hpp"
-#include "Trade.hpp"
 
 class Portfolio : Derivative
 {

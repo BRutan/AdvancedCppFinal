@@ -4,7 +4,6 @@
 #include <ql/time/date.hpp>
 #include "BondFile.hpp"
 #include "Security.hpp"
-#include "Trade.hpp"
 
 class BondAttributes : SecurityAttributes
 {
