@@ -47,7 +47,7 @@ const std::unordered_map<double, FileRow*> FileType::Data() const
 	return this->_Data;
 }
 // Interface Methods:
-bool FileType::PathExists(const std::string &path) const
+bool FileType::PathExists(const std::string &path)
 {
 	return std::filesystem::exists(path);
 }
@@ -58,20 +58,19 @@ std::string FileType::ValueDateStr() const
 std::string FileType::DateToString(const QuantLib::Date dt, char delim)
 {
 	std::stringstream str;
-	str << ((dt.month() < 10) ? "0" : "") << dt.month() << delim;
+	str << ((unsigned(dt.month()) < 10) ? "0" : "") << unsigned(dt.month()) << delim;
 	str << ((dt.dayOfMonth() < 10) ? "0" : "") << dt.dayOfMonth() << delim;
-	str << ((dt.year() < 1000) ? "0" : "") << dt.year();
-	return str.str();
+	str << ((dt.year() < 1000) ? "0" : "") << unsigned(dt.year());
+	return str.str().c_str();
 }
 QuantLib::Date FileType::StringToDate(const std::string &str, char delim)
 {
-	// Expecing MM<delim>DD<delim>YYYY:
-	auto index = str.find_first_of(delim);
-	unsigned month = std::stoul(str.substr(index, 2));
-	index = str.find_first_of(delim, index);
-	QuantLib::Integer day = std::stoul(str.substr(index, 2));
-	index = str.find_first_of(delim, index);
-	QuantLib::Integer year = std::stoul(str.substr(index, 2));
+	// Expecing MM or M<delim>DD or D<delim>YYYY or YY:
+	unsigned firstIndex = str.find_first_of(delim);
+	unsigned middleIndex = str.find_first_of(delim, firstIndex + 1);
+	QuantLib::Integer month = std::stoul(str.substr(0, std::min<unsigned>(firstIndex, 2)));
+	QuantLib::Integer day = std::stoul(str.substr(firstIndex + 1, std::min<unsigned>(middleIndex - firstIndex - 1, 2)));
+	QuantLib::Integer year = std::stoul(str.substr(middleIndex + 1, std::max<unsigned>(str.size() - middleIndex - 1, 2)));
 	return QuantLib::Date(day, FileType::_MonthToEnum[month], year);
 }
 QuantLib::Month FileType::MonthToEnum(unsigned month)

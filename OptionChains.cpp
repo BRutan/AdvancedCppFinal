@@ -1,5 +1,10 @@
 #include "OptionChains.hpp"
 
+// Constructors/Destructor:
+OptionChains::OptionChains() : FileTypeContainer(), _Generator()
+{
+
+}
 OptionChains::OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate) :
 	_Generator(expDate,valueDate), FileTypeContainer()
 {
@@ -9,6 +14,10 @@ OptionChains::OptionChains(const OptionChainPathGenerator &gen) :
 	_Generator(gen), FileTypeContainer()
 {
 	this->ParseFiles(this->_Generator.ValueDateFolder());
+}
+OptionChains::OptionChains(const OptionChains &chain) : FileTypeContainer(chain), _Generator(chain._Generator)
+{
+
 }
 OptionChains::~OptionChains()
 {

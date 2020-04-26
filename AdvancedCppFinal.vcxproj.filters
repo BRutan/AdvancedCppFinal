@@ -96,6 +96,9 @@
     <ClCompile Include="IndexDispersion.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationSteps.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Equity.hpp">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="TimeSeriesRow.hpp">
       <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationSteps.hpp">
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,13 +17,14 @@ private:
 	std::unordered_map<std::string, ComponentWeightsFileRow> _Tickers;
 public:
 	// Constructors/Destructor:
+	ComponentWeightsFile();
 	ComponentWeightsFile(const std::string &path);
 	ComponentWeightsFile(const ComponentWeightsFile&);
 	virtual ~ComponentWeightsFile();
 	// Accessors:
 	const std::unordered_map<std::string, ComponentWeightsFileRow>& Tickers() const;
 	// Interface Methods:
-	void ParseFile(const std::string &path);
+	virtual void ParseFile(const std::string &path);
 	std::pair<OptionChainPathGenerator, std::set<std::string>>
 		AllComponentsAvailable(const OptionChainPathGenerator &gen, const std::string& indexSymbol) const;
 	// Overloaded Operators:

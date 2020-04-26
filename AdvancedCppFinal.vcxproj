@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ApplicationSteps.cpp" />
     <ClCompile Include="Bond.cpp" />
     <ClCompile Include="BondFile.cpp" />
     <ClCompile Include="BondFileRow.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="ComponentWeightsFileRow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ApplicationSteps.hpp" />
     <ClInclude Include="Bond.hpp" />
     <ClInclude Include="BondFile.hpp" />
     <ClInclude Include="BondFileRow.hpp" />

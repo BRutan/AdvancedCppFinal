@@ -41,7 +41,7 @@ void PricingGUI::GetEndValueDate()
 {
 	// Request end value date user via stdin:
 	std::string dateStr;
-	std::cout << "Please enter final value date for dispersion trade (MM//DD//YYYY):" << std::endl;
+	std::cout << "Please enter final value date for dispersion trade (MM/DD/YYYY):" << std::endl;
 	std::cin >> dateStr;
 	/*
 	// Ensure date is valid:
@@ -56,7 +56,7 @@ void PricingGUI::GetStartValueDate()
 {
 	// Request start value date user via stdin:
 	std::string dateStr;
-	std::cout << "Please enter initial trade date for dispersion trade (MM//DD//YYYY):" << std::endl;
+	std::cout << "Please enter initial trade date for dispersion trade (MM/DD/YYYY):" << std::endl;
 	std::cin >> dateStr;
 	/*
 	// Ensure date is valid:

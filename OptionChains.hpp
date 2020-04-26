@@ -19,8 +19,10 @@ private:
 	OptionChainPathGenerator _Generator;
 public:
 	// Constructors/Destructor:
+	OptionChains();
 	OptionChains(const OptionChainPathGenerator &gen);
 	OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate);
+	OptionChains(const OptionChains&);
 	virtual ~OptionChains();
 	// Accessors:
 	const std::unordered_map<std::string, FileType*>& GetOptionChains() const;
@@ -33,7 +35,7 @@ public:
 	OptionChains& operator=(const OptionChains &chains);
 	friend std::ostream& operator<<(std::ostream &stream, const OptionChains &chains)
 	{
-		stream << "ExpirationDate: " << OptionChainPathGenerator::DateToString(chains._Generator.ExpirationDate(),'\\') << '\n';
+		stream << "ExpirationDate: " << OptionChainPathGenerator::DateToString(chains._Generator.ExpirationDate(),'//') << '\n';
 		for (auto &chain_pair : chains._Files)
 		{
 			stream << "Ticker: " << chain_pair.first << '\n';

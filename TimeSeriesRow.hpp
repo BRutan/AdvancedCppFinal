@@ -34,14 +34,12 @@ public:
 		double val;
 		unsigned long col = 0;
 		std::string cell;
-		while (col <= numcols && std::getline(str, cell, ','))
+		std::getline(str, cell, ',');
+		while (col < numcols && std::getline(str, cell, ','))
 		{
-			if (col != 0)
-			{
-				std::istringstream parse(cell);
-				this->_Values[col - 1] = (parse >> val) ? val : 0;
-				++col;
-			}
+			std::istringstream parse(cell);
+			this->_Values[col] = (parse >> val) ? val : 0;
+			++col;	
 		}
 	}
 	// Overloaded Operators:

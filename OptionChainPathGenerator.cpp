@@ -131,12 +131,11 @@ std::string OptionChainPathGenerator::DateToString(const QuantLib::Date dt, char
 QuantLib::Date OptionChainPathGenerator::StringToDate(const std::string &str, char delim)
 {
 	// Expecing MM<delim>DD<delim>YYYY:
-	auto index = str.find_first_of(delim);
-	unsigned month = std::stoul(str.substr(index, 2));
-	index = str.find_first_of(delim, index);
-	QuantLib::Integer day = std::stoul(str.substr(index, 2));
-	index = str.find_first_of(delim, index);
-	QuantLib::Integer year = std::stoul(str.substr(index, 2));
+	unsigned month = std::stoul(str.substr(0, 2));
+	auto index = str.find_first_of(delim, 0);
+	QuantLib::Integer day = std::stoul(str.substr(index + 1, 2));
+	index = str.find_first_of(delim, index + 1);
+	QuantLib::Integer year = std::stoul(str.substr(index + 1, 4));
 	return QuantLib::Date(day, OptionChainPathGenerator::_MonthToEnum[month], year);
 }
 

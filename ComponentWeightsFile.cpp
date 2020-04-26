@@ -2,6 +2,10 @@
 
 
 // Constructors/Destructor:
+ComponentWeightsFile::ComponentWeightsFile() : _Tickers()
+{
+
+}
 ComponentWeightsFile::ComponentWeightsFile(const std::string &path) : _Tickers()
 {
 	this->ParseFile(path);

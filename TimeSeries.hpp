@@ -8,13 +8,21 @@
 #include "FileType.hpp"
 #include "TimeSeriesRow.hpp"
 
+struct QDateHash
+{
+	size_t operator()(const QuantLib::Date& dte) const
+	{
+		return std::hash<int>{}(dte.serialNumber());
+	}
+};
+
 template<unsigned long numcols>
 class TimeSeries
 {
 private:
 	std::string _Symbols[numcols];
 	std::unordered_map<std::string, unsigned long> _SymbolsToColumnNum;
-	std::unordered_map<QuantLib::Date, TimeSeriesRow<numcols>> _Values;
+	std::unordered_map<QuantLib::Date, TimeSeriesRow<numcols>, QDateHash> _Values;
 public:
 	// Constructors/Destructor:
 	TimeSeries()
@@ -34,7 +42,7 @@ public:
 	{
 		return this->_Values.count();
 	}
-	const std::string const * Symbols() const
+	const std::string * const Symbols() const
 	{
 		return this->_Symbols;
 	}
@@ -49,7 +57,7 @@ public:
 		unsigned long col = 0;
 		while (col < numcols)
 		{
-			output[this->_Symbols[col]] = this->_Values[col];
+			output.emplace(this->_Symbols[col], this->_Values[col]);
 		}
 		return output;
 	}
@@ -71,7 +79,7 @@ public:
 		{
 			throw std::exception("Could not open file at path.");
 		}
-		if (this->_Values.count())
+		if (this->_Values.size())
 		{
 			this->_Values.clear();
 			this->_SymbolsToColumnNum.clear();
@@ -87,8 +95,12 @@ public:
 			{
 				// Get all data:
 				std::getline(str, cell,',');
+				if (cell.size() <= 1)
+				{
+					break;
+				}
 				dt = FileType::StringToDate(cell, '//');
-				this->_Values[dt] = TimeSeriesRow<numcols>(line);
+				this->_Values.emplace(dt, TimeSeriesRow<numcols>(line));
 			}
 			else
 			{
@@ -96,14 +108,15 @@ public:
 				std::getline(str,cell,',');
 				while (col < numcols)
 				{
-					std::getline(str, cell);
+					std::getline(str, cell, ',');
 					this->_Symbols[col] = cell;
-					this->_SymbolsToColumnNum[cell] = col;
+					this->_SymbolsToColumnNum.emplace(cell, col);
 					++col;
 				}
 			}
 			++row;
 		}
+		file.close();
 	}
 	// Overloaded Operators:
 	friend std::ostream& operator<<(std::ostream &stream, const TimeSeries &series)
@@ -115,7 +128,7 @@ public:
 		stream << '\n';
 		for (auto &line : series._Values)
 		{
-			stream << FileType::DateToString(line.first, '\\') << line.second << '\n';
+			stream << FileType::DateToString(line.first, '//') << line.second << '\n';
 		}
 		return stream;
 	}
