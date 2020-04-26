@@ -19,9 +19,9 @@ private:
 	OptionChainPathGenerator _Generator;
 public:
 	// Constructors/Destructor:
-	OptionChains();
+	OptionChains(const std::string &containerFolder = "");
 	OptionChains(const OptionChainPathGenerator &gen);
-	OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate);
+	OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder = "");
 	OptionChains(const OptionChains&);
 	virtual ~OptionChains();
 	// Accessors:
@@ -30,7 +30,7 @@ public:
 	const FileType* const GetOptionChain(const std::string &ticker) const;
 	// Mutators:
 	void ParseFiles(const std::vector<std::string> &tickers);
-	void ParseFiles(const std::string &valueDateFolder);
+	void ParseFiles(const QuantLib::Date &valueDate);
 	// Overloaded Operators:
 	OptionChains& operator=(const OptionChains &chains);
 	friend std::ostream& operator<<(std::ostream &stream, const OptionChains &chains)

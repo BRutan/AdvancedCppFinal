@@ -121,6 +121,7 @@ public:
 	// Overloaded Operators:
 	friend std::ostream& operator<<(std::ostream &stream, const TimeSeries &series)
 	{	
+		stream << "Date,";
 		for (unsigned long col = 0; col < numcols; ++col)
 		{
 			stream << series._Symbols[col] << ((col + 1 != numcols) ? "," : "");

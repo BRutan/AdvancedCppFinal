@@ -13,7 +13,7 @@
 class ComponentWeightsFile : public FileType
 {
 private:
-	// All unique tickers in file:
+	static std::string _Headers;
 	std::unordered_map<std::string, ComponentWeightsFileRow> _Tickers;
 public:
 	// Constructors/Destructor:
@@ -26,9 +26,18 @@ public:
 	// Interface Methods:
 	virtual void ParseFile(const std::string &path);
 	std::pair<OptionChainPathGenerator, std::set<std::string>>
-		AllComponentsAvailable(const OptionChainPathGenerator &gen, const std::string& indexSymbol) const;
+		AllComponentsAvailable(OptionChainPathGenerator &gen, const std::string& indexSymbol) const;
 	// Overloaded Operators:
 	ComponentWeightsFile& operator=(const ComponentWeightsFile&); 
+	friend std::ostream& operator<<(std::ostream &stream, const ComponentWeightsFile &file)
+	{
+		stream << ComponentWeightsFile::_Headers << '\n';
+		for (auto &entry : file._Tickers)
+		{
+			stream << entry.second << '\n';
+		}
+		return stream;
+	}
 };
 
 #endif

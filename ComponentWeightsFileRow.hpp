@@ -23,6 +23,11 @@ public:
 	void ParseRow(const std::string& row);
 	// Overloaded Operators:
 	ComponentWeightsFileRow& operator=(const ComponentWeightsFileRow &row);
+	friend std::ostream& operator<<(std::ostream &stream, const ComponentWeightsFileRow &row)
+	{
+		stream << row._Ticker << ',' << row._Weight << ',' << row._DivYield;
+		return stream;
+	}
 };
 
 #endif

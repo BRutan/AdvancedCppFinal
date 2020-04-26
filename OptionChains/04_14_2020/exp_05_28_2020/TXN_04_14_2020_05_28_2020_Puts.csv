@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,TXN200529P00119000,1586451619,119.0,11.51,11.65,12.4,0.0,0.0,10,10,0.43140217041015627,True,REGULAR,USD

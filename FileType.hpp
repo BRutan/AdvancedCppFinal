@@ -31,7 +31,7 @@ public:
 	static bool PathExists(const std::string &path);
 	std::string ValueDateStr() const;
 	static QuantLib::Month MonthToEnum(unsigned month);
-	static std::string DateToString(const QuantLib::Date dt, char delim);
+	static std::string DateToString(const QuantLib::Date &dt, char delim);
 	static QuantLib::Date StringToDate(const std::string &str, char delim);
 	// Overloaded Operators:
 	FileType& operator=(const FileType * const file);

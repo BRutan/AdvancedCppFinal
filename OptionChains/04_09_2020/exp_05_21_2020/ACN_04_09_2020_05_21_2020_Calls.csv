@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,ACN200522C00140000,1585939816,140.0,17.89,37.1,41.9,0.0,0.0,1,1,0.5574995422363282,True,REGULAR,USD

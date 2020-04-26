@@ -1,7 +1,7 @@
 #include "ComponentWeightsFileRow.hpp"
 
 // Constructors/Destructor:
-ComponentWeightsFileRow::ComponentWeightsFileRow(const std::string &row) : _Ticker(), _Weight()
+ComponentWeightsFileRow::ComponentWeightsFileRow(const std::string &row) : _Ticker(), _Weight(), _DivYield()
 {
 	this->ParseRow(row);
 }

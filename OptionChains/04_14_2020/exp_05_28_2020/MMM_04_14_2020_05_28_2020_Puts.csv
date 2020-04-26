@@ -1,0 +1,3 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,MMM200529P00144000,1586459631,144.0,7.9,5.45,7.85,0.0,0.0,5,5,0.5117236328125,False,REGULAR,USD
+1,MMM200529P00147000,1586455312,147.0,10.0,6.5,9.05,0.0,0.0,5,5,0.5020191400146485,False,REGULAR,USD

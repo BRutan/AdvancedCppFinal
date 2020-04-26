@@ -1,0 +1,3 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,COF200522C00041500,1586193988,41.5,10.7,17.7,22.2,0.0,0.0,1,1,1.0210009887695315,True,REGULAR,USD
+1,COF200522C00042500,1586193716,42.5,9.5,16.8,21.35,0.0,0.0,1,0,1.0029346728515625,True,REGULAR,USD

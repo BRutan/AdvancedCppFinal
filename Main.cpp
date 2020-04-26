@@ -13,21 +13,21 @@ Description:
 int main()
 {
 	// Get start and end value date from user:
-	ApplicationSteps steps;
-	steps.GetArgumentsFromUser();
+	ApplicationSteps steps("OptionChains");
+	steps.DisplayStartScreen();
+	//steps.GetArgumentsFromUser();
+	// **Testing 
+	steps.OutputPath("Results");
+	steps.StartValueDate(QuantLib::Date(9, QuantLib::Month::April, 2020));
+	steps.EndValueDate(QuantLib::Date(25, QuantLib::Month::April, 2020));
+	// ****
 	steps.AcquireAllData();
 	steps.FindOptimalDispersionTrade();
 	steps.CalculatePNLForTradePeriod();
 	steps.OutputFiles();
 	steps.PrintResultSummary();
 	/*
-	OptionChainPathGenerator gen;
-	gen.ValueDate(ValueDate);
-	// 1) Pull in S&P 100 tickers and weights from local file:
-	std::string indexName("^OEX");
-	ComponentWeightsFile tickerFile("SP_100.csv");
 	// Find expiration date where all components and index options are trading:
-	auto result = tickerFile.AllComponentsAvailable(gen, indexName);
 	// 2) Determine trade that finds most out-of-line IndexDispersion 
 	// (implied correlation outside of [-1, 1], or highest absolute correlation):
 	IndexDispersionAttributes attrs;

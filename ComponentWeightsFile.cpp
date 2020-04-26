@@ -1,5 +1,6 @@
 #include "ComponentWeightsFile.hpp"
 
+std::string ComponentWeightsFile::_Headers = "Symbol,Weights,DividendRate";
 
 // Constructors/Destructor:
 ComponentWeightsFile::ComponentWeightsFile() : _Tickers()
@@ -47,7 +48,7 @@ void ComponentWeightsFile::ParseFile(const std::string &path)
 }
 
 std::pair<OptionChainPathGenerator, std::set<std::string>>
-	ComponentWeightsFile::AllComponentsAvailable(const OptionChainPathGenerator &gen, const std::string& indexSymbol) const
+	ComponentWeightsFile::AllComponentsAvailable(OptionChainPathGenerator &gen, const std::string& indexSymbol) const
 {
 	// Search for expiration date folder(s) where all components have options trading
 	// or the greatest number of options trading:
@@ -67,7 +68,8 @@ std::pair<OptionChainPathGenerator, std::set<std::string>>
 		}
 		if (curr_tickers.find(indexSymbol) != curr_tickers.end() && curr_tickers.size() > output.second.size())
 		{
-			OptionChainPathGenerator gen(expDateFolder.path().string(), vdFolder);
+			auto expDate = OptionChainPathGenerator::ExtractExpirationDate_Folder(expDateFolder.path().string());
+			gen.ExpirationDate(expDate);
 			output = std::make_pair(gen, curr_tickers);
 		}
 	}

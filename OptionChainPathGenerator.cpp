@@ -14,19 +14,19 @@ std::unordered_map<unsigned, QuantLib::Month> OptionChainPathGenerator::_MonthTo
 };
 
 // Constructors/Destructor:
-OptionChainPathGenerator::OptionChainPathGenerator() : _ExpirationDate(), _ValueDate(), 
-	_ExpirationDateFolder(), _ValueDateFolder()
+OptionChainPathGenerator::OptionChainPathGenerator(const std::string &containerFolder) : _ExpirationDate(), _ValueDate(),
+	_ExpirationDateFolder(), _ValueDateFolder(), _ContainerFolder(containerFolder)
 {
 
 }
-OptionChainPathGenerator::OptionChainPathGenerator(const std::string &expDateFolder, const std::string &valueDateFolder) :
-	_ExpirationDateFolder(expDateFolder), _ValueDateFolder(valueDateFolder)
+OptionChainPathGenerator::OptionChainPathGenerator(const std::string &expDateFolder, const std::string &valueDateFolder, const std::string &containerFolder) :
+	_ExpirationDateFolder(expDateFolder), _ValueDateFolder(valueDateFolder), _ContainerFolder(containerFolder)
 {
 
 }
-OptionChainPathGenerator::OptionChainPathGenerator(const QuantLib::Date &expDate, const QuantLib::Date &valueDate) :
+OptionChainPathGenerator::OptionChainPathGenerator(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder) :
 	_ExpirationDate(expDate), _ValueDate(valueDate), _ExpirationDateFolder(OptionChainPathGenerator::DateToString(expDate, '_')),
-	_ValueDateFolder(OptionChainPathGenerator::DateToString(valueDate,'_'))
+	_ValueDateFolder(OptionChainPathGenerator::DateToString(valueDate,'_')), _ContainerFolder(containerFolder)
 {
 
 }
@@ -35,6 +35,10 @@ OptionChainPathGenerator::~OptionChainPathGenerator()
 
 }
 // Accessors:
+const std::string& OptionChainPathGenerator::ContainerFolder() const
+{
+	return this->_ContainerFolder;
+}
 const QuantLib::Date& OptionChainPathGenerator::ExpirationDate() const
 {
 	return this->_ExpirationDate;
@@ -45,29 +49,26 @@ const QuantLib::Date& OptionChainPathGenerator::ValueDate() const
 }
 const std::string& OptionChainPathGenerator::ExpirationDateFolder() const
 {
-	return this->_ExpirationDateFolder;
+	return this->_ValueDateFolder + this->_ExpirationDateFolder;
 }
 const std::string& OptionChainPathGenerator::ValueDateFolder() const
 {
-	return this->_ValueDateFolder;
+	return this->_ContainerFolder + '\\' + this->_ValueDateFolder + '\\';
 }
 // Mutators:
 void OptionChainPathGenerator::ExpirationDate(const QuantLib::Date &exp)
 {
 	this->_ExpirationDate = exp;
+	this->_ExpirationDateFolder = OptionChainPathGenerator::DateToString(exp, '_');
 }
 void OptionChainPathGenerator::ValueDate(const QuantLib::Date &vd)
 {
 	this->_ValueDate = vd;
+	this->_ValueDateFolder = this->_ContainerFolder + OptionChainPathGenerator::DateToString(vd, '_');
 }
-void OptionChainPathGenerator::ExpirationDateFolder(const std::string &expf)
+void OptionChainPathGenerator::ContainerFolder(const std::string &folder)
 {
-	this->_ExpirationDateFolder = expf;
-	this->_ExpirationDate = OptionChainPathGenerator::StringToDate(expf, '_');
-}
-void OptionChainPathGenerator::ValueDateFolder(const std::string &vdf)
-{
-	this->_ValueDateFolder = vdf;
+	this->_ContainerFolder = folder;
 }
 // Interface Methods:
 std::string OptionChainPathGenerator::ExtractTicker(const std::string &chainpath)
@@ -76,7 +77,20 @@ std::string OptionChainPathGenerator::ExtractTicker(const std::string &chainpath
 	auto filepath = (index != chainpath.npos) ? chainpath.substr(index + 1) : chainpath;
 	return filepath.substr(0, filepath.find_first_of('_'));
 }
-QuantLib::Date OptionChainPathGenerator::ExtractExpirationDate(const std::string &chainpath)
+QuantLib::Date OptionChainPathGenerator::ExtractExpirationDate_Folder(const std::string &chainpath)
+{
+	auto index = chainpath.rfind('\\');
+	std::string fileName((index != chainpath.npos) ? chainpath.substr(index + 1) : chainpath);
+	// OptionChainFolders have format exp_<ExpMonth>_<ExpDay>_<ExpYear>:
+	index = fileName.find_first_of('_');
+	unsigned month = std::stoul(fileName.substr(index + 1, 2));
+	index = fileName.find_first_of('_', index + 1);
+	QuantLib::Integer day = std::stoul(fileName.substr(index + 1, 2));
+	index = fileName.find_first_of('_', index + 1);
+	QuantLib::Integer year = std::stoul(fileName.substr(index + 1, 4));
+	return QuantLib::Date(day, OptionChainPathGenerator::_MonthToEnum[month], year);
+}
+QuantLib::Date OptionChainPathGenerator::ExtractExpirationDate_Chain(const std::string &chainpath)
 {
 	auto index = chainpath.rfind('\\');
 	std::string fileName((index != chainpath.npos) ? chainpath.substr(index + 1) : chainpath);
@@ -120,13 +134,13 @@ bool OptionChainPathGenerator::IsExpDate(const std::string &folderPath) const
 	}
 	return false;
 }
-std::string OptionChainPathGenerator::DateToString(const QuantLib::Date dt, char delim)
+std::string OptionChainPathGenerator::DateToString(const QuantLib::Date &dt, char delim)
 {
 	std::stringstream str;
-	str << ((dt.month() < 10) ? "0" : "") << dt.month() << delim;
-	str << ((dt.dayOfMonth() < 10) ? "0" : "") << dt.dayOfMonth() << delim;
-	str << ((dt.year() < 1000) ? "0" : "") << dt.year();
-	return str.str();
+	str << ((dt.month() < 10) ? "0" : "") << unsigned(dt.month()) << delim;
+	str << ((dt.dayOfMonth() < 10) ? "0" : "") << unsigned(dt.dayOfMonth()) << delim;
+	str << ((dt.year() < 1000) ? "0" : "") << unsigned(dt.year());
+	return str.str().c_str();
 }
 QuantLib::Date OptionChainPathGenerator::StringToDate(const std::string &str, char delim)
 {

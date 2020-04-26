@@ -1,6 +1,7 @@
 #ifndef FILETYPECONTAINER_HPP
 #define FILETYPECONTAINER_HPP
 
+#include <ql/time/date.hpp>
 #include <filesystem>
 #include <string>
 #include <unordered_map>
@@ -19,8 +20,8 @@ public:
 	// Accessors:
 	const std::unordered_map<std::string, FileType*>& Files() const;
 	// Interface Methods:
-	virtual void ParseFiles(const std::string&) = 0;
-	virtual bool PathExists(const std::string &path) const;
+	virtual void ParseFiles(const QuantLib::Date&) = 0;
+	bool PathExists(const std::string &path) const;
 	// Overloaded Operators:
 	FileTypeContainer& operator=(const FileTypeContainer &cont);
 };

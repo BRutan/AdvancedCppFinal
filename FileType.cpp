@@ -55,7 +55,7 @@ std::string FileType::ValueDateStr() const
 {
 	return FileType::DateToString(this->_ValueDate,'//');
 }
-std::string FileType::DateToString(const QuantLib::Date dt, char delim)
+std::string FileType::DateToString(const QuantLib::Date &dt, char delim)
 {
 	std::stringstream str;
 	str << ((unsigned(dt.month()) < 10) ? "0" : "") << unsigned(dt.month()) << delim;

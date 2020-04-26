@@ -1,19 +1,19 @@
 #include "OptionChains.hpp"
 
 // Constructors/Destructor:
-OptionChains::OptionChains() : FileTypeContainer(), _Generator()
+OptionChains::OptionChains(const std::string &containerFolder) : FileTypeContainer(), _Generator(containerFolder)
 {
 
 }
-OptionChains::OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate) :
-	_Generator(expDate,valueDate), FileTypeContainer()
+OptionChains::OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder) :
+	_Generator(expDate,valueDate,containerFolder), FileTypeContainer()
 {
-	this->ParseFiles(this->_Generator.ValueDateFolder());
+	this->ParseFiles(this->_Generator.ValueDate());
 }
 OptionChains::OptionChains(const OptionChainPathGenerator &gen) : 
 	_Generator(gen), FileTypeContainer()
 {
-	this->ParseFiles(this->_Generator.ValueDateFolder());
+	this->ParseFiles(this->_Generator.ValueDate());
 }
 OptionChains::OptionChains(const OptionChains &chain) : FileTypeContainer(chain), _Generator(chain._Generator)
 {
@@ -57,15 +57,16 @@ void OptionChains::ParseFiles(const std::vector<std::string> &tickers)
 		}
 	}
 }
-void OptionChains::ParseFiles(const std::string &valueDateFolder)
+void OptionChains::ParseFiles(const QuantLib::Date &valueDate)
 {
 	// Pull all option chains in value date folder for given
 	// expiration date:
+	this->_Generator.ValueDate(valueDate);
+	auto valueDateFolder = this->_Generator.ValueDateFolder();
 	if (!this->PathExists(valueDateFolder))
 	{
 		throw std::exception("valueDateFolder does not exist");
 	}
-	this->_Generator.ValueDateFolder(valueDateFolder);
 	// Parse all option chains in the folder matching the expiration
 	// date:
 	for (const auto &entry : std::filesystem::directory_iterator(valueDateFolder))

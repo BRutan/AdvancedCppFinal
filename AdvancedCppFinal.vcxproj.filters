@@ -185,6 +185,9 @@
     <ClInclude Include="ApplicationSteps.hpp">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="TradeGenerator.hpp">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="04_08_2020.zip" />

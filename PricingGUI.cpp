@@ -73,3 +73,27 @@ void PricingGUI::DisplayStartScreen() const
 	std::cout << "^OEX Dispersion Trade PNL Generator" << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 }
+void PricingGUI::DisplayExceptionMessages(const std::vector<std::string> &messages, bool exitApp) const
+{
+	std::ostringstream out(std::ios_base::ate);
+	for (auto &msg : messages)
+	{
+		out << msg << '\n';
+	}
+	auto str = out.str().c_str();
+	std::cerr << str << std::endl;
+	std::cout << "Closing Application..." << std::endl;
+	if (exitApp)
+	{
+		exit(1);
+	}
+}
+void PricingGUI::DisplayExceptionMessage(const std::string &message, bool exitApp) const
+{
+	std::cerr << message << std::endl;
+	std::cout << "Closing Application..." << std::endl;
+	if (exitApp)
+	{
+		exit(1);
+	}
+}

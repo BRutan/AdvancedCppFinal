@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,CHTR200522C00430000,1586789932,430.0,49.1,70.2,76.5,0.0,0.0,1,0,0.5427596994018556,True,REGULAR,USD

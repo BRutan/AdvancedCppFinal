@@ -27,8 +27,23 @@ public:
 	void GetOutputPath();
 	void GetEndValueDate();
 	void GetStartValueDate();
+	// ** Testing:
+	void OutputPath(const std::string&path)
+	{
+		this->_OutputPath = path;
+	}
+	void StartValueDate(const QuantLib::Date &dt)
+	{
+		this->_StartValueDate = dt;
+	}
+	void EndValueDate(const QuantLib::Date &dt)
+	{
+		this->_EndValueDate = dt;
+	}
 	// Interface Methods:
 	void DisplayStartScreen() const;
+	void DisplayExceptionMessage(const std::string &message, bool exitApp = false) const;
+	void DisplayExceptionMessages(const std::vector<std::string> &messages, bool exitApp) const;
 };
 
 #endif
