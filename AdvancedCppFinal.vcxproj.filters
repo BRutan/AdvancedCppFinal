@@ -146,9 +146,6 @@
     <ClInclude Include="DispersionTrade.hpp">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="TradeFactory.hpp">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="FileTypeContainer.hpp">
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>

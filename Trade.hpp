@@ -5,14 +5,6 @@
 #include <string>
 #include "Security.hpp"
 
-enum class TradeType
-{
-	OPTION,
-	DISPERSION_TRADE,
-	EQUITY,
-	BOND
-};
-
 class Trade
 {
 private:

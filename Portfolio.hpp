@@ -13,10 +13,9 @@ public:
 	// Constructors/Destructor:
 	Portfolio();
 	Portfolio(const Portfolio&);
-	// Accessors:
-
 	// Interface Methods:
 	virtual double Price() const;
+	double CalculatePNL(const Portfolio&) const;
 	virtual double Delta() const;
 	virtual double Gamma() const;
 	virtual double Theta() const;

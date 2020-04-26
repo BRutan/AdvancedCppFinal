@@ -171,7 +171,6 @@
     <ClInclude Include="StockPricesFile.hpp" />
     <ClInclude Include="StockPricesFileRow.hpp" />
     <ClInclude Include="ComponentWeightsFileRow.hpp" />
-    <ClInclude Include="TradeFactory.hpp" />
     <ClInclude Include="Observer.hpp" />
     <ClInclude Include="Option.hpp" />
     <ClInclude Include="OptionChain.hpp" />
