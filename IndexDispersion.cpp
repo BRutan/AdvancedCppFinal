@@ -155,11 +155,11 @@ std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const
 	IndexDispersionAttributes out, copy(attrs);
 	bool isNegative = false;
 	double maxAbsImpCorr = 0, impCorr;
-	auto indexAttrs = copy.IndexOption_Mutable();
+	auto indexOpt = copy.IndexOption_Mutable();
 	auto components = copy.ConstituentOptions_Mutable();
-	if (indexAttrs.Attributes_Mutable() == nullptr)
+	if (indexOpt.Attributes_Mutable() == nullptr)
 	{
-		indexAttrs.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
+		indexOpt.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
 	}
 	// Set attributes for to feed into ImpliedCorrelation():
 	for (auto &indexRow : indexChain->Data())
@@ -167,8 +167,8 @@ std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const
 		auto converted = dynamic_cast<OptionChainRow*>(indexRow.second);
 		auto indexStrike = converted->Strike();
 		auto indexIV = converted->ImpliedVol();
-		dynamic_cast<OptionAttributes*>(indexAttrs.Attributes_Mutable().get())->Strike(indexStrike);
-		dynamic_cast<OptionAttributes*>(indexAttrs.Attributes_Mutable().get())->ImpliedVol(indexIV);
+		dynamic_cast<OptionAttributes*>(indexOpt.Attributes_Mutable().get())->Strike(indexStrike);
+		dynamic_cast<OptionAttributes*>(indexOpt.Attributes_Mutable().get())->ImpliedVol(indexIV);
 		for (auto component = components.begin(); component != components.end(); ++component)
 		{
 			if (component->second.first.Attributes_Mutable() == nullptr)
