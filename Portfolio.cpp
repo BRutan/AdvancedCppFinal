@@ -10,7 +10,7 @@ Portfolio::Portfolio(const Portfolio &port) : _Securities(port._Securities)
 
 }
 // Interface Methods:
-double Portfolio::Price()
+double Portfolio::Price() const
 {
 	double price = 0;
 	for (auto &entry : this->_Securities)
@@ -77,7 +77,7 @@ double Portfolio::Rho() const
 	}
 	return rho;
 }
-Portfolio Portfolio::CreateCopy()
+Portfolio Portfolio::CreateCopy() const
 {
 	return Portfolio(*this);
 }

@@ -43,6 +43,7 @@ public:
 	Security();
 	Security(SecurityAttributes& attr);
 	Security(Security&);
+	Security(Security&);
 	virtual ~Security();
 	// Mutators:
 	SecurityAttributes& Attributes();

@@ -13,14 +13,14 @@ public:
 	Portfolio();
 	Portfolio(const Portfolio&);
 	// Interface Methods:
-	virtual double Price();
+	virtual double Price() const;
 	double CalculatePNL(const Portfolio&) const;
 	virtual double Delta() const;
 	virtual double Gamma() const;
 	virtual double Theta() const;
 	virtual double Vega() const;
 	virtual double Rho() const;
-	Portfolio CreateCopy();
+	Portfolio CreateCopy() const;
 	// Overloaded Operators:
 	Portfolio& operator=(const Portfolio&);
 };

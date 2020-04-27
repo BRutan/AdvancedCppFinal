@@ -44,7 +44,7 @@ class IndexDispersion : public Derivative
 public:
 	// Constructors/Destructor:
 	IndexDispersion();
-	IndexDispersion(IndexDispersionAttributes&);	
+	IndexDispersion(IndexDispersionAttributes&);
 	IndexDispersion(IndexDispersion&);
 	virtual ~IndexDispersion();
 	// Accessors:
