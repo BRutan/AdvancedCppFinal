@@ -11,7 +11,8 @@ EquityAttributes::EquityAttributes(double price, const QuantLib::Date &settle, b
 {
 
 }
-EquityAttributes::EquityAttributes(const EquityAttributes& attr) : _MarginRate(attr._MarginRate), _DividendYield(attr._DividendYield)
+EquityAttributes::EquityAttributes(const EquityAttributes& attr) : _MarginRate(attr._MarginRate),_DividendYield(attr._DividendYield), 
+	SecurityAttributes(attr._Price, attr._SettlementDate, attr._IsLong)
 {
 
 }
@@ -63,10 +64,11 @@ Equity::~Equity()
 
 }
 // Accessors:
+/*
 const std::shared_ptr<EquityAttributes>& Equity::GetAttributes() const
 {
 	return std::make_shared<EquityAttributes>(this->_Attributes.get());
-}
+}*/
 // Mutators:
 void Equity::SetAttributes(const std::shared_ptr<EquityAttributes>& attr)
 {

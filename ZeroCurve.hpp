@@ -10,6 +10,8 @@
 #include "Hashers.hpp"
 #include "Security.hpp"
 
+using IterType = std::vector<QuantLib::Real>::iterator;
+
 enum class InterpolationType
 {
 	LINEAR, CUBIC_SPLINE
@@ -18,12 +20,13 @@ enum class InterpolationType
 class ZeroCurve : Security
 {
 private:
-	std::shared_ptr<QuantLib::Interpolation> _Interp;
+	QuantLib::Interpolation *_Interp;
 	std::unordered_map<double, double> _ZeroRates;
 	void _SetInterp(const InterpolationType&);
 public:
 	// Constructors/Destructor:
-	ZeroCurve(const InterpolationType&);
+	ZeroCurve();
+	ZeroCurve(std::unordered_map<double, double> rates, const InterpolationType&);
 	ZeroCurve(const ZeroCurve&);
 	virtual ~ZeroCurve();
 	// Accessors:

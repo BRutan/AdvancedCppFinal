@@ -61,7 +61,7 @@ void ApplicationSteps::_GetAllOptionChains()
 void ApplicationSteps::_EnsureAllPathsPresent()
 {
 	// Ensure all necessary files/folders present:
-	std::vector<std::string> targets = { "SP_100.csv", "TimeSeries.csv", this->_AllChainFolder };
+	std::vector<std::string> targets = { "SP_100.csv", "TimeSeries.csv", this->_AllChainFolder, "RiskFree.csv" };
 	std::vector<std::string> missing;
 	for (auto target = targets.begin(); target != targets.end(); ++target)
 	{
@@ -81,9 +81,21 @@ void ApplicationSteps::_EnsureAllPathsPresent()
 		this->_GUI.DisplayExceptionMessage(message.str().c_str(), true);
 	}
 }
+void ApplicationSteps::_UpdateUnderlyings(const QuantLib::Date &valueDate)
+{
+	auto prices = this->_EquityTimeSeries.GetSeriesForDate(valueDate);
+	this->_Underlyings.clear();
+	for (auto &entry : this->_WeightsFile.Tickers())
+	{
+		auto price = prices[entry.first];
+		this->_Underlyings.emplace(entry.first,
+			EquityAttributes(price, valueDate, true, 0, entry.second.DividendYield()));
+	}
+}
 // Constructors/Destructor:
 ApplicationSteps::ApplicationSteps(const std::string &allChainFolder) : _AllChainFolder(allChainFolder),
-	_AllChains(), _EquityTimeSeries(), _GUI(), _Gen(allChainFolder), _Portfolio(), _TradeChains(), _ValueDateChains(), _WeightsFile("^OEX")
+	_AllChains(), _EquityTimeSeries(), _GUI(), _Gen(allChainFolder), _Portfolio(), _TradeChains(), _ValueDateChains(), _WeightsFile("^OEX"),
+	_TradeFactory(), _Underlyings(), _OptimalTrade()
 {
 
 }
@@ -116,6 +128,9 @@ void ApplicationSteps::AcquireAllData()
 	std::cout << "^OEX and component time series..." << std::endl;
 	this->_EquityTimeSeries.ParseFile("TimeSeries.csv");
 	this->_Gen.ValueDate(this->_GUI.StartValueDate());
+	this->_RiskFree.ParseFile("RiskFree.csv");
+	// Get all underlying info from equity time series file for start value date and weights file:
+	
 }
 void ApplicationSteps::FindOptimalDispersionTrade()
 {
@@ -125,12 +140,20 @@ void ApplicationSteps::FindOptimalDispersionTrade()
 	std::cout << "Using expiration date: " << FileType::DateToString(result.first.ExpirationDate(), '\\') << std::endl;
 	std::cout << "with " << result.second.size() << " total options." << std::endl;
 	std::cout << "----- Finding optimal disperion trade for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << "----" << std::endl;
-	
+	auto attr = this->_TradeFactory.GenerateDisperionAttributes("^OEX", this->_WeightsFile, this->_Underlyings);
+	auto optimal_trade = IndexDispersion::OptimalDispersionTrade(this->_Gen, attr);
+	this->_OptimalTrade = optimal_trade.first;
+	auto index_attr = dynamic_cast<OptionAttributes*>(this->_OptimalTrade.IndexOption().Attributes().get());
+	auto trade_attr = dynamic_cast<IndexDispersionAttributes*>(this->_OptimalTrade.Attributes().get());
+
+	std::cout << "Optimal trade has implied correlation of " << std::setprecision(2) << optimal_trade.second << std::endl;
+	std::cout << "with index strike " << index_attr->Strike() << std::endl;
+	std::cout << "net premium " << trade_attr->Price() << std::endl;
 	// Pull all option chains for expiration date:
+
 
 	// Find the optimal strikes for the dispersion trade:
 	//IndexDispersion::OptimalDispersionTrade(this->_Gen, );
-	std::cout << "Optimal strike: " << std::endl;
 	
 }
 void ApplicationSteps::CalculatePNLForTradePeriod()
