@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include "ComponentWeightsFile.hpp"
+#include "Hashers.hpp"
 #include "IndexDispersion.hpp"
 #include "Option.hpp"
 #include "OptionChains.hpp"

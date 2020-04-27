@@ -20,11 +20,11 @@ OptionAttributes::OptionAttributes() : _IsCall(false), DerivativeAttributes(), _
 {
 
 }
-OptionAttributes::OptionAttributes(bool isCall, bool isLong, double riskFree, double divYield, double underlyingPrice,
+OptionAttributes::OptionAttributes(bool isCall, bool isLong, double premium, double riskFree, double divYield, double underlyingPrice,
 	const OptionChainRow& row, const QuantLib::Date &settle, const QuantLib::Date &exp) :
 	_IsCall(isCall), _Strike(row.Strike()), _Price((isLong) ? row.Ask() : row.Bid()), 
 	_ImpliedVol(row.ImpliedVol()), _TTM(QuantLib::Actual365Fixed().yearFraction(settle, exp)), 
-	_DivYield(divYield), _UnderlyingPrice(underlyingPrice), DerivativeAttributes(isLong, settle, exp)
+	_DivYield(divYield), _UnderlyingPrice(underlyingPrice), DerivativeAttributes(premium, isLong, settle, exp)
 {
 
 }

@@ -5,6 +5,11 @@
 #include "OptionChainRow.hpp"
 
 // Constructors/Destructor:
+OptionChainRow::OptionChainRow() : _Ask(), _Bid(), _Change(), _PercentChange(), _Volume(), 
+	_OpenInterest(), _ImpliedVol(), _Tenor()
+{
+
+}
 OptionChainRow::OptionChainRow(const std::string& row, double tenor) : _Tenor(tenor)
 {
 	this->ParseRow(row);

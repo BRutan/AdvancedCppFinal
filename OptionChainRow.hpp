@@ -15,6 +15,7 @@ private:
 	void _ParseCell(const std::string &cell, const std::size_t &index);
 public:
 	// Constructors/Destructor:
+	OptionChainRow();
 	OptionChainRow(const std::string& row, double tenor);
 	OptionChainRow(const OptionChainRow&);
 	virtual ~OptionChainRow();

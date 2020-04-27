@@ -7,8 +7,8 @@ DerivativeAttributes::DerivativeAttributes() : SecurityAttributes(), _Expiration
 {
 
 }
-DerivativeAttributes::DerivativeAttributes(bool isLong, const QuantLib::Date& settle, const QuantLib::Date& exp) : 
-	SecurityAttributes(settle, isLong), _ExpirationDate(exp)
+DerivativeAttributes::DerivativeAttributes(double price, bool isLong, const QuantLib::Date& settle, const QuantLib::Date& exp) : 
+	SecurityAttributes(price,settle, isLong), _ExpirationDate(exp)
 {
 	
 }

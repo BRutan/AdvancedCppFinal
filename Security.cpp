@@ -4,11 +4,12 @@
 // SecurityAttributes:
 /////////////////
 // Constructors/Destructor:
-SecurityAttributes::SecurityAttributes() : _IsLong(false)
+SecurityAttributes::SecurityAttributes() : _SettlementDate(), _IsLong(), _Price()
 {
 
 }
-SecurityAttributes::SecurityAttributes(const QuantLib::Date& settle, bool IsLong) : _IsLong(IsLong)
+SecurityAttributes::SecurityAttributes(double price, const QuantLib::Date& settle, bool IsLong) : 
+	_SettlementDate(settle), _IsLong(IsLong), _Price((!IsLong) ? -price : price)
 {
 
 }
@@ -21,6 +22,10 @@ bool SecurityAttributes::IsLong() const
 {
 	return this->_IsLong;
 }
+double SecurityAttributes::Price() const
+{
+	return this->_Price;
+}
 const QuantLib::Date& SecurityAttributes::SettlementDate() const
 {
 	return this->_SettlementDate;
@@ -29,6 +34,10 @@ const QuantLib::Date& SecurityAttributes::SettlementDate() const
 void SecurityAttributes::IsLong(bool isLong)
 {
 	this->_IsLong = isLong;
+}
+void SecurityAttributes::Price(double price)
+{
+	this->_Price = price;
 }
 void SecurityAttributes::SettlementDate(const QuantLib::Date& dt)
 {
@@ -39,8 +48,9 @@ SecurityAttributes& SecurityAttributes::operator=(const SecurityAttributes &attr
 {
 	if (this != &attr)
 	{
-		this->_SettlementDate = attr._SettlementDate;
 		this->_IsLong = attr._IsLong;
+		this->_SettlementDate = attr._SettlementDate;
+		this->_Price = attr._Price;
 	}
 	return *this;
 }

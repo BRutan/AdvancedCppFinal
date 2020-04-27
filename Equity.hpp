@@ -1,15 +1,24 @@
 #ifndef EQUITY_HPP
 #define EQUITY_HPP
 
+#include "ComponentWeightsFileRow.hpp"
 #include "Security.hpp"
 
-class EquityAttributes : SecurityAttributes
+class EquityAttributes : public SecurityAttributes
 {
 private:
-	double _Price, _MarginRate;
+	double _MarginRate, _DividendYield;
 public:
 	// Constructors/Destructor:
-	EquityAttributes(bool isLong, double price, double margin_rate = 0);
+	EquityAttributes();
+	EquityAttributes(double price, const QuantLib::Date &settle, bool isLong, double margin_rate, double dividendYield);
+	explicit EquityAttributes(const EquityAttributes&);
+	// Accessors:
+	double MarginRate() const;
+	double DividendYield() const;
+	// Mutators:
+	void MarginRate(double);
+	void DividendYield(double);
 	// Overloaded Operators:
 	EquityAttributes& operator=(const EquityAttributes&);
 };
@@ -18,13 +27,21 @@ class Equity : public Security
 {
 public:
 	// Constructors/Destructor:
+	Equity();
 	Equity(const EquityAttributes&);
 	Equity(const Equity&);
 	virtual ~Equity();
 	// Accessors:
-
+	const std::shared_ptr<EquityAttributes>& GetAttributes() const;
 	// Mutators:
-
+	void SetAttributes(const std::shared_ptr<EquityAttributes>&);
+	// Interface Methods:
+	// Interface Methods:
+	virtual double Delta() const;
+	virtual double Gamma() const;
+	virtual double Theta() const;
+	virtual double Vega() const;
+	virtual double Rho() const;
 	// Overloaded Operator:
 	Equity& operator=(const Equity&);
 };

@@ -10,7 +10,7 @@
 #include "FileType.hpp"
 #include "OptionChainPathGenerator.hpp"
 
-class ComponentWeightsFile : public FileType
+class ComponentWeightsFile : private FileType
 {
 private:
 	static std::string _Headers;

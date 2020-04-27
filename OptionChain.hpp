@@ -25,6 +25,9 @@ public:
 	virtual ~OptionChain();
 	// Accessors:
 	const QuantLib::Date& ExpirationDate() const;
+	double GetClosestStrike(double strike) const;
+	const OptionChainRow& GetRow(double strike) const;
+	bool HasStrike(double strike) const;
 	const std::string& Ticker() const;
 	// Mutators:
 	void ParseFile(const std::string & filepath);

@@ -37,6 +37,41 @@ const QuantLib::Date& OptionChain::ExpirationDate() const
 {
 	return this->_ExpDate;
 }
+double OptionChain::GetClosestStrike(double strike) const
+{
+	// Sort by strike:
+	std::vector<double> sorted_strikes(this->_Data.size());
+	for (auto &iter : this->_Data)
+	{
+		sorted_strikes.push_back(iter.first);
+	}
+	std::sort(sorted_strikes.begin(), sorted_strikes.end());
+	// Find closest option chain:
+	for (auto iter = sorted_strikes.begin(); iter != sorted_strikes.end(); ++iter)
+	{
+		if (strike < *iter)
+		{
+			return *iter;
+		}
+		else if (strike < *(iter + 1))
+		{
+			return ((std::abs(*iter - strike) > std::abs(*(iter + 1) - strike)) ? *(iter + 1) : *iter);
+		}
+	}
+}
+const OptionChainRow& OptionChain::GetRow(double strike) const
+{
+	auto match = this->_Data.find(strike);
+	if (match == this->_Data.end())
+	{
+		std::exception("Strike not in data set.");
+	}
+	return *dynamic_cast<OptionChainRow*>(match->second);
+}
+bool OptionChain::HasStrike(double strike) const
+{
+	return this->_Data.find(strike) != this->_Data.end();
+}
 const std::string& OptionChain::Ticker() const
 {
 	return this->_Ticker;

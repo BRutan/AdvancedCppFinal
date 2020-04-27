@@ -27,7 +27,7 @@ public:
 	// Accessors:
 	const std::unordered_map<std::string, FileType*>& GetOptionChains() const;
 	bool HasOptionChain(const std::string &ticker) const;
-	const FileType* const GetOptionChain(const std::string &ticker) const;
+	const OptionChain* const GetOptionChain(const std::string &ticker) const;
 	// Mutators:
 	void ParseFiles(const std::vector<std::string> &tickers, const QuantLib::Date &expDate);
 	void ParseFiles(const QuantLib::Date &expDate);

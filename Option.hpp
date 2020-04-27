@@ -31,7 +31,7 @@ private:
 public:
 	// Constructors/Destructor:
 	OptionAttributes();
-	OptionAttributes(bool isCall, bool isLong, double riskFree, double divYield, double underlyingPrice,
+	OptionAttributes(bool isCall, bool isLong, double premium, double riskFree, double divYield, double underlyingPrice,
 		const OptionChainRow& row, const QuantLib::Date &settle, const QuantLib::Date &exp);
 	virtual ~OptionAttributes();
 	// Accessors:

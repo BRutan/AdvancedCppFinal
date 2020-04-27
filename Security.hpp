@@ -8,19 +8,22 @@
 
 class SecurityAttributes
 {
-private:
+protected:
 	QuantLib::Date _SettlementDate;
 	bool _IsLong;
+	double _Price;
 public:
 	// Constructors/Destructor:
 	SecurityAttributes();
-	SecurityAttributes(const QuantLib::Date& settle, bool IsLong);
+	SecurityAttributes(double price, const QuantLib::Date& settle, bool IsLong);
 	virtual ~SecurityAttributes() = 0;
 	// Accessors:
 	bool IsLong() const;
 	const QuantLib::Date& SettlementDate() const;
+	double Price() const;
 	// Mutators:
 	void IsLong(bool);
+	void Price(double);
 	void SettlementDate(const QuantLib::Date&);
 	// Overloaded Operators:
 	SecurityAttributes& operator=(const SecurityAttributes&);

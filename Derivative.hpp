@@ -12,7 +12,7 @@ private:
 public:
 	// Constructors/Destructor:
 	DerivativeAttributes();
-	DerivativeAttributes(bool isLong, const QuantLib::Date& settle, const QuantLib::Date& exp);
+	DerivativeAttributes(double price, bool isLong, const QuantLib::Date& settle, const QuantLib::Date& exp);
 	virtual ~DerivativeAttributes();
 	// Accessors:
 	const QuantLib::Date& ExpirationDate() const;

@@ -32,13 +32,13 @@ bool OptionChains::HasOptionChain(const std::string &ticker) const
 {
 	return FileTypeContainer::_Files.find(ticker) == FileTypeContainer::_Files.end();
 }
-const FileType* const OptionChains::GetOptionChain(const std::string &ticker) const
+const OptionChain* const OptionChains::GetOptionChain(const std::string &ticker) const
 {
 	if (this->HasOptionChain(ticker))
 	{
 		throw std::exception("Could not find option chain with ticker.");
 	}
-	return FileTypeContainer::_Files.find(ticker)->second;
+	return dynamic_cast<OptionChain*>(FileTypeContainer::_Files.find(ticker)->second);
 }
 // Mutators:
 void OptionChains::ParseFiles(const std::vector<std::string> &tickers, const QuantLib::Date &expDate)

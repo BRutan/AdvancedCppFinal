@@ -6,15 +6,8 @@
 #include <fstream>
 #include <unordered_map>
 #include "FileType.hpp"
+#include "Hashers.hpp"
 #include "TimeSeriesRow.hpp"
-
-struct QDateHash
-{
-	size_t operator()(const QuantLib::Date& dte) const
-	{
-		return std::hash<int>{}(dte.serialNumber());
-	}
-};
 
 template<unsigned long numcols>
 class TimeSeries

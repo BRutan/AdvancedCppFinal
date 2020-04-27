@@ -17,7 +17,7 @@ private:
 	std::string _IndexName;
 	Option _IndexOption;
 	std::unordered_map<std::string, std::pair<Option, double>> _ConstituentOptions;
-	void _SetAttributesCorrectly();
+	void _SetAttributes();
 public:
 	// Constructors/Destructor:
 	IndexDispersionAttributes();
