@@ -38,7 +38,7 @@ public:
 	Option GenerateOption(bool isCall, const OptionChainRow &option_data, const EquityAttributes& attr) const;
 	IndexDispersion GenerateDispersion(const std::string &indexSymbol, double indexStrike, const ComponentWeightsFile& weights, const OptionChains& chains,
 		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
-	IndexDispersionAttributes GenerateDisperionAttributes(const std::string &indexSymbol, const ComponentWeightsFile& weights,
+	IndexDispersionAttributes GenerateDispersionAttributes(const std::string &indexSymbol, const ComponentWeightsFile& weights,
 		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
 	/*
 	template<unsigned long numcols>

@@ -31,12 +31,8 @@ public:
 	Equity(const EquityAttributes&);
 	Equity(const Equity&);
 	virtual ~Equity();
-	// Accessors:
-	//const std::shared_ptr<EquityAttributes>& GetAttributes() const;
-	// Mutators:
-	//void SetAttributes(const std::shared_ptr<EquityAttributes>&);
 	// Interface Methods:
-	// Interface Methods:
+	virtual double Price() const;
 	virtual double Delta() const;
 	virtual double Gamma() const;
 	virtual double Theta() const;

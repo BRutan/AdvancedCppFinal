@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <utility>
 #include "ComponentWeightsFileRow.hpp"
+#include "Equity.hpp"
 #include "Option.hpp"
 #include "OptionChains.hpp"
 #include "Security.hpp"
@@ -52,12 +53,11 @@ public:
 	const std::string& IndexName() const;
 	const Option& IndexOption() const;
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
-	// Mutators:
-	std::shared_ptr<IndexDispersionAttributes> Attributes_Mutable();
 	// Interface Methods:
 	double ImpliedCorrelation() const;
 	static double ImpliedCorrelation(const IndexDispersionAttributes &attr);
-	static std::pair<IndexDispersion, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, const IndexDispersionAttributes &attrs);
+	static std::pair<IndexDispersion, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, 
+		const IndexDispersionAttributes &attrs, const std::unordered_map<std::string,EquityAttributes>&, double);
 	virtual double Price() const;
 	virtual double Delta() const;
 	virtual double Gamma() const;

@@ -4,7 +4,7 @@
 // SecurityAttributes:
 /////////////////
 // Constructors/Destructor:
-SecurityAttributes::SecurityAttributes() : _SettlementDate(), _IsLong(), _Price()
+SecurityAttributes::SecurityAttributes() : _SettlementDate(), _IsLong(false), _Price(0)
 {
 
 }

@@ -64,8 +64,8 @@ Option AssetFactory::GenerateOption(bool isCall, const OptionChainRow &data, con
 		underlying.Price(), data, this->_Settle, this->_Expiry);
 	return Option(attr);
 }
-IndexDispersionAttributes AssetFactory::GenerateDisperionAttributes(const std::string &indexSymbol, const ComponentWeightsFile& weights,
-	const std::unordered_map<std::string, EquityAttributes>& underlyings) const
+IndexDispersionAttributes AssetFactory::GenerateDispersionAttributes(const std::string &indexSymbol, const ComponentWeightsFile& weights,
+	const std::unordered_map<std::string,EquityAttributes>& underlyings) const
 {
 	// Generate empty IndexDisperionAttributes object:
 	auto indexUnderlying = underlyings.find(indexSymbol);

@@ -15,7 +15,7 @@ using QBlackConstantVol = QuantLib::BlackConstantVol;
 // OptionAttributes definitions:
 ////////////////////
 // Constructors/Destructor:
-OptionAttributes::OptionAttributes() : _IsCall(false), DerivativeAttributes(), _Strike(0), _Price(0), _ImpliedVol(0), _TTM(0),
+OptionAttributes::OptionAttributes() : _IsCall(false), DerivativeAttributes(), _Strike(0), _ImpliedVol(0), _TTM(0),
 	_DivYield(0), _UnderlyingPrice(0)
 {
 
@@ -69,7 +69,7 @@ bool OptionAttributes::IsCall() const
 }
 double OptionAttributes::UnderlyingPrice() const
 {
-	return this->_UnderlyingPrice;
+	return this->_Underlying.Price();
 }
 // Mutators:
 void OptionAttributes::DividendYield(double yield)

@@ -146,7 +146,8 @@ const std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersio
 }
 #pragma endregion
 #pragma region Interface Methods
-std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const OptionChainPathGenerator &gen, const IndexDispersionAttributes &attrs)
+std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const OptionChainPathGenerator &gen, 
+	const IndexDispersionAttributes &attrs, const std::unordered_map<std::string, EquityAttributes>& underlyings, double assumedIV)
 {
 	// Get all option chains:
 	OptionChains allchains(gen);
@@ -171,15 +172,34 @@ std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const
 		dynamic_cast<OptionAttributes*>(indexOpt.Attributes_Mutable().get())->ImpliedVol(indexIV);
 		for (auto component = components.begin(); component != components.end(); ++component)
 		{
+			if (component->first == attrs.IndexName())
+			{
+				continue;
+			}
 			if (component->second.first.Attributes_Mutable() == nullptr)
 			{
 				component->second.first.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
 			}
-			auto weight = component->second.second;
-			auto comp_strike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(indexStrike / weight);
-			auto comp_iv = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(comp_strike).ImpliedVol();
-			dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(comp_strike);
-			dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(comp_iv);
+			if (!(chains.find(component->first) != chains.end() && chains[component->first]->NumRows() != 0))
+			{
+			Assume:
+				// Use estimated implied volatility and atm strike price:
+				auto eqPrice = underlyings.find(component->first)->second.Price();
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(eqPrice);
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(assumedIV);
+			}
+			else
+			{
+				auto weight = component->second.second;
+				auto comp_strike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(indexStrike * weight);
+				if (comp_strike < 0)
+				{
+					goto Assume;
+				}
+				auto comp_iv = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(comp_strike).ImpliedVol();
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(comp_strike);
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(comp_iv);
+			}
 		}
 		// Get implied correlation:
 		impCorr = IndexDispersion::ImpliedCorrelation(copy);
@@ -196,18 +216,24 @@ std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const
 }
 double IndexDispersion::ImpliedCorrelation(const IndexDispersionAttributes &attr)
 {
-	std::size_t index = 0;
 	double numerator = 0, denominator = 0;
-	double curr_risk_entry = 0, sub_risk_entry = 0, iv = 0;
+	double curr_risk_entry, sub_risk_entry, iv = 0;
 	for (auto &entry : attr.ConstituentOptions())
 	{
 		iv = dynamic_cast<OptionAttributes*>(entry.second.first.Attributes().get())->ImpliedVol();
 		curr_risk_entry = entry.second.second * iv;
 		numerator += curr_risk_entry * curr_risk_entry;
-		std::size_t sub_index = 0;
+	}
+	// Calculate denominator:
+	std::size_t index = 0, sub_index;
+	for (auto &entry : attr.ConstituentOptions())
+	{
+		iv = dynamic_cast<OptionAttributes*>(entry.second.first.Attributes().get())->ImpliedVol();
+		curr_risk_entry = entry.second.second * iv;
+		sub_index = 0;
 		for (auto &sub_entry : attr.ConstituentOptions())
 		{
-			if (sub_index > index)
+			if (sub_index != index)
 			{
 				iv = dynamic_cast<OptionAttributes*>(sub_entry.second.first.Attributes().get())->ImpliedVol();
 				sub_risk_entry = sub_entry.second.second * iv;

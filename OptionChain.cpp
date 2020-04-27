@@ -41,9 +41,11 @@ double OptionChain::GetClosestStrike(double strike) const
 {
 	// Sort by strike:
 	std::vector<double> sorted_strikes(this->_Data.size());
+	std::size_t index = 0;
 	for (auto &iter : this->_Data)
 	{
-		sorted_strikes.push_back(iter.first);
+		sorted_strikes[index] = iter.first;
+		++index;
 	}
 	std::sort(sorted_strikes.begin(), sorted_strikes.end());
 	// Find closest option chain:
@@ -53,11 +55,12 @@ double OptionChain::GetClosestStrike(double strike) const
 		{
 			return *iter;
 		}
-		else if (strike < *(iter + 1))
+		else if ((iter + 1) != sorted_strikes.end() && strike < *(iter + 1))
 		{
 			return ((std::abs(*iter - strike) > std::abs(*(iter + 1) - strike)) ? *(iter + 1) : *iter);
 		}
 	}
+	return *(sorted_strikes.end() - 1);
 }
 const OptionChainRow& OptionChain::GetRow(double strike) const
 {

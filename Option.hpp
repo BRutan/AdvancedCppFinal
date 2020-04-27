@@ -18,6 +18,7 @@
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/utilities/dataformatters.hpp>
+#include "Equity.hpp"
 #include "OptionChainRow.hpp"
 #include "Derivative.hpp"
 #include "Security.hpp"
@@ -25,9 +26,10 @@
 class OptionAttributes : public DerivativeAttributes
 {
 private:
-	double _Strike, _Price, _ImpliedVol, _TTM, _DivYield;
+	double _Strike, _ImpliedVol, _TTM, _DivYield;
 	double _UnderlyingPrice, _RiskFreeRate;
 	bool _Long, _IsCall;
+	EquityAttributes _Underlying;
 public:
 	// Constructors/Destructor:
 	OptionAttributes();
@@ -44,6 +46,7 @@ public:
 	double Strike() const;
 	double TimeToMaturity() const;
 	double UnderlyingPrice() const;
+	const EquityAttributes& Underlying() const;
 	// Mutators:
 	void DividendYield(double);
 	void ImpliedVol(double);

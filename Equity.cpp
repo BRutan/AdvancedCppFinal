@@ -7,12 +7,13 @@ EquityAttributes::EquityAttributes() : _MarginRate(0), _DividendYield(0), Securi
 }
 EquityAttributes::EquityAttributes(double price, const QuantLib::Date &settle, bool isLong, 
 	double margin_rate, double dividendYield) : _MarginRate(margin_rate), _DividendYield(dividendYield),
-	SecurityAttributes(price,settle,isLong)
+	SecurityAttributes(price, settle, isLong)
 {
 
 }
 
-EquityAttributes::EquityAttributes(const EquityAttributes& attr) : _MarginRate(attr._MarginRate), _DividendYield(attr._DividendYield)
+EquityAttributes::EquityAttributes(const EquityAttributes& attr) : _MarginRate(attr._MarginRate), _DividendYield(attr._DividendYield),
+	SecurityAttributes(attr)
 {
 
 }
@@ -45,7 +46,6 @@ EquityAttributes& EquityAttributes::operator=(const EquityAttributes &attr)
 	return *this;
 }
 
-
 // Constructors/Destructor:
 Equity::Equity() : Security()
 {
@@ -63,18 +63,11 @@ Equity::~Equity()
 {
 
 }
-// Accessors:
-/*
-const std::shared_ptr<EquityAttributes>& Equity::GetAttributes() const
-{
-	return std::make_shared<EquityAttributes>(this->_Attributes);
-}
-// Mutators:
-void Equity::SetAttributes(const std::shared_ptr<EquityAttributes>& attr)
-{
-	this->_Attributes = attr;
-}*/
 // Interface Methods:
+double Equity::Price() const
+{
+	return this->_Attributes->Price();
+}
 double Equity::Delta() const
 {
 	return 1;

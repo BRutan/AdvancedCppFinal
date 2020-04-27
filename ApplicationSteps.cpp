@@ -88,8 +88,7 @@ void ApplicationSteps::_UpdateUnderlyings(const QuantLib::Date &valueDate)
 	for (auto &entry : this->_WeightsFile.Tickers())
 	{
 		auto price = prices[entry.first];
-		this->_Underlyings.emplace(entry.first,
-			EquityAttributes(price, valueDate, true, 0, entry.second.DividendYield()));
+		this->_Underlyings.emplace(entry.first, EquityAttributes(price, valueDate, true, 0, entry.second.DividendYield()));
 	}
 }
 // Constructors/Destructor:
@@ -140,16 +139,15 @@ void ApplicationSteps::FindOptimalDispersionTrade()
 	std::cout << "Using expiration date: " << FileType::DateToString(result.first.ExpirationDate(), '\\') << std::endl;
 	std::cout << "with " << result.second.size() << " total options." << std::endl;
 	std::cout << "----- Finding optimal disperion trade for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << "----" << std::endl;
-	auto attr = this->_TradeFactory.GenerateDisperionAttributes("^OEX", this->_WeightsFile, this->_Underlyings);
+	auto attr = this->_TradeFactory.GenerateDispersionAttributes("^OEX", this->_WeightsFile, this->_Underlyings);
 	attr.ExpirationDate(result.first.ExpirationDate());
 	attr.SettlementDate(this->_GUI.StartValueDate());
 	this->_Gen.ExpirationDate(attr.ExpirationDate());
 	this->_Gen.ValueDate(attr.SettlementDate());
-	auto optimal_trade = IndexDispersion::OptimalDispersionTrade(this->_Gen, attr);
+	auto optimal_trade = IndexDispersion::OptimalDispersionTrade(this->_Gen, attr, this->_Underlyings, .3);
 	this->_OptimalTrade = optimal_trade.first;
 	auto index_attr = dynamic_cast<OptionAttributes*>(this->_OptimalTrade.IndexOption().Attributes().get());
 	auto trade_attr = dynamic_cast<IndexDispersionAttributes*>(this->_OptimalTrade.Attributes().get());
-
 	std::cout << "Optimal trade has implied correlation of " << std::setprecision(2) << optimal_trade.second << std::endl;
 	std::cout << "with index strike " << index_attr->Strike() << std::endl;
 	std::cout << "net premium " << trade_attr->Price() << std::endl;
