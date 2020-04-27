@@ -21,8 +21,9 @@ int main()
 	steps.StartValueDate(QuantLib::Date(9, QuantLib::Month::April, 2020));
 	steps.EndValueDate(QuantLib::Date(25, QuantLib::Month::April, 2020));
 	// ****
-	steps.AcquireAllData();
+	steps.AcquireBackendData();
 	steps.FindOptimalDispersionTrade();
+	steps.AcquireTradeData();
 	//steps.CalculatePNLForTradePeriod();
 	//steps.OutputFiles();
 	//steps.PrintResultSummary();

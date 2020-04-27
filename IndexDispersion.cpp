@@ -7,20 +7,13 @@ void IndexDispersionAttributes::_SetAttributes()
 	// Ensure that long/short attributes are set correctly:
 	// (if long index, short constituents, vice versa).
 	// Calculate net price of the portfolio.
-	bool indexIsLong = this->_IndexOption.Attributes()->IsLong();
+	bool indexIsLong = this->_IndexOption.Attributes().IsLong();
 	bool constIsLong = !indexIsLong;
-	
-	auto attr = dynamic_cast<OptionAttributes*>(this->_IndexOption.Attributes().get());
-	attr->IsLong(indexIsLong);
-	const std::shared_ptr<OptionAttributes> ptr(attr);
-	this->_IndexOption.SetAttributes(ptr);
+	auto attr = static_cast<const OptionAttributes&>(this->_IndexOption.Attributes());
 	double netPrice = this->_IndexOption.Price();
 	for (auto &pair : this->_ConstituentOptions)
 	{
-		auto attr = dynamic_cast<OptionAttributes*>(pair.second.first.Attributes().get());
-		attr->IsLong(constIsLong);
-		const std::shared_ptr<OptionAttributes> ptr(attr);
-		pair.second.first.SetAttributes(ptr);
+		static_cast<OptionAttributes&>(pair.second.first.Attributes_Mutable()).IsLong(constIsLong);
 		netPrice += pair.second.first.Price() * pair.second.second;
 	}
 	this->_Price = netPrice;
@@ -35,15 +28,18 @@ IndexDispersionAttributes::IndexDispersionAttributes(bool isLong, const std::str
 	const std::unordered_map<std::string, std::pair<Option, double>> constitutentOptions, const QuantLib::Date &settle, const QuantLib::Date &exp) : _IndexName(indexName),
 	_IndexOption(indexOption), _ConstituentOptions(constitutentOptions), DerivativeAttributes(0, isLong, settle, exp)
 {
-	this->_IndexOption.Attributes()->IsLong(isLong);
-	// Ensure attributes set correctly, calculate initial NPV:
+	this->_IndexOption.Attributes_Mutable().IsLong(isLong);
 	this->_SetAttributes();
 }
 IndexDispersionAttributes::IndexDispersionAttributes(const IndexDispersionAttributes &attr) : _IndexName(attr._IndexName),
 	_IndexOption(attr._IndexOption), _ConstituentOptions(attr._ConstituentOptions), DerivativeAttributes(attr)
 {
-	// Ensure attributes set correctly:
 	this->_SetAttributes();
+}
+IndexDispersionAttributes::IndexDispersionAttributes(IndexDispersionAttributes&& attr) : _IndexName(std::move(attr._IndexName)),
+	_IndexOption(std::move(attr._IndexOption)), _ConstituentOptions(std::move(attr._ConstituentOptions)), DerivativeAttributes(std::move(attr))
+{
+
 }
 IndexDispersionAttributes::~IndexDispersionAttributes()
 {
@@ -68,7 +64,6 @@ const std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersio
 void IndexDispersionAttributes::ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>> &constits)
 {
 	this->_ConstituentOptions = constits;
-	// Ensure attributes set correctly:
 	this->_SetAttributes();
 }
 void IndexDispersionAttributes::IndexName(const std::string& indexName)
@@ -78,7 +73,6 @@ void IndexDispersionAttributes::IndexName(const std::string& indexName)
 void IndexDispersionAttributes::IndexOption(const Option& indexOpt)
 {
 	this->_IndexOption = indexOpt;
-	// Ensure attributes set correctly:
 	this->_SetAttributes();
 }
 #pragma endregion
@@ -103,7 +97,8 @@ IndexDispersion::IndexDispersion() : Derivative()
 {
 
 }
-IndexDispersion::IndexDispersion(const IndexDispersionAttributes &attr) : Derivative(std::make_shared<IndexDispersionAttributes>(attr))
+IndexDispersion::IndexDispersion(const IndexDispersionAttributes &attr) : 
+	Derivative(attr)
 {
 
 }
@@ -119,15 +114,15 @@ IndexDispersion::~IndexDispersion()
 #pragma region Accessors
 const std::string& IndexDispersion::IndexName() const
 {
-	return dynamic_cast<IndexDispersionAttributes*>(this->Attributes().get())->IndexName();
+	return static_cast<const IndexDispersionAttributes&>(this->Attributes()).IndexName();
 }
 const Option& IndexDispersion::IndexOption() const
 {
-	return dynamic_cast<IndexDispersionAttributes*>(this->Attributes().get())->IndexOption();
+	return static_cast<const IndexDispersionAttributes&>(this->Attributes()).IndexOption();
 }
 const std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersion::ConstitutentOptions() const
 {
-	return dynamic_cast<IndexDispersionAttributes*>(this->Attributes().get())->ConstituentOptions();
+	return static_cast<const IndexDispersionAttributes&>(this->Attributes()).ConstituentOptions();
 }
 #pragma endregion
 #pragma region Interface Methods
@@ -163,7 +158,7 @@ double IndexDispersion::ImpliedCorrelation(const IndexDispersionAttributes &attr
 	double curr_risk_entry = 0, sub_risk_entry = 0, iv = 0;
 	for (auto &entry : attr.ConstituentOptions())
 	{
-		iv = dynamic_cast<OptionAttributes*>(entry.second.first.Attributes().get())->ImpliedVol();
+		iv = static_cast<const OptionAttributes&>(entry.second.first.Attributes()).ImpliedVol();
 		curr_risk_entry = entry.second.second * iv;
 		numerator += curr_risk_entry * curr_risk_entry;
 		std::size_t sub_index = 0;
@@ -171,7 +166,7 @@ double IndexDispersion::ImpliedCorrelation(const IndexDispersionAttributes &attr
 		{
 			if (sub_index > index)
 			{
-				iv = dynamic_cast<OptionAttributes*>(sub_entry.second.first.Attributes().get())->ImpliedVol();
+				iv = static_cast<const OptionAttributes&>(sub_entry.second.first.Attributes()).ImpliedVol();
 				sub_risk_entry = sub_entry.second.second * iv;
 				denominator += curr_risk_entry * sub_risk_entry;
 			}
@@ -179,18 +174,18 @@ double IndexDispersion::ImpliedCorrelation(const IndexDispersionAttributes &attr
 		}
 		++index;
 	}
-	double indexiv = dynamic_cast<OptionAttributes*>(attr.IndexOption().Attributes().get())->ImpliedVol();
+	double indexiv = static_cast<const OptionAttributes&>(attr.IndexOption().Attributes()).ImpliedVol();
 	return (indexiv * indexiv - numerator) / denominator;
 }
 double IndexDispersion::Price() const
 {
-	return this->_Attributes->Price();
+	return this->_Attributes.Price();
 }
 double IndexDispersion::Delta() const
 {
-	auto attr = dynamic_cast<IndexDispersionAttributes*>(this->Attributes().get());
-	double delta = attr->IndexOption().Delta();
-	for (auto &constituent : attr->ConstituentOptions())
+	auto attr = static_cast<const IndexDispersionAttributes&>(this->_Attributes);
+	double delta = attr.IndexOption().Delta();
+	for (auto &constituent : attr.ConstituentOptions())
 	{
 		delta += constituent.second.first.Delta() * constituent.second.second;
 	}
@@ -198,9 +193,9 @@ double IndexDispersion::Delta() const
 }
 double IndexDispersion::Gamma() const
 {
-	auto attr = dynamic_cast<IndexDispersionAttributes*>(this->Attributes().get());
-	double gamma = attr->IndexOption().Gamma();
-	for (auto &constituent : attr->ConstituentOptions())
+	auto attr = static_cast<const IndexDispersionAttributes&>(this->_Attributes);
+	double gamma = attr.IndexOption().Gamma();
+	for (auto &constituent : attr.ConstituentOptions())
 	{
 		gamma += constituent.second.first.Gamma() * constituent.second.second;
 	}
@@ -208,9 +203,9 @@ double IndexDispersion::Gamma() const
 }
 double IndexDispersion::Theta() const
 {
-	auto attr = dynamic_cast<IndexDispersionAttributes*>(this->Attributes().get());
-	double theta = attr->IndexOption().Gamma();
-	for (auto &constituent : attr->ConstituentOptions())
+	auto attr = static_cast<const IndexDispersionAttributes&>(this->_Attributes);
+	double theta = attr.IndexOption().Gamma();
+	for (auto &constituent : attr.ConstituentOptions())
 	{
 		theta += constituent.second.first.Theta() * constituent.second.second;
 	}
@@ -218,9 +213,9 @@ double IndexDispersion::Theta() const
 }
 double IndexDispersion::Vega() const
 {
-	auto attr = dynamic_cast<IndexDispersionAttributes*>(this->Attributes().get());
-	double vega = attr->IndexOption().Vega();
-	for (auto &constituent : attr->ConstituentOptions())
+	auto attr = static_cast<const IndexDispersionAttributes&>(this->_Attributes);
+	double vega = attr.IndexOption().Vega();
+	for (auto &constituent : attr.ConstituentOptions())
 	{
 		vega += constituent.second.first.Vega() * constituent.second.second;
 	}
@@ -228,9 +223,9 @@ double IndexDispersion::Vega() const
 }
 double IndexDispersion::Rho() const
 {
-	auto attr = dynamic_cast<IndexDispersionAttributes*>(this->Attributes().get());
-	double rho = attr->IndexOption().Rho();
-	for (auto &constituent : attr->ConstituentOptions())
+	auto attr = static_cast<const IndexDispersionAttributes&>(this->_Attributes);
+	double rho = attr.IndexOption().Rho();
+	for (auto &constituent : attr.ConstituentOptions())
 	{
 		rho += constituent.second.first.Rho() * constituent.second.second;
 	}
@@ -238,7 +233,7 @@ double IndexDispersion::Rho() const
 }
 double IndexDispersion::ImpliedCorrelation() const
 {
-	return IndexDispersion::ImpliedCorrelation(*dynamic_cast<IndexDispersionAttributes*>(this->_Attributes.get()));
+	return IndexDispersion::ImpliedCorrelation(static_cast<const IndexDispersionAttributes&>(this->_Attributes));
 }
 #pragma endregion
 #pragma region Overloaded Operators

@@ -117,7 +117,7 @@ void ApplicationSteps::GetArgumentsFromUser()
 	this->_GUI.GetEndValueDate();
 	this->_GUI.GetOutputPath();
 }
-void ApplicationSteps::AcquireAllData()
+void ApplicationSteps::AcquireBackendData()
 {
 	std::cout << "----- Acquiring all relevant data ----" << std::endl;
 	// Ensure all files and folders are present:
@@ -130,7 +130,7 @@ void ApplicationSteps::AcquireAllData()
 	this->_Gen.ValueDate(this->_GUI.StartValueDate());
 	this->_RiskFree.ParseFile("RiskFree.csv");
 	// Get all underlying info from equity time series file for start value date and weights file:
-	
+	this->_UpdateUnderlyings(this->_Gen.ValueDate());
 }
 void ApplicationSteps::FindOptimalDispersionTrade()
 {
@@ -145,16 +145,17 @@ void ApplicationSteps::FindOptimalDispersionTrade()
 	this->_OptimalTrade = optimal_trade.first;
 	auto index_attr = dynamic_cast<OptionAttributes*>(this->_OptimalTrade.IndexOption().Attributes().get());
 	auto trade_attr = dynamic_cast<IndexDispersionAttributes*>(this->_OptimalTrade.Attributes().get());
-
 	std::cout << "Optimal trade has implied correlation of " << std::setprecision(2) << optimal_trade.second << std::endl;
 	std::cout << "with index strike " << index_attr->Strike() << std::endl;
 	std::cout << "net premium " << trade_attr->Price() << std::endl;
+}
+void ApplicationSteps::AcquireTradeData()
+{
 	// Pull all option chains for expiration date:
 
 
 	// Find the optimal strikes for the dispersion trade:
 	//IndexDispersion::OptimalDispersionTrade(this->_Gen, );
-	
 }
 void ApplicationSteps::CalculatePNLForTradePeriod()
 {

@@ -1,4 +1,8 @@
 #include "Security.hpp"
+#include "Option.hpp"
+
+static OptionAttributes _DefaultOpt = OptionAttributes();
+SecurityAttributes &Security::_Default = _DefaultOpt;
 
 /////////////////
 // SecurityAttributes:
@@ -10,6 +14,16 @@ SecurityAttributes::SecurityAttributes() : _SettlementDate(), _IsLong(), _Price(
 }
 SecurityAttributes::SecurityAttributes(double price, const QuantLib::Date& settle, bool IsLong) : 
 	_SettlementDate(settle), _IsLong(IsLong), _Price((!IsLong) ? -price : price)
+{
+
+}
+SecurityAttributes::SecurityAttributes(const SecurityAttributes &attr) : _SettlementDate(attr._SettlementDate), 
+	_IsLong(attr._IsLong), _Price(attr._Price) 
+{
+
+}
+SecurityAttributes::SecurityAttributes(SecurityAttributes &&attr) : _SettlementDate(std::move(attr._SettlementDate)), 
+	_IsLong(std::move(attr._IsLong)), _Price(std::move(attr._IsLong))
 {
 
 }
@@ -59,15 +73,15 @@ SecurityAttributes& SecurityAttributes::operator=(const SecurityAttributes &attr
 // Security:
 /////////////////
 // Constructors/Destructor:
-Security::Security() : _Attributes()
+Security::Security() : _Attributes(Security::_Default)
 {
 
 }
-Security::Security(const std::shared_ptr<SecurityAttributes>& attr) : _Attributes(attr)
+Security::Security(SecurityAttributes& attr) : _Attributes(attr)
 {
 
 }
-Security::Security(const Security &sec)
+Security::Security(const Security &sec) : _Attributes(sec._Attributes)
 {
 
 }
@@ -76,7 +90,12 @@ Security::~Security()
 
 }
 // Accessors:
-const std::shared_ptr<SecurityAttributes>& Security::Attributes() const
+const SecurityAttributes& Security::Attributes() const
+{
+	return this->_Attributes;
+}
+
+SecurityAttributes& Security::Attributes_Mutable()
 {
 	return this->_Attributes;
 }

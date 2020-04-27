@@ -93,9 +93,9 @@ IndexDispersionAttributes AssetFactory::GenerateDisperionAttributes(const std::s
 		{
 			throw std::exception("Missing one or more tickers from underlyings.");
 		}
-		auto newOpt = OptionAttributes();
-		newOpt.IsLong(!this->_GenerateLong);
-		curr_const = std::make_pair<Option, double>(newOpt, elem.second.Weight());
+		auto newOpt = std::make_shared<OptionAttributes>(OptionAttributes());
+		newOpt->IsLong(!this->_GenerateLong);
+		curr_const = std::make_pair<Option, double>(Option(newOpt), elem.second.Weight());
 		comps.emplace(elem.second.Ticker(), curr_const);
 	}
 	// Add all constituent options:

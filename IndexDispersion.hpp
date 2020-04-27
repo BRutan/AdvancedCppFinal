@@ -25,6 +25,7 @@ public:
 		const std::unordered_map<std::string, std::pair<Option, double>> ConstitutentOptions, 
 		const QuantLib::Date &settle, const QuantLib::Date &exp);
 	IndexDispersionAttributes(const IndexDispersionAttributes&);
+	IndexDispersionAttributes(IndexDispersionAttributes&&);
 	virtual ~IndexDispersionAttributes();
 	// Accessors:
 	const std::string& IndexName() const;

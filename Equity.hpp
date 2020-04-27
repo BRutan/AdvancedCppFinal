@@ -32,9 +32,9 @@ public:
 	Equity(const Equity&);
 	virtual ~Equity();
 	// Accessors:
-	const std::shared_ptr<EquityAttributes>& GetAttributes() const;
+	const EquityAttributes& GetAttributes() const;
 	// Mutators:
-	void SetAttributes(const std::shared_ptr<EquityAttributes>&);
+	void SetAttributes(const EquityAttributes&);
 	// Interface Methods:
 	// Interface Methods:
 	virtual double Delta() const;

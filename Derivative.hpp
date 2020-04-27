@@ -13,6 +13,8 @@ public:
 	// Constructors/Destructor:
 	DerivativeAttributes();
 	DerivativeAttributes(double price, bool isLong, const QuantLib::Date& settle, const QuantLib::Date& exp);
+	DerivativeAttributes(const DerivativeAttributes&);
+	explicit DerivativeAttributes(DerivativeAttributes&&);
 	virtual ~DerivativeAttributes();
 	// Accessors:
 	const QuantLib::Date& ExpirationDate() const;
@@ -27,7 +29,7 @@ class Derivative : public Security
 public:
 	// Constructors/Destructor:
 	Derivative();
-	Derivative(const std::shared_ptr<SecurityAttributes> &attr);
+	Derivative(const DerivativeAttributes &attr);
 	Derivative(const Derivative&);
 	virtual ~Derivative();
 	// Overloaded Operators:
