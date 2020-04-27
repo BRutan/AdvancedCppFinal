@@ -50,11 +50,11 @@ Equity::Equity() : Security()
 {
 
 }
-Equity::Equity(EquityAttributes& attr) : Security(attr)
+Equity::Equity(const EquityAttributes& attr) : Security(attr)
 {
 
 }
-Equity::Equity(Equity& eq) : Security(eq)
+Equity::Equity(const Equity& eq) : Security(eq)
 {
 
 }

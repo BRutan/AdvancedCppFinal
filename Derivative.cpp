@@ -12,7 +12,7 @@ DerivativeAttributes::DerivativeAttributes(double price, bool isLong, const Quan
 {
 	
 }
-DerivativeAttributes::DerivativeAttributes(DerivativeAttributes &attr) : _ExpirationDate(attr._ExpirationDate), 
+DerivativeAttributes::DerivativeAttributes(const DerivativeAttributes &attr) : _ExpirationDate(attr._ExpirationDate), 
 	SecurityAttributes(attr)
 {
 
@@ -55,11 +55,11 @@ Derivative::Derivative() : Security()
 {
 
 }
-Derivative::Derivative(DerivativeAttributes& attr) : Security(static_cast<SecurityAttributes&>(attr))
+Derivative::Derivative(const DerivativeAttributes& attr) : Security(attr)
 {
 
 }
-Derivative::Derivative(Derivative& deriv) : Security(deriv._Attributes)
+Derivative::Derivative(const Derivative& deriv) : Security(deriv._Attributes)
 {
 
 }

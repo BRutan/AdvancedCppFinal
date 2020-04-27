@@ -28,8 +28,8 @@ class Equity : public Security
 public:
 	// Constructors/Destructor:
 	Equity();
-	Equity(EquityAttributes&);
-	Equity(Equity&);
+	Equity(const EquityAttributes&);
+	Equity(const Equity&);
 	virtual ~Equity();
 	// Accessors:
 	const EquityAttributes& GetAttributes() const;
