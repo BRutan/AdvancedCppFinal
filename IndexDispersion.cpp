@@ -169,7 +169,7 @@ std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const
 		auto indexIV = converted->ImpliedVol();
 		dynamic_cast<OptionAttributes*>(indexAttrs.Attributes_Mutable().get())->Strike(indexStrike);
 		dynamic_cast<OptionAttributes*>(indexAttrs.Attributes_Mutable().get())->ImpliedVol(indexIV);
-		for (auto component = components.begin(); components != components.end(); ++component)
+		for (auto component = components.begin(); component != components.end(); ++component)
 		{
 			if (component->second.first.Attributes_Mutable() == nullptr)
 			{
