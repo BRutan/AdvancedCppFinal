@@ -44,7 +44,7 @@ public:
 	// Interface Methods:
 	static double DiscountFactor(double rate, double tenor);
 	static double Tenor(const QuantLib::Date &settle, const QuantLib::Date &expiry);
-	virtual double Price() const;
+	virtual double Price();
 	virtual double Delta() const;
 	virtual double Gamma() const;
 	virtual double Theta() const;
