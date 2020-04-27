@@ -193,7 +193,7 @@ double Option::Vega(const OptionAttributes& attrs)
 {
 	return Option::GenerateOptionObj(attrs).vega();
 }
-QuantLib::VanillaOption Option::GenerateOptionObj(const OptionAttributes &attr)
+std::shared_ptr<QuantLib::VanillaOption> Option::GenerateOptionObj(const OptionAttributes &attr)
 {
 	auto dayCount = QuantLib::Actual365Fixed();
 	auto type = (attr.IsCall()) ? QuantLib::Option::Call : QuantLib::Option::Put;
@@ -209,9 +209,8 @@ QuantLib::VanillaOption Option::GenerateOptionObj(const OptionAttributes &attr)
 	
 	auto stochProcess = boost::shared_ptr<QBSMP>(new QBSMP(underlying,divTermStruct,rfTermStruct,volTermStruct));
 	auto engine = boost::shared_ptr<QPricingEngine>(new QBAWEngine(stochProcess));
-	QuantLib::VanillaOption option(payoff, exercise);
-	option.setPricingEngine(engine);
-
+	auto option = std::make_shared< QuantLib::VanillaOption>(QuantLib::VanillaOption(payoff, exercise));
+	option->setPricingEngine(engine);
 	return option;
 }
 // Overloaded Operators:

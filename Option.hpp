@@ -82,7 +82,7 @@ public:
 	static double Theta(const OptionAttributes&);
 	static double Vega(const OptionAttributes&);
 	static double Rho(const OptionAttributes&);
-	static QuantLib::VanillaOption GenerateOptionObj(const OptionAttributes&);
+	static std::shared_ptr<QuantLib::VanillaOption> GenerateOptionObj(const OptionAttributes&);
 	// Overloaded Operators:
 	Option& operator=(const Option&);
 };
