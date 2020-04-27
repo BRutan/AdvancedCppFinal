@@ -28,7 +28,7 @@ OptionAttributes::OptionAttributes(bool isCall, bool isLong, double premium, dou
 {
 
 }
-OptionAttributes::OptionAttributes(const OptionAttributes &attr) : _IsCall(attr._IsCall), _Strike(attr._Strike), _Price(attr._Price),
+OptionAttributes::OptionAttributes(OptionAttributes &attr) : _IsCall(attr._IsCall), _Strike(attr._Strike), _Price(attr._Price),
 _ImpliedVol(attr._ImpliedVol), _TTM(attr._TTM), _DivYield(attr._DivYield), _RiskFreeRate(attr._RiskFreeRate),
 _UnderlyingPrice(attr._UnderlyingPrice), DerivativeAttributes(attr)
 {
@@ -130,24 +130,19 @@ OptionAttributes& OptionAttributes::operator=(const OptionAttributes &attr)
 // Option definitions:
 ////////////////////
 // Constructors/Destructor:
-Option::Option() : Derivative(std::make_shared<OptionAttributes>(OptionAttributes())), _OptionObj(nullptr)
+Option::Option() : Derivative(), _OptionObj(nullptr)
 {
 	
 }
-Option::Option(const Option& opt) : Derivative(opt.Attributes()), _OptionObj(opt._OptionObj)
+Option::Option(Option& opt) : Derivative(static_cast<DerivativeAttributes&>(opt._Attributes)), _OptionObj(opt._OptionObj)
 {
 
 }
-Option::Option(Option && opt) : Derivative(std::move(opt.Attributes())), _OptionObj(std::move(opt._OptionObj))
+Option::Option(Option && opt) : Derivative(static_cast<DerivativeAttributes&>(opt._Attributes)), _OptionObj(std::move(opt._OptionObj))
 {
-
+	opt._OptionObj = nullptr;
 }
-Option::Option(const OptionAttributes & attr) : Derivative(attr), _OptionObj(Option::GenerateOptionObj(*attr))
-{
-
-}
-Option::Option(const OptionAttributes& attr) : Derivative(std::make_shared<OptionAttributes>(attr)) 
-	, _OptionObj(Option::GenerateOptionObj(attr))
+Option::Option(OptionAttributes & attr) : Derivative(attr), _OptionObj(Option::GenerateOptionObj(attr))
 {
 
 }
@@ -156,9 +151,9 @@ Option::~Option()
 
 }
 // Accessors:
-double Option::Price() const
+double Option::Price()
 {
-	return static_cast<const OptionAttributes&>(this->Attributes()).Price();
+	return static_cast<OptionAttributes&>(this->Attributes()).Price();
 }
 // Mutators:
 void Option::SetAttributes(const OptionAttributes& attr)

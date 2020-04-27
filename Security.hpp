@@ -18,7 +18,7 @@ public:
 	// Constructors/Destructor:
 	SecurityAttributes();
 	SecurityAttributes(double price, const QuantLib::Date& settle, bool IsLong);
-	explicit SecurityAttributes(const SecurityAttributes&);
+	explicit SecurityAttributes(SecurityAttributes&);
 	SecurityAttributes(SecurityAttributes&&);
 	virtual ~SecurityAttributes();
 	// Accessors:
@@ -42,14 +42,13 @@ public:
 	// Constructors/Destructor:
 	Security();
 	Security(SecurityAttributes& attr);
-	Security(const Security&);
+	Security(Security&);
 	Security(Security&);
 	virtual ~Security();
 	// Mutators:
-	const SecurityAttributes& Attributes() const;
-	SecurityAttributes& Attributes_Mutable();
+	SecurityAttributes& Attributes();
 	// Interface Methods:
-	virtual double Price() const = 0;
+	virtual double Price() = 0;
 	virtual double Delta() const = 0;
 	virtual double Gamma() const = 0;
 	virtual double Theta() const = 0;

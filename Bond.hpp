@@ -11,9 +11,9 @@ private:
 	double _Tenor, _Coupon, _Yield, _PresentValue;
 public:
 	// Constructors/Destructor:
+	BondAttributes();
 	BondAttributes(const QuantLib::Date &dt, const BondFileRow&);
 	virtual ~BondAttributes();
-
 	// Overloaded Operators:
 	BondAttributes& operator=(const BondAttributes&);
 };
@@ -24,6 +24,8 @@ private:
 	QuantLib::Date _MaturityDate;
 public:
 	// Constructors/Destructor:
+	Bond(Bond& bd);
+	Bond(BondAttributes& attr);
 	Bond(const QuantLib::Date&);
 	virtual ~Bond();
 	// Overloaded Operators:

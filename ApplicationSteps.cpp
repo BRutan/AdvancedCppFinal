@@ -143,11 +143,11 @@ void ApplicationSteps::FindOptimalDispersionTrade()
 	auto attr = this->_TradeFactory.GenerateDisperionAttributes("^OEX", this->_WeightsFile, this->_Underlyings);
 	auto optimal_trade = IndexDispersion::OptimalDispersionTrade(this->_Gen, attr);
 	this->_OptimalTrade = optimal_trade.first;
-	auto index_attr = dynamic_cast<OptionAttributes*>(this->_OptimalTrade.IndexOption().Attributes().get());
-	auto trade_attr = dynamic_cast<IndexDispersionAttributes*>(this->_OptimalTrade.Attributes().get());
+	auto index_attr = static_cast<OptionAttributes&>(this->_OptimalTrade.IndexOption().Attributes());
+	auto trade_attr = static_cast<IndexDispersionAttributes&>(this->_OptimalTrade.Attributes());
 	std::cout << "Optimal trade has implied correlation of " << std::setprecision(2) << optimal_trade.second << std::endl;
-	std::cout << "with index strike " << index_attr->Strike() << std::endl;
-	std::cout << "net premium " << trade_attr->Price() << std::endl;
+	std::cout << "with index strike " << index_attr.Strike() << std::endl;
+	std::cout << "net premium " << trade_attr.Price() << std::endl;
 }
 void ApplicationSteps::AcquireTradeData()
 {

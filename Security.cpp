@@ -17,7 +17,7 @@ SecurityAttributes::SecurityAttributes(double price, const QuantLib::Date& settl
 {
 
 }
-SecurityAttributes::SecurityAttributes(const SecurityAttributes &attr) : _SettlementDate(attr._SettlementDate), 
+SecurityAttributes::SecurityAttributes(SecurityAttributes &attr) : _SettlementDate(attr._SettlementDate), 
 	_IsLong(attr._IsLong), _Price(attr._Price) 
 {
 
@@ -81,7 +81,7 @@ Security::Security(SecurityAttributes& attr) : _Attributes(attr)
 {
 
 }
-Security::Security(const Security &sec) : _Attributes(sec._Attributes)
+Security::Security(Security &sec) : _Attributes(sec._Attributes)
 {
 
 }
@@ -90,12 +90,7 @@ Security::~Security()
 
 }
 // Accessors:
-const SecurityAttributes& Security::Attributes() const
-{
-	return this->_Attributes;
-}
-
-SecurityAttributes& Security::Attributes_Mutable()
+SecurityAttributes& Security::Attributes()
 {
 	return this->_Attributes;
 }

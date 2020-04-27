@@ -33,7 +33,7 @@ public:
 	OptionAttributes();
 	OptionAttributes(bool isCall, bool isLong, double premium, double riskFree, double divYield, double underlyingPrice,
 		const OptionChainRow& row, const QuantLib::Date &settle, const QuantLib::Date &exp);
-	OptionAttributes(const OptionAttributes&);
+	OptionAttributes(OptionAttributes&);
 	OptionAttributes(OptionAttributes&&);
 	virtual ~OptionAttributes();
 	// Accessors:
@@ -65,13 +65,12 @@ private:
 public:
 	// Constructors/Destructor:
 	Option();
-	Option(const OptionAttributes&);
-	explicit Option(const Option&);
+	Option(OptionAttributes& attr);
+	explicit Option(Option&);
 	Option(Option&&);
-	Option(const OptionAttributes& attr);
 	virtual ~Option();
 	// Accessors:
-	virtual double Price() const;
+	virtual double Price();
 	// Mutators:
 	void SetAttributes(const OptionAttributes& attr);
 	// Interface Functions:

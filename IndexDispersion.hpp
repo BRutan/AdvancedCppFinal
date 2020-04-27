@@ -21,16 +21,16 @@ private:
 public:
 	// Constructors/Destructor:
 	IndexDispersionAttributes();
-	IndexDispersionAttributes(bool isLong, const std::string& indexName, const Option& indexOption,
+	IndexDispersionAttributes(bool isLong, const std::string& indexName, Option& indexOption,
 		const std::unordered_map<std::string, std::pair<Option, double>> ConstitutentOptions, 
 		const QuantLib::Date &settle, const QuantLib::Date &exp);
-	IndexDispersionAttributes(const IndexDispersionAttributes&);
+	IndexDispersionAttributes(IndexDispersionAttributes&);
 	IndexDispersionAttributes(IndexDispersionAttributes&&);
 	virtual ~IndexDispersionAttributes();
 	// Accessors:
 	const std::string& IndexName() const;
-	const Option& IndexOption() const;
-	const std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions() const;
+	Option& IndexOption();
+	std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions();
 	// Mutators:
 	void ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>>&);
 	void IndexName(const std::string&);
@@ -44,17 +44,17 @@ class IndexDispersion : public Derivative
 public:
 	// Constructors/Destructor:
 	IndexDispersion();
-	IndexDispersion(const IndexDispersionAttributes&);
-	IndexDispersion(const IndexDispersion&);
+	IndexDispersion(IndexDispersionAttributes&);
+	IndexDispersion(IndexDispersion&);
 	virtual ~IndexDispersion();
 	// Accessors:
-	const std::string& IndexName() const;
-	const Option& IndexOption() const;
-	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
+	std::string& IndexName();
+	Option& IndexOption();
+	std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions();
 	// Interface Methods:
 	double ImpliedCorrelation() const;
-	static double ImpliedCorrelation(const IndexDispersionAttributes &attr);
-	static std::pair<IndexDispersion, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, const IndexDispersionAttributes &attrs);
+	static double ImpliedCorrelation(IndexDispersionAttributes &attr);
+	static std::pair<IndexDispersion, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, IndexDispersionAttributes &attrs);
 	virtual double Price() const;
 	virtual double Delta() const;
 	virtual double Gamma() const;
