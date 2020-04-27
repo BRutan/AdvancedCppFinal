@@ -22,21 +22,19 @@ void ZeroCurve::_SetInterp(const InterpolationType &interp)
 	switch (interp)
 	{
 	case InterpolationType::LINEAR:
-		this->_Interp = new QuantLib::LinearInterpolation(tenors.begin(), tenors.end(), rates.begin());
+		this->_Interp = std::make_shared<QuantLib::LinearInterpolation>(
+			new QuantLib::LinearInterpolation(tenors.begin(), tenors.end(), rates.begin()));
 		break;
 	case InterpolationType::CUBIC_SPLINE:
-		this->_Interp = new QuantLib::CubicNaturalSpline(tenors.begin(), tenors.end(), rates.begin());
+		this->_Interp = std::make_shared<QuantLib::CubicNaturalSpline>(
+			new QuantLib::CubicNaturalSpline(tenors.begin(), tenors.end(), rates.begin()));
 		break;
 	}
 }
-ZeroCurve::ZeroCurve() : _ZeroRates(), _Interp()
+// Constructors/Destructor:
+ZeroCurve::ZeroCurve(const InterpolationType& interp) : _ZeroRates(), _Interp()
 {
 
-}
-// Constructors/Destructor:
-ZeroCurve::ZeroCurve(std::unordered_map<double, double> rates, const InterpolationType& interp) : _ZeroRates(rates), _Interp()
-{
-	this->_SetInterp(interp);
 }
 ZeroCurve::ZeroCurve(const ZeroCurve& crv) : _ZeroRates(crv._ZeroRates), _Interp(crv._Interp)
 {
@@ -44,7 +42,7 @@ ZeroCurve::ZeroCurve(const ZeroCurve& crv) : _ZeroRates(crv._ZeroRates), _Interp
 }
 ZeroCurve::~ZeroCurve()
 {
-	delete this->_Interp;
+
 }
 // Accessors:
 const std::unordered_map<double, double>& ZeroCurve::ZeroRates() const

@@ -63,10 +63,6 @@ public:
 		}
 		return *this;
 	}
-	double operator[](unsigned long index) const
-	{
-		return this->_Values[index];
-	}
 };
 
 #endif
