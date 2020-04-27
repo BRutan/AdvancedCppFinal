@@ -3,6 +3,10 @@
 std::string ComponentWeightsFile::_Headers = "Symbol,Weights,DividendRate";
 
 // Constructors/Destructor:
+ComponentWeightsFile::ComponentWeightsFile() : _IndexSymbol(), _Tickers()
+{
+
+}
 ComponentWeightsFile::ComponentWeightsFile(const std::string& indexSymbol) : _IndexSymbol(indexSymbol), _Tickers()
 {
 	this->_Tickers.emplace(this->_IndexSymbol, ComponentWeightsFileRow(indexSymbol,1,std::log(1.0185)));

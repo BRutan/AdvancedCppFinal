@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,EMR201218C00060000,1587567526,60.0,3.65,3.9,3.6,0.0,0.0,,,0.3502262243652343,False,REGULAR,

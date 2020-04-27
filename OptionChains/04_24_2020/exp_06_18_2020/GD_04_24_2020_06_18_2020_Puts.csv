@@ -1,0 +1,3 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,GD200619P00120000,1587664416,120.0,4.3,4.6,4.9,0.0,0.0,,,0.44751529052734373,False,REGULAR,USD
+1,GD200619P00125000,1587670085,125.0,5.75,6.0,6.5,0.0,0.0,,,0.4234676794433594,False,REGULAR,

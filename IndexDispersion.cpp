@@ -156,21 +156,21 @@ std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const
 	IndexDispersionAttributes out, copy(attrs);
 	bool isNegative = false;
 	double maxAbsImpCorr = 0, impCorr;
-	auto indexOpt = copy.IndexOption_Mutable();
-	auto components = copy.ConstituentOptions_Mutable();
-	if (indexOpt.Attributes_Mutable() == nullptr)
+	if (copy.IndexOption_Mutable().Attributes_Mutable() == nullptr)
 	{
-		indexOpt.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
+		copy.IndexOption_Mutable().Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
 	}
 	// Set attributes for to feed into ImpliedCorrelation():
+	double temp;
 	for (auto &indexRow : indexChain->Data())
 	{
 		auto converted = dynamic_cast<OptionChainRow*>(indexRow.second);
 		auto indexStrike = converted->Strike();
 		auto indexIV = converted->ImpliedVol();
-		dynamic_cast<OptionAttributes*>(indexOpt.Attributes_Mutable().get())->Strike(indexStrike);
-		dynamic_cast<OptionAttributes*>(indexOpt.Attributes_Mutable().get())->ImpliedVol(indexIV);
-		for (auto component = components.begin(); component != components.end(); ++component)
+		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->Strike(indexStrike);
+		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->ImpliedVol(indexIV);
+		for (auto component = copy.ConstituentOptions_Mutable().begin(); 
+			component != copy.ConstituentOptions_Mutable().end(); ++component)
 		{
 			if (component->first == attrs.IndexName())
 			{
@@ -203,10 +203,15 @@ std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const
 		}
 		// Get implied correlation:
 		impCorr = IndexDispersion::ImpliedCorrelation(copy);
+		if (impCorr > 1 || impCorr < -1)
+		{
+			impCorr = impCorr;
+		}
 		if (std::abs(impCorr) > maxAbsImpCorr)
 		{
 			maxAbsImpCorr = std::abs(impCorr);
 			isNegative = impCorr < 0;
+			temp = impCorr;
 		}
 	}
 	// Generate trade using optimal strikes:

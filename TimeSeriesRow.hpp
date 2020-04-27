@@ -14,6 +14,10 @@ private:
 	double _Values[numcols];
 public:
 	// Constructors/Destructor:
+	TimeSeriesRow()
+	{
+
+	}
 	TimeSeriesRow(const std::string &row)
 	{
 		this->ParseRow(row);

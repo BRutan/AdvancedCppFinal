@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,GM201218P00020000,1587735312,20.0,3.4,3.35,3.5,-0.19999981,-5.5555506,,,0.647464462890625,False,REGULAR,USD

@@ -1,0 +1,3 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,DHR201218C00155000,1587398743,155.0,17.65,20.9,24.6,0.0,0.0,,,0.40775128387451176,True,REGULAR,USD
+1,DHR201218C00175000,1587391579,175.0,8.03,11.15,13.85,0.0,0.0,,,0.3608767526245117,False,REGULAR,USD

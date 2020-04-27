@@ -18,6 +18,7 @@ private:
 	std::unordered_map<std::string, ComponentWeightsFileRow> _Tickers;
 public:
 	// Constructors/Destructor:
+	ComponentWeightsFile();
 	ComponentWeightsFile(const std::string &indexSymbol);
 	ComponentWeightsFile(const std::string &indexSymbol, const std::string &path);
 	ComponentWeightsFile(const ComponentWeightsFile&);

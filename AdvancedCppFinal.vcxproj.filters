@@ -167,12 +167,6 @@
     <ClInclude Include="BondFileRow.hpp">
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
-    <ClInclude Include="StockPricesFile.hpp">
-      <Filter>Header Files\FileTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="StockPricesFileRow.hpp">
-      <Filter>Header Files\FileTypes</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentWeightsFile.hpp">
       <Filter>Header Files\FileTypes</Filter>
     </ClInclude>

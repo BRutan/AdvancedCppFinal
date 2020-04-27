@@ -1,0 +1,6 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,F201218C00005000,1587410980,5.0,1.15,,,0.0,0.0,,23,0.0,False,REGULAR,USD
+1,F201218C00006000,1587410980,6.0,0.75,,,0.0,0.0,,29,0.0,False,REGULAR,USD
+2,F201218C00007000,1587412532,7.0,0.45,,,0.0,0.0,,92,0.0,False,REGULAR,USD
+3,F201218C00008000,1587412671,8.0,0.24,,,0.0,0.0,,4,0.0,False,REGULAR,USD
+4,F201218C00010000,1587411322,10.0,0.09,,,0.0,0.0,,12,0.0,False,REGULAR,USD

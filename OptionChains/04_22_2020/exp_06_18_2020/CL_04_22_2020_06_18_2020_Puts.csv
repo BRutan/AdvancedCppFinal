@@ -1,0 +1,4 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,CL200619P00065000,1587411160,65.0,1.55,2.02,2.23,0.0,0.0,,,0.43506424316406256,False,REGULAR,
+1,CL200619P00067500,1587409180,67.5,2.29,2.69,2.94,0.0,0.0,,,0.415044912109375,False,REGULAR,
+2,CL200619P00070000,1587480102,70.0,3.55,3.6,3.95,0.5,16.393442,,,0.40601179931640624,False,REGULAR,

@@ -1,0 +1,4 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,PM201218C00090000,1587400273,90.0,3.5,2.18,2.93,0.0,0.0,,,0.35272864074707033,False,REGULAR,USD
+1,PM201218C00100000,1587409980,100.0,1.4,0.46,2.92,0.0,0.0,,,0.43726148681640625,False,REGULAR,
+2,PM201218C00110000,1587405895,110.0,0.75,0.23,0.64,0.0,0.0,,,0.3354558642578125,False,REGULAR,

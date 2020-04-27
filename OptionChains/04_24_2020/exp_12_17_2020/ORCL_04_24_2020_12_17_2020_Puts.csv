@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,ORCL201218P00055000,1587412753,55.0,6.45,7.4,7.8,0.0,0.0,,,0.38941040283203127,True,REGULAR,USD

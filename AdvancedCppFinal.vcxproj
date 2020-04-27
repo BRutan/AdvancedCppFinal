@@ -172,8 +172,6 @@
     <ClInclude Include="Portfolio.hpp" />
     <ClInclude Include="PricingGUI.hpp" />
     <ClInclude Include="Stats.hpp" />
-    <ClInclude Include="StockPricesFile.hpp" />
-    <ClInclude Include="StockPricesFileRow.hpp" />
     <ClInclude Include="ComponentWeightsFileRow.hpp" />
     <ClInclude Include="Observer.hpp" />
     <ClInclude Include="Option.hpp" />

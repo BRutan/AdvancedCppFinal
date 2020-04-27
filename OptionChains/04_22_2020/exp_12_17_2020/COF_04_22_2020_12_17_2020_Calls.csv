@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,COF201218C00055000,1587574216,55.0,8.3,8.3,8.6,-1.6999998,-16.999998,46,5,0.5972940661621093,False,REGULAR,USD

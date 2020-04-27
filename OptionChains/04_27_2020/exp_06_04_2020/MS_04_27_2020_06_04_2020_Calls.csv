@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,MS200605C00039500,1587752324,39.5,1.7,1.95,2.19,0.0,0.0,1,1,0.46143116699218756,False,REGULAR,USD

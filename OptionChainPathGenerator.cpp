@@ -14,6 +14,11 @@ std::unordered_map<unsigned, QuantLib::Month> OptionChainPathGenerator::_MonthTo
 };
 
 // Constructors/Destructor:
+OptionChainPathGenerator::OptionChainPathGenerator() : _ExpirationDate(), _ValueDate(),
+	_ContainerFolder()
+{
+
+}
 OptionChainPathGenerator::OptionChainPathGenerator(const std::string &containerFolder) : _ExpirationDate(), _ValueDate(),
 	_ContainerFolder(containerFolder)
 {

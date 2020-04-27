@@ -17,6 +17,7 @@ private:
 	std::string _ContainerFolder;
 public:
 	// Constructors/Destructor:
+	OptionChainPathGenerator();
 	OptionChainPathGenerator(const std::string &containerFolder = "");
 	OptionChainPathGenerator(const std::string &expDateFolder, const std::string &valueDateFolder, const std::string &containerFolder = "");
 	OptionChainPathGenerator(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder = "");

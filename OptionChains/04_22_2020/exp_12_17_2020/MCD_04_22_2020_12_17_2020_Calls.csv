@@ -1,0 +1,2 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,MCD201218C00260000,1587389449,260.0,1.35,0.6,1.21,0.0,0.0,,,0.2624585473632813,False,REGULAR,

@@ -1,0 +1,4 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,EMR201218P00030000,1587412796,30.0,1.75,1.65,1.95,0.0,0.0,,,0.6862824340820313,False,REGULAR,
+1,EMR201218P00045000,1587409690,45.0,5.4,5.2,,0.0,0.0,,4.0,0.5358933129882812,False,REGULAR,USD
+2,EMR201218P00050000,1587389708,50.0,8.27,7.2,8.2,0.0,0.0,,,0.5368698657226563,False,REGULAR,

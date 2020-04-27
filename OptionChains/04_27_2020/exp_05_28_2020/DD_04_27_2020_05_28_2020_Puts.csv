@@ -1,0 +1,3 @@
+,contractSymbol,lastTradeDate,strike,lastPrice,bid,ask,change,percentChange,volume,openInterest,impliedVolatility,inTheMoney,contractSize,currency
+0,DD200529P00037500,1587757131,37.5,1.35,0.34,1.53,0.0,0.0,15.0,15,0.6015664843750002,False,REGULAR,USD
+1,DD200529P00050000,1587356026,50.0,12.92,5.7,10.2,0.0,0.0,,5,0.6064492480468751,True,REGULAR,USD
