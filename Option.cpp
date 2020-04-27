@@ -22,9 +22,15 @@ OptionAttributes::OptionAttributes() : _IsCall(false), DerivativeAttributes(), _
 }
 OptionAttributes::OptionAttributes(bool isCall, bool isLong, double premium, double riskFree, double divYield, double underlyingPrice,
 	const OptionChainRow& row, const QuantLib::Date &settle, const QuantLib::Date &exp) :
-	_IsCall(isCall), _Strike(row.Strike()), _Price((isLong) ? row.Ask() : row.Bid()), 
+	_IsCall(isCall), _Strike(row.Strike()),  
 	_ImpliedVol(row.ImpliedVol()), _TTM(QuantLib::Actual365Fixed().yearFraction(settle, exp)), 
-	_DivYield(divYield), _UnderlyingPrice(underlyingPrice), DerivativeAttributes(premium, isLong, settle, exp)
+	_DivYield(divYield), _UnderlyingPrice(underlyingPrice), DerivativeAttributes(((isLong) ? row.Ask() : row.Bid()), isLong, settle, exp)
+{
+
+}
+OptionAttributes::OptionAttributes(const OptionAttributes& attr) : _IsCall(attr._IsCall), _Strike(attr._Strike),
+_ImpliedVol(attr._ImpliedVol), _TTM(attr._TTM), _DivYield(attr._DivYield), _UnderlyingPrice(attr._UnderlyingPrice), 
+DerivativeAttributes(attr._Price, attr._IsLong, attr._SettlementDate, attr.ExpirationDate())
 {
 
 }
@@ -118,7 +124,7 @@ OptionAttributes& OptionAttributes::operator=(const OptionAttributes &attr)
 // Option definitions:
 ////////////////////
 // Constructors/Destructor:
-Option::Option() : Derivative()
+Option::Option() : Derivative(), _OptionObj(nullptr)
 {
 
 }

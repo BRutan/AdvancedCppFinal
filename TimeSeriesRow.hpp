@@ -65,7 +65,7 @@ public:
 	}
 	double operator[](unsigned long index) const
 	{
-		return this->_Values[col];
+		return this->_Values[index];
 	}
 };
 

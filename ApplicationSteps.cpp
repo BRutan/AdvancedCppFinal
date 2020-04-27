@@ -130,7 +130,7 @@ void ApplicationSteps::AcquireAllData()
 	this->_Gen.ValueDate(this->_GUI.StartValueDate());
 	this->_RiskFree.ParseFile("RiskFree.csv");
 	// Get all underlying info from equity time series file for start value date and weights file:
-
+	this->_UpdateUnderlyings(this->_Gen.ValueDate());
 }
 void ApplicationSteps::FindOptimalDispersionTrade()
 {

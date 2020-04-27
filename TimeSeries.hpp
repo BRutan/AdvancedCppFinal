@@ -50,7 +50,7 @@ public:
 		unsigned long col = 0;
 		while (col < numcols)
 		{
-			output.emplace(this->_Symbols[col], row.operator[](col));
+			output.emplace(this->_Symbols[col], row->second.operator[](col));
 			++col;
 		}
 		return output;

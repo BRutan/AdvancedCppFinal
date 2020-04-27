@@ -33,6 +33,7 @@ public:
 	OptionAttributes();
 	OptionAttributes(bool isCall, bool isLong, double premium, double riskFree, double divYield, double underlyingPrice,
 		const OptionChainRow& row, const QuantLib::Date &settle, const QuantLib::Date &exp);
+	OptionAttributes(const OptionAttributes&);
 	virtual ~OptionAttributes();
 	// Accessors:
 	double DividendYield() const;
