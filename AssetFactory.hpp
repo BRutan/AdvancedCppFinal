@@ -18,9 +18,9 @@ private:
 	bool _GenerateLong;
 	ZeroCurve _RiskFreeCurve;
 	QuantLib::Date _Settle, _Expiry;
-	double _ClosestRiskFreeRate(const QuantLib::Date& exp) const;
 public:
 	// Constructors/Destructor:
+	AssetFactory();
 	AssetFactory(bool generateLong, const ZeroCurve& riskFree, const QuantLib::Date &settle, const QuantLib::Date &expiry);
 	AssetFactory(const AssetFactory&);
 	virtual ~AssetFactory();
@@ -37,7 +37,9 @@ public:
 	// Interface Methods:
 	Option GenerateOption(bool isCall, const OptionChainRow &option_data, const EquityAttributes& attr) const;
 	IndexDispersion GenerateDispersion(const std::string &indexSymbol, double indexStrike, const ComponentWeightsFile& weights, const OptionChains& chains,
-		const std::unordered_map<std::string, EquityAttributes>&) const;
+		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
+	IndexDispersionAttributes GenerateDisperionAttributes(const std::string &indexSymbol, const ComponentWeightsFile& weights,
+		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
 	/*
 	template<unsigned long numcols>
 	Equity GenerateEquity(const TimeSeries<numcols> &series, const QuantLib::Date &valueDate);

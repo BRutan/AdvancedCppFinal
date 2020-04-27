@@ -9,7 +9,6 @@ void IndexDispersionAttributes::_SetAttributes()
 	// Calculate net price of the portfolio.
 	bool indexIsLong = this->_IndexOption.Attributes()->IsLong();
 	bool constIsLong = !indexIsLong;
-	
 	auto attr = dynamic_cast<OptionAttributes*>(this->_IndexOption.Attributes().get());
 	attr->IsLong(indexIsLong);
 	const std::shared_ptr<OptionAttributes> ptr(attr);
@@ -99,6 +98,10 @@ IndexDispersionAttributes& IndexDispersionAttributes::operator=(const IndexDispe
 
 #pragma region IndexDispersion
 #pragma region Constructors/Destructor
+IndexDispersion::IndexDispersion() : Derivative()
+{
+
+}
 IndexDispersion::IndexDispersion(const IndexDispersionAttributes &attr) : 
 	Derivative(std::make_shared<IndexDispersionAttributes>(attr))
 {

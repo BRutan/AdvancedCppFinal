@@ -30,6 +30,10 @@ void ZeroCurve::_SetInterp(const InterpolationType &interp)
 	}
 }
 // Constructors/Destructor:
+ZeroCurve::ZeroCurve() : _ZeroRates(), _Interp()
+{
+
+}
 ZeroCurve::ZeroCurve(const InterpolationType& interp) : _ZeroRates(), _Interp()
 {
 

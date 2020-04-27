@@ -23,6 +23,7 @@ private:
 	void _SetInterp(const InterpolationType&);
 public:
 	// Constructors/Destructor:
+	ZeroCurve();
 	ZeroCurve(const InterpolationType&);
 	ZeroCurve(const ZeroCurve&);
 	virtual ~ZeroCurve();
