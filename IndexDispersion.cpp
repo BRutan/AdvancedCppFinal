@@ -99,7 +99,8 @@ IndexDispersionAttributes& IndexDispersionAttributes::operator=(const IndexDispe
 
 #pragma region IndexDispersion
 #pragma region Constructors/Destructor
-IndexDispersion::IndexDispersion(const IndexDispersionAttributes &attr) : Derivative(std::make_shared<IndexDispersionAttributes>(attr))
+IndexDispersion::IndexDispersion(const IndexDispersionAttributes &attr) : 
+	Derivative(std::make_shared<IndexDispersionAttributes>(attr))
 {
 
 }

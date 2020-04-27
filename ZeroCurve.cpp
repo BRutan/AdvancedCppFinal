@@ -21,11 +21,11 @@ void ZeroCurve::_SetInterp(const InterpolationType &interp)
 	{
 	case InterpolationType::LINEAR:
 		this->_Interp = std::make_shared<QuantLib::LinearInterpolation>(
-			new QuantLib::LinearInterpolation(tenors.begin(), tenors.end(), rates.begin()));
+			QuantLib::LinearInterpolation(tenors.begin(), tenors.end(), rates.begin()));
 		break;
 	case InterpolationType::CUBIC_SPLINE:
 		this->_Interp = std::make_shared<QuantLib::CubicNaturalSpline>(
-			new QuantLib::CubicNaturalSpline(tenors.begin(), tenors.end(), rates.begin()));
+			QuantLib::CubicNaturalSpline(tenors.begin(), tenors.end(), rates.begin()));
 		break;
 	}
 }
