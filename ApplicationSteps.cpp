@@ -141,6 +141,10 @@ void ApplicationSteps::FindOptimalDispersionTrade()
 	std::cout << "with " << result.second.size() << " total options." << std::endl;
 	std::cout << "----- Finding optimal disperion trade for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << "----" << std::endl;
 	auto attr = this->_TradeFactory.GenerateDisperionAttributes("^OEX", this->_WeightsFile, this->_Underlyings);
+	attr.ExpirationDate(result.first.ExpirationDate());
+	attr.SettlementDate(this->_GUI.StartValueDate());
+	this->_Gen.ExpirationDate(attr.ExpirationDate());
+	this->_Gen.ValueDate(attr.SettlementDate());
 	auto optimal_trade = IndexDispersion::OptimalDispersionTrade(this->_Gen, attr);
 	this->_OptimalTrade = optimal_trade.first;
 	auto index_attr = dynamic_cast<OptionAttributes*>(this->_OptimalTrade.IndexOption().Attributes().get());

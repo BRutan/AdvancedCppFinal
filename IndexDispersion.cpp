@@ -41,8 +41,10 @@ IndexDispersionAttributes::IndexDispersionAttributes(bool isLong, const std::str
 IndexDispersionAttributes::IndexDispersionAttributes(const IndexDispersionAttributes &attr) : _IndexName(attr._IndexName),
 	_IndexOption(attr._IndexOption), _ConstituentOptions(attr._ConstituentOptions), DerivativeAttributes(attr)
 {
-	// Ensure attributes set correctly:
-	this->_SetAttributes();
+	if (this->_IndexOption.Attributes() != nullptr)
+	{
+		this->_SetAttributes();
+	}
 }
 IndexDispersionAttributes::~IndexDispersionAttributes()
 {
@@ -68,7 +70,10 @@ void IndexDispersionAttributes::ConstituentOptions(const std::unordered_map<std:
 {
 	this->_ConstituentOptions = constits;
 	// Ensure attributes set correctly:
-	this->_SetAttributes();
+	if (this->_IndexOption.Attributes() != nullptr)
+	{
+		this->_SetAttributes();
+	}
 }
 void IndexDispersionAttributes::IndexName(const std::string& indexName)
 {
@@ -77,8 +82,18 @@ void IndexDispersionAttributes::IndexName(const std::string& indexName)
 void IndexDispersionAttributes::IndexOption(const Option& indexOpt)
 {
 	this->_IndexOption = indexOpt;
-	// Ensure attributes set correctly:
-	this->_SetAttributes();
+	if (this->_ConstituentOptions.size())
+	{
+		this->_SetAttributes();
+	}
+}
+Option& IndexDispersionAttributes::IndexOption_Mutable()
+{
+	return this->_IndexOption;
+}
+std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersionAttributes::ConstituentOptions_Mutable()
+{
+	return this->_ConstituentOptions;
 }
 #pragma endregion
 #pragma region Overloaded Operators
@@ -133,27 +148,50 @@ const std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersio
 #pragma region Interface Methods
 std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const OptionChainPathGenerator &gen, const IndexDispersionAttributes &attrs)
 {
+	// Get all option chains:
 	OptionChains allchains(gen);
 	auto indexChain = allchains.GetOptionChain(attrs.IndexName());
 	auto chains = allchains.GetOptionChains();
+	IndexDispersionAttributes out, copy(attrs);
 	bool isNegative = false;
-	double maxAbsImpCorr = 0, currImpCorr = 0;
-	for (auto &row : indexChain->Data())
+	double maxAbsImpCorr = 0, impCorr;
+	auto indexAttrs = copy.IndexOption_Mutable();
+	auto components = copy.ConstituentOptions_Mutable();
+	if (indexAttrs.Attributes_Mutable() == nullptr)
 	{
-		auto converted = dynamic_cast<OptionChainRow*>(row.second);
-		currImpCorr = 0;
-		for (auto &constituentChain : attrs.ConstituentOptions())
+		indexAttrs.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
+	}
+	// Set attributes for to feed into ImpliedCorrelation():
+	for (auto &indexRow : indexChain->Data())
+	{
+		auto converted = dynamic_cast<OptionChainRow*>(indexRow.second);
+		auto indexStrike = converted->Strike();
+		auto indexIV = converted->ImpliedVol();
+		dynamic_cast<OptionAttributes*>(indexAttrs.Attributes_Mutable().get())->Strike(indexStrike);
+		dynamic_cast<OptionAttributes*>(indexAttrs.Attributes_Mutable().get())->ImpliedVol(indexIV);
+		for (auto component = components.begin(); components != components.end(); ++component)
 		{
-			currImpCorr += 0;
+			if (component->second.first.Attributes_Mutable() == nullptr)
+			{
+				component->second.first.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
+			}
+			auto weight = component->second.second;
+			auto comp_strike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(indexStrike / weight);
+			auto comp_iv = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(comp_strike).ImpliedVol();
+			dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(comp_strike);
+			dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(comp_iv);
 		}
-		if (std::abs(currImpCorr) > maxAbsImpCorr)
+		// Get implied correlation:
+		impCorr = IndexDispersion::ImpliedCorrelation(copy);
+		if (std::abs(impCorr) > maxAbsImpCorr)
 		{
-			maxAbsImpCorr = std::abs(currImpCorr);
-			bool isLong = currImpCorr < 0;
+			maxAbsImpCorr = std::abs(impCorr);
+			isNegative = impCorr < 0;
 		}
 	}
 	// Generate trade using optimal strikes:
-	IndexDispersion trade(attrs);
+	IndexDispersion trade(copy);
+	maxAbsImpCorr *= ((isNegative) ? -1 : 1);
 	return std::make_pair(trade, maxAbsImpCorr);
 }
 double IndexDispersion::ImpliedCorrelation(const IndexDispersionAttributes &attr)

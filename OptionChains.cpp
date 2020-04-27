@@ -5,15 +5,26 @@ OptionChains::OptionChains(const std::string &containerFolder) : FileTypeContain
 {
 
 }
+OptionChains::OptionChains(const QuantLib::Date &valueDate, const std::string &containerFolder) 
+	: _Generator(), FileTypeContainer()
+{
+	this->_Generator.ValueDate(valueDate);
+}
 OptionChains::OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder) :
 	_Generator(expDate,valueDate,containerFolder), FileTypeContainer()
 {
-	this->ParseFiles(expDate);
+	if (this->_Generator.ExpirationDate().serialNumber() != 0)
+	{
+		this->ParseFiles(this->_Generator.ExpirationDate());
+	}
 }
 OptionChains::OptionChains(const OptionChainPathGenerator &gen) : 
 	_Generator(gen), FileTypeContainer()
 {
-	this->ParseFiles(gen.ExpirationDate());
+	if (this->_Generator.ExpirationDate().serialNumber() != 0)
+	{
+		this->ParseFiles(this->_Generator.ExpirationDate());
+	}
 }
 OptionChains::OptionChains(const OptionChains &chain) : FileTypeContainer(chain), _Generator(chain._Generator)
 {

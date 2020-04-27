@@ -129,7 +129,7 @@ Option::Option() : Derivative(), _OptionObj(nullptr)
 
 }
 Option::Option(const OptionAttributes& attr) : Derivative(std::make_shared<OptionAttributes>(attr)), 
-	_OptionObj(&Option::GenerateOptionObj(attr))
+	_OptionObj(Option::GenerateOptionObj(attr))
 {
 	
 }
@@ -175,23 +175,23 @@ double Option::Vega() const
 // Static Methods:
 double Option::Delta(const OptionAttributes& attrs)
 {
-	return Option::GenerateOptionObj(attrs).delta();
+	return Option::GenerateOptionObj(attrs)->delta();
 }
 double Option::Gamma(const OptionAttributes& attrs)
 {
-	return Option::GenerateOptionObj(attrs).gamma();
+	return Option::GenerateOptionObj(attrs)->gamma();
 }
 double Option::Rho(const OptionAttributes& attrs)
 {
-	return Option::GenerateOptionObj(attrs).rho();
+	return Option::GenerateOptionObj(attrs)->rho();
 }
 double Option::Theta(const OptionAttributes& attrs)
 {
-	return Option::GenerateOptionObj(attrs).theta();
+	return Option::GenerateOptionObj(attrs)->theta();
 }
 double Option::Vega(const OptionAttributes& attrs)
 {
-	return Option::GenerateOptionObj(attrs).vega();
+	return Option::GenerateOptionObj(attrs)->vega();
 }
 std::shared_ptr<QuantLib::VanillaOption> Option::GenerateOptionObj(const OptionAttributes &attr)
 {

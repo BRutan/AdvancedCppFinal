@@ -59,7 +59,7 @@ SecurityAttributes& SecurityAttributes::operator=(const SecurityAttributes &attr
 // Security:
 /////////////////
 // Constructors/Destructor:
-Security::Security() : _Attributes()
+Security::Security() : _Attributes(nullptr)
 {
 
 }
@@ -67,7 +67,7 @@ Security::Security(const std::shared_ptr<SecurityAttributes>& attr) : _Attribute
 {
 
 }
-Security::Security(const Security &sec)
+Security::Security(const Security &sec) : _Attributes(sec._Attributes)
 {
 
 }
@@ -77,6 +77,11 @@ Security::~Security()
 }
 // Accessors:
 const std::shared_ptr<SecurityAttributes>& Security::Attributes() const
+{
+	return this->_Attributes;
+}
+
+std::shared_ptr<SecurityAttributes>& Security::Attributes_Mutable()
 {
 	return this->_Attributes;
 }

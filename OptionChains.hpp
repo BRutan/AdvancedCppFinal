@@ -20,8 +20,9 @@ private:
 public:
 	// Constructors/Destructor:
 	OptionChains(const std::string &containerFolder = "");
-	OptionChains(const OptionChainPathGenerator &gen);
+	OptionChains(const QuantLib::Date &valueDate, const std::string &containerFolder = "");
 	OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder = "");
+	OptionChains(const OptionChainPathGenerator &gen);
 	explicit OptionChains(const OptionChains&);
 	virtual ~OptionChains();
 	// Accessors:

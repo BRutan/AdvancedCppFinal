@@ -34,6 +34,8 @@ public:
 	void ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>>&);
 	void IndexName(const std::string&);
 	void IndexOption(const Option&);
+	Option& IndexOption_Mutable();
+	std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions_Mutable();
 	// Overloaded Operators:
 	IndexDispersionAttributes& operator=(const IndexDispersionAttributes&);
 };
@@ -50,6 +52,8 @@ public:
 	const std::string& IndexName() const;
 	const Option& IndexOption() const;
 	const std::unordered_map<std::string, std::pair<Option, double>>& ConstitutentOptions() const;
+	// Mutators:
+	std::shared_ptr<IndexDispersionAttributes> Attributes_Mutable();
 	// Interface Methods:
 	double ImpliedCorrelation() const;
 	static double ImpliedCorrelation(const IndexDispersionAttributes &attr);
