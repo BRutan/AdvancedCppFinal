@@ -1,7 +1,5 @@
 #include "ZeroCurve.hpp"
 
-std::string ZeroCurve::_Header = "Tenor,Rate";
-
 // Private Helpers:
 void ZeroCurve::_SetInterp(const InterpolationType &interp)
 {
@@ -95,31 +93,25 @@ void ZeroCurve::AddZeroRate(double rate, double tenor)
 }
 void ZeroCurve::ParseFile(const std::string &path)
 {
+	if (this->_ZeroRates.size())
+	{
+		this->_ZeroRates.clear();
+	}
 	std::fstream file(path);
 	if (!file)
 	{
 		throw std::exception("Could not open ZeroRates file.");
 	}
-	this->_ZeroRates.clear();
 	std::string cell, line;
 	double tenor, rate;
 	std::getline(file, line);
 	while (!file.eof())
 	{
-		std::getline(file, line);
-		if (line.empty())
-		{
-			break;
-		}
 		std::stringstream stream(line);
 		std::getline(stream, cell, ',');
-		if (cell.empty())
-		{
-			break;
-		}
-		tenor = std::stod(cell);
+		tenor = std::stoul(cell);
 		std::getline(stream, cell, ',');
-		rate = std::stod(cell);
+		rate = std::stoul(cell);
 		this->_ZeroRates.emplace(tenor, rate);
 	}
 }

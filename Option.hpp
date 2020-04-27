@@ -33,8 +33,6 @@ public:
 	OptionAttributes();
 	OptionAttributes(bool isCall, bool isLong, double premium, double riskFree, double divYield, double underlyingPrice,
 		const OptionChainRow& row, const QuantLib::Date &settle, const QuantLib::Date &exp);
-	OptionAttributes(const OptionAttributes&);
-	OptionAttributes(OptionAttributes&&);
 	virtual ~OptionAttributes();
 	// Accessors:
 	double DividendYield() const;
@@ -65,15 +63,12 @@ private:
 public:
 	// Constructors/Destructor:
 	Option();
-	Option(const OptionAttributes&);
-	explicit Option(const Option&);
-	Option(Option&&);
 	Option(const OptionAttributes& attr);
 	virtual ~Option();
 	// Accessors:
 	virtual double Price() const;
 	// Mutators:
-	void SetAttributes(const OptionAttributes& attr);
+	void SetAttributes(const std::shared_ptr<OptionAttributes>& attr);
 	// Interface Functions:
 	virtual double Delta() const;
 	virtual double Gamma() const;
@@ -86,7 +81,7 @@ public:
 	static double Theta(const OptionAttributes&);
 	static double Vega(const OptionAttributes&);
 	static double Rho(const OptionAttributes&);
-	static std::shared_ptr<QuantLib::VanillaOption> GenerateOptionObj(const OptionAttributes&);
+	static QuantLib::VanillaOption GenerateOptionObj(const OptionAttributes&);
 	// Overloaded Operators:
 	Option& operator=(const Option&);
 };

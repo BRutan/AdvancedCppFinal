@@ -50,7 +50,7 @@ Equity::Equity() : Security()
 {
 
 }
-Equity::Equity(const EquityAttributes& attr) : Security(attr)
+Equity::Equity(const EquityAttributes& attr) : Security(std::make_shared<EquityAttributes>(attr))
 {
 
 }
@@ -68,7 +68,7 @@ const std::shared_ptr<EquityAttributes>& Equity::GetAttributes() const
 	return std::make_shared<EquityAttributes>(this->_Attributes.get());
 }
 // Mutators:
-void Equity::SetAttributes(const EquityAttributes& attr)
+void Equity::SetAttributes(const std::shared_ptr<EquityAttributes>& attr)
 {
 	this->_Attributes = attr;
 }

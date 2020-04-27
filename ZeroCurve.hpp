@@ -20,7 +20,6 @@ enum class InterpolationType
 class ZeroCurve : Security
 {
 private:
-	static std::string _Header;
 	QuantLib::Interpolation *_Interp;
 	std::unordered_map<double, double> _ZeroRates;
 	void _SetInterp(const InterpolationType&);
@@ -52,15 +51,6 @@ public:
 	virtual double Rho() const;
 	// Overloaded Operators:
 	ZeroCurve& operator=(const ZeroCurve&);
-	friend std::ostream& operator<<(std::ostream& stream, const ZeroCurve& curve)
-	{
-		stream << ZeroCurve::_Header << '\n';
-		for (auto &entry : curve._ZeroRates)
-		{
-			stream << entry.first << ',' << entry.second << '\n';
-		}
-		return stream;
-	}
 };
 
 #endif

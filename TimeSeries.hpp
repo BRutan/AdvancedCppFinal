@@ -50,7 +50,8 @@ public:
 		auto row = this->_Values.find(dt);
 		while (col < numcols)
 		{
-			output.emplace(std::string(this->_Symbols[col]), row->second.operator[](col));
+			double val = row->second.operator[](col);
+			//output.emplace(std::string(this->_Symbols[col]), row->second[col]);
 			++col;
 		}
 		return output;

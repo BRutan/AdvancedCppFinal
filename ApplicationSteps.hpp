@@ -47,9 +47,8 @@ public:
 	// Interface Methods:
 	void DisplayStartScreen();
 	void GetArgumentsFromUser();
-	void AcquireBackendData();
+	void AcquireAllData();
 	void FindOptimalDispersionTrade();
-	void AcquireTradeData();
 	void CalculatePNLForTradePeriod();
 	void OutputFiles();
 	void PrintResultSummary();

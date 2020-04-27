@@ -6,8 +6,6 @@
 #include <iostream>
 #include <string>
 
-class EquityAttributes;
-
 class SecurityAttributes
 {
 protected:
@@ -18,9 +16,7 @@ public:
 	// Constructors/Destructor:
 	SecurityAttributes();
 	SecurityAttributes(double price, const QuantLib::Date& settle, bool IsLong);
-	explicit SecurityAttributes(const SecurityAttributes&);
-	SecurityAttributes(SecurityAttributes&&);
-	virtual ~SecurityAttributes();
+	virtual ~SecurityAttributes() = 0;
 	// Accessors:
 	bool IsLong() const;
 	const QuantLib::Date& SettlementDate() const;
@@ -36,18 +32,15 @@ public:
 class Security
 {
 protected:
-	static SecurityAttributes &_Default;
-	SecurityAttributes& _Attributes;
+	std::shared_ptr<SecurityAttributes> _Attributes;
 public:
 	// Constructors/Destructor:
 	Security();
-	Security(SecurityAttributes& attr);
+	Security(const std::shared_ptr<SecurityAttributes>& attr);
 	Security(const Security&);
-	Security(Security&);
 	virtual ~Security();
-	// Mutators:
-	const SecurityAttributes& Attributes() const;
-	SecurityAttributes& Attributes_Mutable();
+	// Accessors:
+	const std::shared_ptr<SecurityAttributes>& Attributes() const;
 	// Interface Methods:
 	virtual double Price() const = 0;
 	virtual double Delta() const = 0;
