@@ -39,20 +39,18 @@ public:
 	{
 		return this->_Symbols;
 	}
-	const TimeSeriesRow<numcols>& GetRow(const QuantLib::Date &date) const
+	double GetTimeSeries(const std::string &symbol, const QuantLib::Date &date) const
 	{
-		return this->_Values[date];
+		unsigned long index = this->_SymbolsToColumnNum[symbol];
+		return this->_Values[date].GetTimeSeries(index);
 	}
-	std::unordered_map<std::string, double> GetSeriesForDate(const QuantLib::Date &dt) const
+	std::unordered_map<std::string, double> GetDateEntries(const QuantLib::Date &dt) const
 	{
 		std::unordered_map<std::string, double> output;
 		unsigned long col = 0;
-		auto row = this->_Values.find(dt);
 		while (col < numcols)
 		{
-			double val = row->second.operator[](col);
-			//output.emplace(std::string(this->_Symbols[col]), row->second[col]);
-			++col;
+			output.emplace(this->_Symbols[col], this->_Values[col]);
 		}
 		return output;
 	}

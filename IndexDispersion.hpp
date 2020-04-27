@@ -42,7 +42,6 @@ class IndexDispersion : public Derivative
 {
 public:
 	// Constructors/Destructor:
-	IndexDispersion();
 	IndexDispersion(const IndexDispersionAttributes&);
 	IndexDispersion(const IndexDispersion&);
 	virtual ~IndexDispersion();
