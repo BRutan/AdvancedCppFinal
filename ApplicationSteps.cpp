@@ -174,6 +174,13 @@ void ApplicationSteps::CalculatePNLForTradePeriod()
 		}
 		this->_TradeFactory.Settlement(startDate);
 		OptionChains chains(true, this->_Gen);
+		if (chains.Files().size() == 0)
+		{
+			std::cerr << "Skipping value date " << FileType::DateToString(this->_Gen.ValueDate(), '//') << std::endl;
+			std::cerr << "no data available for " << FileType::DateToString(this->_Gen.ExpirationDate(), '//') << " expiration." << std::endl;
+			continue;
+		}
+		// Update trade value data, calculate pnl over period:
 		auto newDisp = this->_TradeFactory.GenerateDispersion(chains, copy);
 		copy = *std::dynamic_pointer_cast<IndexDispersionAttributes>(newDisp.Attributes());
 		// Calculate PNL:

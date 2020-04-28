@@ -63,6 +63,7 @@ public:
 	// Constructors/Destructor:
 	Option();
 	Option(const OptionAttributes&);
+	Option(const Option&);
 	virtual ~Option();
 	// Accessors:
 	virtual double Price() const;

@@ -2,8 +2,6 @@
 Description:
 	* Query user to determine starting value date and ending value date.
 	Find expiration date with greatest number of 
-
-
 */
 
 // NOTE: Need to set "/std:c++latest" as compiler flag to compile the <filesystem> library.

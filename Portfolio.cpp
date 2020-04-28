@@ -1,5 +1,24 @@
 #include "Portfolio.hpp"
 
+
+PortfolioAttributes::PortfolioAttributes()
+{
+
+}
+PortfolioAttributes::PortfolioAttributes(const PortfolioAttributes& attr)
+{
+
+}
+PortfolioAttributes::~PortfolioAttributes()
+{
+
+}
+// Overloaded Operators:
+PortfolioAttributes& PortfolioAttributes::operator=(const PortfolioAttributes& attr)
+{
+	return *this;
+}
+
 // Constructors/Destructor:
 Portfolio::Portfolio() : _Securities()
 {

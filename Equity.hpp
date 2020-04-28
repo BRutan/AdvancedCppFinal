@@ -6,7 +6,7 @@
 
 class EquityAttributes : public SecurityAttributes
 {
-private:
+protected:
 	double _MarginRate, _DividendYield;
 public:
 	// Constructors/Destructor:

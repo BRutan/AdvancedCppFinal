@@ -5,6 +5,17 @@
 #include "Derivative.hpp"
 #include "PNLFileRow.hpp"
 
+class PortfolioAttributes : DerivativeAttributes
+{
+public:
+	// Constructors/Destructor:
+	PortfolioAttributes();
+	PortfolioAttributes(const PortfolioAttributes&);
+	virtual ~PortfolioAttributes();
+	// Overloaded Operators:
+	PortfolioAttributes& operator=(const PortfolioAttributes&);
+};
+
 class Portfolio : Derivative
 {
 private:

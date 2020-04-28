@@ -13,6 +13,11 @@ SecurityAttributes::SecurityAttributes(double price, const QuantLib::Date& settl
 {
 
 }
+SecurityAttributes::SecurityAttributes(const SecurityAttributes &sec) : _SettlementDate(sec._SettlementDate),
+	_IsLong(sec._IsLong), _Price(sec._Price)
+{
+
+}
 SecurityAttributes::~SecurityAttributes()
 {
 

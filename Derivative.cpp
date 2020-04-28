@@ -7,6 +7,11 @@ DerivativeAttributes::DerivativeAttributes() : SecurityAttributes(), _Expiration
 {
 
 }
+DerivativeAttributes::DerivativeAttributes(const DerivativeAttributes &attr) : 
+	SecurityAttributes(attr._Price, attr._SettlementDate, attr._IsLong), _ExpirationDate(attr._ExpirationDate)
+{
+
+}
 DerivativeAttributes::DerivativeAttributes(double price, bool isLong, const QuantLib::Date& settle, const QuantLib::Date& exp) : 
 	SecurityAttributes(price,settle, isLong), _ExpirationDate(exp)
 {
@@ -50,11 +55,11 @@ Derivative::Derivative() : Security()
 {
 
 }
-Derivative::Derivative(const std::shared_ptr<SecurityAttributes>& attr) : Security(attr)
+Derivative::Derivative(const std::shared_ptr<DerivativeAttributes>& attr) : Security(attr)
 {
 
 }
-Derivative::Derivative(const Derivative& deriv) : Security(deriv._Attributes)
+Derivative::Derivative(const Derivative& deriv) : Security()
 {
 
 }
@@ -67,7 +72,9 @@ Derivative& Derivative::operator=(const Derivative& deriv)
 {
 	if (this != &deriv)
 	{
-		this->_Attributes = deriv._Attributes;
+		this->Attributes_Mutable()->IsLong(deriv.Attributes()->IsLong());
+		this->Attributes_Mutable()->Price(deriv.Attributes()->Price());
+		this->Attributes_Mutable()->SettlementDate(deriv.Attributes()->SettlementDate());
 	}
 	return *this;
 }

@@ -16,6 +16,7 @@ public:
 	// Constructors/Destructor:
 	SecurityAttributes();
 	SecurityAttributes(double price, const QuantLib::Date& settle, bool IsLong);
+	SecurityAttributes(const SecurityAttributes&);
 	virtual ~SecurityAttributes() = 0;
 	// Accessors:
 	bool IsLong() const;

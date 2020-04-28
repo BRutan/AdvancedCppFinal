@@ -106,7 +106,8 @@ OptionAttributes& OptionAttributes::operator=(const OptionAttributes &attr)
 // Option definitions:
 ////////////////////
 // Constructors/Destructor:
-Option::Option() : Derivative(), _OptionObj(nullptr)
+Option::Option() : Derivative(std::make_shared<OptionAttributes>(OptionAttributes())), 
+	_OptionObj()
 {
 
 }
@@ -114,6 +115,18 @@ Option::Option(const OptionAttributes& attr) : Derivative(std::make_shared<Optio
 	_OptionObj(Option::GenerateOptionObj(attr))
 {
 	
+}
+Option::Option(const Option& opt) : Derivative(),
+	_OptionObj()
+{
+	if (opt._OptionObj != nullptr)
+	{
+		this->_OptionObj = std::make_shared<QuantLib::VanillaOption>(*opt._OptionObj);
+	}
+	if (opt.Attributes() != nullptr)
+	{
+		this->_Attributes = std::make_shared<DerivativeAttributes>(*std::dynamic_pointer_cast<OptionAttributes>(opt._Attributes));
+	}
 }
 Option::~Option()
 {
@@ -239,8 +252,22 @@ Option& Option::operator=(const Option &opt)
 {
 	if (this != &opt)
 	{
-		this->_OptionObj = opt._OptionObj;
-		this->_Attributes = opt._Attributes;
+		if (opt._OptionObj != nullptr)
+		{
+			this->_OptionObj = std::make_shared<QuantLib::VanillaOption>(*opt._OptionObj);
+		}
+		else
+		{
+			this->_OptionObj.reset();
+		}
+		if (opt._Attributes != nullptr)
+		{
+			this->_Attributes = std::make_shared<OptionAttributes>(*std::dynamic_pointer_cast<OptionAttributes>(opt._Attributes));
+		}
+		else
+		{
+			this->_Attributes.reset();
+		}
 	}
 	return *this;
 }
