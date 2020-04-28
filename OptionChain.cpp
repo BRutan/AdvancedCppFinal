@@ -68,18 +68,22 @@ double OptionChain::GetClosestStrike(double strike) const
 	}
 	return *(this->_SortedStrikes.end() - 1);
 }
-const OptionChainRow& OptionChain::GetRow(double strike) const
+const OptionChainRow * OptionChain::GetRow(double strike) const
 {
 	auto match = this->_Data.find(strike);
 	if (match == this->_Data.end())
 	{
 		std::exception("Strike not in data set.");
 	}
-	return *dynamic_cast<OptionChainRow*>(match->second);
+	return dynamic_cast<OptionChainRow*>(match->second);
 }
 bool OptionChain::HasStrike(double strike) const
 {
 	return this->_Data.find(strike) != this->_Data.end();
+}
+const std::vector<double>& OptionChain::Strikes() const
+{
+	return this->_SortedStrikes;
 }
 const std::string& OptionChain::Ticker() const
 {

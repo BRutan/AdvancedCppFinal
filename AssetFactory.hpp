@@ -40,7 +40,7 @@ public:
 		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
 	IndexDispersionAttributes GenerateDispersionAttributes(const std::string &indexSymbol, const ComponentWeightsFile& weights,
 		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
-	IndexDispersion OptimalDispersionTrade(const OptionChainPathGenerator &gen,
+	std::pair<IndexDispersion, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen,
 		const IndexDispersionAttributes &attrs, const std::unordered_map<std::string, EquityAttributes>& underlyings, double assumedIV);
 	static double NormCDF(double z);
 	// Overloaded Operators:

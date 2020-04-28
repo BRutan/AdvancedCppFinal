@@ -9,6 +9,11 @@ Portfolio::Portfolio(const Portfolio &port) : _Securities(port._Securities)
 {
 
 }
+// Accessors:
+const std::unordered_map<std::string, std::shared_ptr<Security>>& Portfolio::Securities() const
+{
+	return this->_Securities;
+}
 // Interface Methods:
 double Portfolio::Price() const
 {
@@ -90,4 +95,8 @@ Portfolio& Portfolio::operator=(const Portfolio &port)
 		Portfolio::Derivative::operator=(port);
 	}
 	return *this;
+}
+PNLFileRow Portfolio::operator-(const Portfolio &port)
+{
+
 }

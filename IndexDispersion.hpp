@@ -10,6 +10,7 @@
 #include "Equity.hpp"
 #include "Option.hpp"
 #include "OptionChains.hpp"
+#include "PNLFileRow.hpp"
 #include "Security.hpp"
 
 class IndexDispersionAttributes : public DerivativeAttributes
@@ -75,6 +76,7 @@ public:
 	virtual double Vega() const;
 	virtual double Rho() const;
 	IndexDispersion& operator=(const IndexDispersion&);
+	PNLFileRow operator-(const IndexDispersion&);
 };
 
 #endif

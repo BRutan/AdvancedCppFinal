@@ -108,6 +108,12 @@
     <ClCompile Include="Equity.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="PNLFileRow.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="PNLFile.cpp">
+      <Filter>Source Files\FileTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Equity.hpp">
@@ -193,6 +199,12 @@
     </ClInclude>
     <ClInclude Include="Hashers.hpp">
       <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="PNLFile.hpp">
+      <Filter>Header Files\FileTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="PNLFileRow.hpp">
+      <Filter>Header Files\FileTypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

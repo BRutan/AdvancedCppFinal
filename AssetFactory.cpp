@@ -110,7 +110,7 @@ IndexDispersion AssetFactory::GenerateDispersion(const std::string &indexSymbol,
 		throw std::exception("Missing index underlying info.");
 	}
 	auto indexChain = chains.GetOptionChain(indexSymbol);
-	OptionChainRow row;
+	const OptionChainRow * row;
 	if (!indexChain->HasStrike(indexStrike))
 	{
 		indexStrike = indexChain->GetClosestStrike(indexStrike);
@@ -123,7 +123,7 @@ IndexDispersion AssetFactory::GenerateDispersion(const std::string &indexSymbol,
 	IndexDispersionAttributes attr;
 	std::unordered_map<std::string, std::pair<Option, double>> comps;
 	std::pair<Option, double> curr_const;
-	attr.IndexOption(this->GenerateOption(this->_GenerateLong, row, indexUnderlying->second));
+	attr.IndexOption(this->GenerateOption(this->_GenerateLong, *row, indexUnderlying->second));
 	attr.IndexName(indexSymbol);
 	attr.IsLong(this->_GenerateLong);
 	attr.SettlementDate(this->_Settle);
@@ -143,7 +143,7 @@ IndexDispersion AssetFactory::GenerateDispersion(const std::string &indexSymbol,
 			component_strike = chain->GetClosestStrike(component_strike);
 		}
 		curr_const = std::make_pair<Option, double>(
-			this->GenerateOption(!this->_GenerateLong, chain->GetRow(component_strike), underlying->second),
+			this->GenerateOption(!this->_GenerateLong, *chain->GetRow(component_strike), underlying->second),
 			elem.second.Weight());
 		comps.emplace(elem.second.Ticker(), curr_const);
 	}
@@ -151,11 +151,11 @@ IndexDispersion AssetFactory::GenerateDispersion(const std::string &indexSymbol,
 	attr.ConstituentOptions(comps);
 	return IndexDispersion(attr);
 }
-IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenerator &gen,
+std::pair<IndexDispersion,double> AssetFactory::OptimalDispersionTrade(const OptionChainPathGenerator &gen,
 	const IndexDispersionAttributes &attrs, const std::unordered_map<std::string, EquityAttributes>& underlyings, double assumedIV)
 {
 	// Get all option chains:
-	OptionChains allchains(gen);
+	OptionChains allchains(true, gen);
 	auto indexChain = allchains.GetOptionChain(attrs.IndexName());
 	auto chains = allchains.GetOptionChains();
 	IndexDispersionAttributes out, copy(attrs);
@@ -172,20 +172,22 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 	auto indexDiv = underlyings.find(attrs.IndexName())->second.DividendYield();
 	auto indexFuture = indexPrice * std::exp((riskFree - indexDiv) * tenor);
 	bool isNegative = false;
-	double maxAbsImpCorr = 0, impCorr, delta;
+	double maxAbsImpCorr = 0, impCorr, currDelta, delta;
 	for (auto &indexRow : indexChain->Data())
 	{
 		auto converted = dynamic_cast<OptionChainRow*>(indexRow.second);
 		auto indexStrike = converted->Strike();
 		auto indexIV = converted->ImpliedVol();
+		auto indexPrice = (converted->Ask() + converted->Bid()) / 2.0;
 		auto indexXVal = IndexDispersionAttributes::ApproxExerciseDelta(indexFuture, indexIV, tenor, indexStrike);
+		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->Price(indexPrice);
 		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->Strike(indexStrike);
 		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->ImpliedVol(indexIV);
 		std::vector<double> deltas{ AssetFactory::NormCDF(indexXVal) };
 		for (auto component = copy.ConstituentOptions_Mutable().begin();
 			component != copy.ConstituentOptions_Mutable().end(); ++component)
 		{
-			if (component->first == attrs.IndexName())
+			if (component->first == attrs.IndexName() || component->first == "")
 			{
 				continue;
 			}
@@ -193,30 +195,41 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 			{
 				component->second.first.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
 			}
-			auto chain = allchains.GetOptionChain(component->first);
 			auto equityAttr = underlyings.find(component->first)->second;
 			auto futurePrice = equityAttr.Price() * std::exp((riskFree - equityAttr.DividendYield()) * tenor);
-			auto targetStrike = IndexDispersionAttributes::TargetStrike(futurePrice, chain->AverageImpliedVolatility(),tenor,indexXVal);
-			targetStrike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(targetStrike);
 			auto weight = component->second.second;
-			if (targetStrike < 0 || targetStrike >= indexStrike)
+			double targetStrike = 0;
+			if (allchains.HasOptionChain(component->first) && allchains.GetOptionChain(component->first)->NumRows())
 			{
-				// Use estimated implied volatility and compute price using model if price not available:
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(equityAttr.Price());
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(chain->AverageImpliedVolatility());
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price(0);
+				auto chain = allchains.GetOptionChain(component->first);
+				targetStrike = IndexDispersionAttributes::TargetStrike(futurePrice, chain->AverageImpliedVolatility(), tenor, indexXVal);
+				targetStrike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(targetStrike);
+				if (targetStrike <= 0 || targetStrike >= indexStrike)
+				{
+					// Use estimated implied volatility and compute price using model if price not available:
+					dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(equityAttr.Price());
+					dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(chain->AverageImpliedVolatility());
+					dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price(0);
+				}
+				else
+				{
+					auto row = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(targetStrike);
+					dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(row->Strike());
+					dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(row->ImpliedVol());
+					dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price((row->Bid() + row->Ask()) / 2.0);
+				}
 			}
 			else
 			{
-				auto row = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(targetStrike);
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(row.Strike());
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(row.ImpliedVol());
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price((row.Bid() + row.Ask())/2.0);
+				// Use estimated implied volatility and compute price using model if price not available:
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(equityAttr.Price());
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(assumedIV);
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price(0);
 			}
 			auto strike = dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike();
 			auto iv = dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol();
-			auto delta = IndexDispersionAttributes::ApproxExerciseDelta(futurePrice, iv, tenor, strike);
-			deltas.push_back(-AssetFactory::NormCDF(delta) * weight);
+			auto componentX = IndexDispersionAttributes::ApproxExerciseDelta(futurePrice, iv, tenor, strike);
+			deltas.push_back(-AssetFactory::NormCDF(componentX) * weight);
 		}
 		// Get implied correlation:
 		impCorr = IndexDispersion::ImpliedCorrelation(copy);
@@ -226,6 +239,7 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 			out = copy;
 			maxAbsImpCorr = std::abs(impCorr);
 			isNegative = impCorr < 0;
+			currDelta = netDelta;
 		}
 	}
 	// Generate trade using optimal strikes:
@@ -243,7 +257,7 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 			component->second.first.Attributes_Mutable().get())->Underlying(underlyings.find(component->first)->second);
 	}
 	out.Generate();
-	return IndexDispersion(out);
+	return std::make_pair(IndexDispersion(out), currDelta);
 }
 double AssetFactory::NormCDF(double z)
 {

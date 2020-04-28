@@ -146,6 +146,8 @@
     <ClCompile Include="OptionChainPathGenerator.cpp" />
     <ClCompile Include="OptionChainRow.cpp" />
     <ClCompile Include="OptionChains.cpp" />
+    <ClCompile Include="PNLFile.cpp" />
+    <ClCompile Include="PNLFileRow.cpp" />
     <ClCompile Include="Portfolio.cpp" />
     <ClCompile Include="PricingGUI.cpp" />
     <ClCompile Include="Security.cpp" />
@@ -169,6 +171,8 @@
     <ClInclude Include="FileRow.hpp" />
     <ClInclude Include="FileType.hpp" />
     <ClInclude Include="FileTypeContainer.hpp" />
+    <ClInclude Include="PNLFile.hpp" />
+    <ClInclude Include="PNLFileRow.hpp" />
     <ClInclude Include="Portfolio.hpp" />
     <ClInclude Include="PricingGUI.hpp" />
     <ClInclude Include="Stats.hpp" />

@@ -21,7 +21,6 @@ void IndexDispersionAttributes::_SetAttributes()
 		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->SettlementDate(this->_SettlementDate);
 		netPrice += component.second.first.Price() * component.second.second;
 	}
-	this->_IsLong = indexIsLong;
 	this->_Price = netPrice;
 }
 void IndexDispersionAttributes::_InitializeAttributes()
@@ -129,7 +128,6 @@ void IndexDispersionAttributes::SettlementDate(const QuantLib::Date &dt)
 }
 void IndexDispersionAttributes::Generate()
 {
-	this->_SetAttributes();
 	this->_IndexOption.Generate();
 	for (auto component : this->_ConstituentOptions)
 	{
@@ -310,6 +308,17 @@ IndexDispersion& IndexDispersion::operator=(const IndexDispersion &trade)
 		Derivative::operator=(trade);
 	}
 	return *this;
+}
+PNLFileRow IndexDispersion::operator-(const IndexDispersion &disp)
+{
+	PNLFileRow row;
+	row.Price(disp.Price());
+	row.PriceChg(disp.Price() - this->Price());
+	row.PercentChg(row.PriceChg() / disp.Price());
+	row.ValueDate(disp.ValueDate());
+	row.Ticker(disp.IndexName());
+	row.ImpliedCorrelation(disp.ImpliedCorrelation());
+	return row;
 }
 #pragma endregion
 #pragma endregion

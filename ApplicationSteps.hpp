@@ -12,6 +12,8 @@
 #include "Option.hpp"
 #include "OptionChains.hpp"
 #include "OptionChainPathGenerator.hpp"
+#include "PNLFile.hpp"
+#include "PNLFileRow.hpp"
 #include "Portfolio.hpp"
 #include "PricingGUI.hpp"
 #include "TimeSeries.hpp"
@@ -27,6 +29,7 @@ private:
 	std::string _AllChainFolder;
 	ComponentWeightsFile _WeightsFile;
 	// Map ValueDate -> ExpirationDate -> OptionChains:
+	PNLFile _PNL;
 	AllChainMap _AllChains;
 	SubChainMap _ValueDateChains;
 	AssetFactory _TradeFactory;

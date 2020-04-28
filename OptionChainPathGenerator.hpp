@@ -33,6 +33,7 @@ public:
 	void ExpirationDate(const QuantLib::Date&);
 	void ValueDate(const QuantLib::Date&);
 	// Interface Methods:
+	static bool IsCalls(const std::string &path);
 	static std::string ExtractTicker(const std::string &chainpath);
 	static QuantLib::Date ExtractExpirationDate_Chain(const std::string &chainpath);
 	static QuantLib::Date ExtractExpirationDate_Folder(const std::string &chainpath);
@@ -41,7 +42,7 @@ public:
 	static QuantLib::Date StringToDate(const std::string &str, char delim);
 	bool IsExpDate(const std::string &path) const;
 	bool IsValueDate(const std::string &path) const;
-	bool PathExists(const std::string &ticker) const;
+	bool PathExists(const std::string &ticker);
 	std::string TickerPath(const std::string &ticker) const;
 	// Overloaded Operators:
 	OptionChainPathGenerator& operator=(const OptionChainPathGenerator&);

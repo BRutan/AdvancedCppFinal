@@ -23,28 +23,8 @@ int main()
 	// ****
 	steps.AcquireAllData();
 	steps.FindOptimalDispersionTrade();
-	//steps.CalculatePNLForTradePeriod();
-	//steps.OutputFiles();
-	//steps.PrintResultSummary();
-	/*
-	// Find expiration date where all components and index options are trading:
-	// 2) Determine trade that finds most out-of-line IndexDispersion 
-	// (implied correlation outside of [-1, 1], or highest absolute correlation):
-	IndexDispersionAttributes attrs;
-	attrs.IndexName(indexName);
-	attrs.IndexOption(Option());
-	std::unordered_map<std::string, std::pair<Option, double>> constituents;
-	for (auto &entry : tickerFile.Tickers())
-	{
-		constituents.emplace(entry.second.Ticker(), std::make_pair(Option(), entry.second.Weight()));
-	}
-	attrs.ConstituentOptions(constituents);
-	auto optimal_trade = IndexDispersion::OptimalDispersionTrade(result.first, attrs);
-	// 3) Pull in option chains for optimal value date:
-	
-	// 4) Calculate profit-and-loss, trade "greeks" for each available revalue date,
-	
-	*/
-
+	steps.CalculatePNLForTradePeriod();
+	steps.OutputFiles();
+	steps.PrintResultSummary();
 	return 0;
 }

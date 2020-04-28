@@ -9,7 +9,7 @@ bool ApplicationSteps::_GetOptionChains_Expiry(const QuantLib::Date &expiry)
 	{
 		return false;
 	}
-	this->_TradeChains = OptionChains(gen);
+	this->_TradeChains = OptionChains(true, gen);
 	return true;
 }
 bool ApplicationSteps::_GetOptionChains_ValueDate(const QuantLib::Date &valueDate)
@@ -24,7 +24,7 @@ bool ApplicationSteps::_GetOptionChains_ValueDate(const QuantLib::Date &valueDat
 		{
 			auto expDate = OptionChainPathGenerator::ExtractExpirationDate_Folder(expDateFolder.path().string());
 			gen.ExpirationDate(expDate);
-			this->_ValueDateChains.emplace(expDate, OptionChains(gen));
+			this->_ValueDateChains.emplace(expDate, OptionChains(true, gen));
 		}
 	}
 	else
@@ -52,7 +52,7 @@ void ApplicationSteps::_GetAllOptionChains()
 			{
 				auto expDate = OptionChainPathGenerator::ExtractExpirationDate_Folder(expDateFolder.path().string());
 				gen.ExpirationDate(expDate);
-				this->_AllChains[valueDate].emplace(expDate, OptionChains(gen));
+				this->_AllChains[valueDate].emplace(expDate, OptionChains(true, gen));
 			}
 		}
 		valueDate += 1;
@@ -94,7 +94,7 @@ void ApplicationSteps::_UpdateUnderlyings(const QuantLib::Date &valueDate)
 // Constructors/Destructor:
 ApplicationSteps::ApplicationSteps(const std::string &allChainFolder) : _AllChainFolder(allChainFolder),
 _AllChains(), _EquityTimeSeries(), _GUI(), _Gen(allChainFolder), _Portfolio(), _TradeChains(), _ValueDateChains(), _WeightsFile("^OEX"),
-_TradeFactory(), _Underlyings(), _OptimalTrade()
+_TradeFactory(), _Underlyings(), _OptimalTrade(), _PNL()
 {
 
 }
@@ -147,20 +147,44 @@ void ApplicationSteps::FindOptimalDispersionTrade()
 	this->_Gen.ExpirationDate(attr.ExpirationDate());
 	this->_Gen.ValueDate(attr.SettlementDate());
 	std::cout << "----- Finding optimal disperion trade for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << "----" << std::endl;
-	this->_OptimalTrade = this->_TradeFactory.OptimalDispersionTrade(this->_Gen, attr, this->_Underlyings, .3);
+	auto results = this->_TradeFactory.OptimalDispersionTrade(this->_Gen, attr, this->_Underlyings, .3);
+	this->_OptimalTrade = results.first;
 	auto index_attr = dynamic_cast<OptionAttributes*>(this->_OptimalTrade.IndexOption().Attributes().get());
 	auto trade_attr = dynamic_cast<IndexDispersionAttributes*>(this->_OptimalTrade.Attributes().get());
-	std::cout << "Optimal trade has implied correlation of " << std::setprecision(2) << this->_OptimalTrade.ImpliedCorrelation() << std::endl;
-	std::cout << "with index strike " << index_attr->Strike() << std::endl;
-	std::cout << "net premium " << trade_attr->Price() << std::endl;
+	std::cout << "Optimal trade has implied correlation of " << std::fixed << std::setprecision(2) << this->_OptimalTrade.ImpliedCorrelation() << std::endl;
+	std::cout << "index strike: " << std::fixed << std::setprecision(2) << index_attr->Strike() << std::endl;
+	std::cout << "net premium: " << std::fixed << std::setprecision(2) << trade_attr->Price() << std::endl;
+	std::cout << "approximate delta: " << std::fixed << std::setprecision(2) << results.second << std::endl;
 }
 void ApplicationSteps::CalculatePNLForTradePeriod()
 {
 	std::cout << "----- Calculating trade PNL for value dates ----" << std::endl;
+	auto indexStrike = std::dynamic_pointer_cast<OptionAttributes>(this->_OptimalTrade.IndexOption().Attributes())->Strike();
+	auto indexSymbol = std::dynamic_pointer_cast<IndexDispersionAttributes>(this->_OptimalTrade.Attributes())->IndexName();
+	for (auto startDate = this->_Gen.ValueDate(); startDate < this->_GUI.EndValueDate(); ++startDate)
+	{
+		this->_Gen.ValueDate(startDate);
+		this->_TradeFactory.Settlement(startDate);
+		OptionChains chains(true, this->_Gen);
+		auto newDisp = this->_TradeFactory.GenerateDispersion(indexSymbol, indexStrike, this->_WeightsFile, 
+			chains, this->_Underlyings);
+		// Calculate PNL:
+		auto row = this->_OptimalTrade - newDisp;
+		this->_PNL.AppendRow(row);
+	}
 }
 void ApplicationSteps::OutputFiles()
 {
-	std::cout << "----- Outputting all files ----" << std::endl;
+	std::cout << "----- Final Results----" << std::endl;
+	std::cout << "Outputting PNL file to " << std::endl;
+	std::cout << this->_GUI.OutputPath() << std::endl;
+	std::ofstream file(this->_GUI.OutputPath());
+	if (!file)
+	{
+		throw std::exception("Could not open file at path.");
+	}
+	file << this->_PNL;
+	file.close();
 }
 void ApplicationSteps::PrintResultSummary()
 {

@@ -123,15 +123,15 @@ Option::~Option()
 double Option::Price() const
 {
 	double price;
-	if (this->_Attributes->Price() <= 0)
+	if (this->_Attributes->Price() <= 0 && this->_OptionObj != nullptr)
 	{
-		price = dynamic_cast<OptionAttributes*>(this->Attributes().get())->Price();
+		price = this->_OptionObj->NPV();
 	}
 	else
 	{
 		price = this->_Attributes->Price();
 	}
-	return (price * (this->_Attributes->IsLong()) ? 1 : -1);
+	return (price * ((this->_Attributes->IsLong()) ? 1 : -1));
 }
 // Mutators
 void Option::Generate()
@@ -154,28 +154,48 @@ double Option::ImpliedVolatility(const OptionAttributes &attr, double tol_approx
 }
 double Option::Delta() const
 {
+	if (this->_OptionObj == nullptr)
+	{
+		return 0;
+	}
 	return this->_OptionObj->delta() * ((this->_Attributes->IsLong()) ? 1 : -1);
 }
 double Option::Gamma() const
 {
+	if (this->_OptionObj == nullptr)
+	{
+		return 0;
+	}
 	return this->_OptionObj->gamma();
 }
 double Option::Rho() const
 {
+	if (this->_OptionObj == nullptr)
+	{
+		return 0;
+	}
 	return this->_OptionObj->rho() * ((this->_Attributes->IsLong()) ? 1 : -1);
 }
 double Option::Theta() const
 {
+	if (this->_OptionObj == nullptr)
+	{
+		return 0;
+	}
 	return this->_OptionObj->theta();
 }
 double Option::Vega() const
 {
+	if (this->_OptionObj == nullptr)
+	{
+		return 0;
+	}
 	return this->_OptionObj->vega();
 }
 // Static Methods:
 double Option::Delta(const OptionAttributes& attrs)
 {
-	return Option::GenerateOptionObj(attrs)->delta();
+	return Option::GenerateOptionObj(attrs)->delta() * ((attrs.IsLong()) ? 1 : -1);
 }
 double Option::Gamma(const OptionAttributes& attrs)
 {
@@ -183,7 +203,7 @@ double Option::Gamma(const OptionAttributes& attrs)
 }
 double Option::Rho(const OptionAttributes& attrs)
 {
-	return Option::GenerateOptionObj(attrs)->rho();
+	return Option::GenerateOptionObj(attrs)->rho() * ((attrs.IsLong()) ? 1 : -1);
 }
 double Option::Theta(const OptionAttributes& attrs)
 {
@@ -210,7 +230,7 @@ std::shared_ptr<QuantLib::VanillaOption> Option::GenerateOptionObj(const OptionA
 	
 	auto stochProcess = boost::shared_ptr<QBSMP>(new QBSMP(underlying,divTermStruct,rfTermStruct,volTermStruct));
 	auto engine = boost::shared_ptr<QPricingEngine>(new QBAWEngine(stochProcess));
-	auto option = std::make_shared< QuantLib::VanillaOption>(QuantLib::VanillaOption(payoff, exercise));
+	auto option = std::make_shared<QuantLib::VanillaOption>(QuantLib::VanillaOption(payoff, exercise));
 	option->setPricingEngine(engine);
 	return option;
 }

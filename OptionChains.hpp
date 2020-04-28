@@ -17,15 +17,18 @@ class OptionChains : public FileTypeContainer
 {
 private:
 	OptionChainPathGenerator _Generator;
+	bool _IsCalls;
 public:
 	// Constructors/Destructor:
 	OptionChains(const std::string &containerFolder = "");
-	OptionChains(const QuantLib::Date &valueDate, const std::string &containerFolder = "");
-	OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder = "");
-	OptionChains(const OptionChainPathGenerator &gen);
+	OptionChains(bool calls, const std::string &containerFolder = "");
+	OptionChains(bool calls, const QuantLib::Date &valueDate, const std::string &containerFolder = "");
+	OptionChains(bool calls, const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder = "");
+	OptionChains(bool calls, const OptionChainPathGenerator &gen);
 	explicit OptionChains(const OptionChains&);
 	virtual ~OptionChains();
 	// Accessors:
+	bool IsCalls() const;
 	const std::unordered_map<std::string, FileType*>& GetOptionChains() const;
 	bool HasOptionChain(const std::string &ticker) const;
 	const OptionChain* const GetOptionChain(const std::string &ticker) const;

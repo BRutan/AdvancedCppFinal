@@ -1,24 +1,28 @@
 #include "OptionChains.hpp"
 
 // Constructors/Destructor:
-OptionChains::OptionChains(const std::string &containerFolder) : FileTypeContainer(), _Generator(containerFolder)
+OptionChains::OptionChains(const std::string &containerFolder) : _IsCalls(), FileTypeContainer(), _Generator(containerFolder)
 {
 
 }
-OptionChains::OptionChains(const QuantLib::Date &valueDate, const std::string &containerFolder) 
-	: _Generator(), FileTypeContainer()
+OptionChains::OptionChains(bool iscalls, const std::string &containerFolder) : _IsCalls(iscalls), FileTypeContainer(), _Generator(containerFolder)
+{
+
+}
+OptionChains::OptionChains(bool iscalls, const QuantLib::Date &valueDate, const std::string &containerFolder)
+	: _IsCalls(iscalls), _Generator(), FileTypeContainer()
 {
 	this->_Generator.ValueDate(valueDate);
 }
-OptionChains::OptionChains(const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder) :
-	_Generator(expDate,valueDate,containerFolder), FileTypeContainer()
+OptionChains::OptionChains(bool iscalls, const QuantLib::Date &expDate, const QuantLib::Date &valueDate, const std::string &containerFolder) :
+	_IsCalls(iscalls), _Generator(expDate,valueDate,containerFolder), FileTypeContainer()
 {
 	if (this->_Generator.ExpirationDate().serialNumber() != 0)
 	{
 		this->ParseFiles(this->_Generator.ExpirationDate());
 	}
 }
-OptionChains::OptionChains(const OptionChainPathGenerator &gen) : 
+OptionChains::OptionChains(bool iscalls, const OptionChainPathGenerator &gen) : _IsCalls(iscalls),
 	_Generator(gen), FileTypeContainer()
 {
 	if (this->_Generator.ExpirationDate().serialNumber() != 0)
@@ -26,7 +30,7 @@ OptionChains::OptionChains(const OptionChainPathGenerator &gen) :
 		this->ParseFiles(this->_Generator.ExpirationDate());
 	}
 }
-OptionChains::OptionChains(const OptionChains &chain) : FileTypeContainer(chain), _Generator(chain._Generator)
+OptionChains::OptionChains(const OptionChains &chain) : _IsCalls(chain._IsCalls), FileTypeContainer(chain), _Generator(chain._Generator)
 {
 
 }
@@ -35,17 +39,21 @@ OptionChains::~OptionChains()
 
 }
 // Accessors:
+bool OptionChains::IsCalls() const
+{
+	return this->_IsCalls;
+}
 const std::unordered_map<std::string, FileType*>& OptionChains::GetOptionChains() const
 {
 	return FileTypeContainer::_Files;
 }
 bool OptionChains::HasOptionChain(const std::string &ticker) const
 {
-	return FileTypeContainer::_Files.find(ticker) == FileTypeContainer::_Files.end();
+	return FileTypeContainer::_Files.find(ticker) != FileTypeContainer::_Files.end();
 }
 const OptionChain* const OptionChains::GetOptionChain(const std::string &ticker) const
 {
-	if (this->HasOptionChain(ticker))
+	if (!this->HasOptionChain(ticker))
 	{
 		throw std::exception("Could not find option chain with ticker.");
 	}
@@ -94,8 +102,11 @@ void OptionChains::ParseFiles(const QuantLib::Date &expDate)
 	for (const auto &file: std::filesystem::directory_iterator(expFolder))
 	{
 		// Pull in all option chains from the folder:
-		auto ticker = OptionChainPathGenerator::ExtractTicker(file.path().string());
-		FileTypeContainer::_Files.emplace(ticker, new OptionChain(file.path().string()));
+		if (this->_IsCalls && OptionChainPathGenerator::IsCalls(file.path().string()))
+		{
+			auto ticker = OptionChainPathGenerator::ExtractTicker(file.path().string());
+			FileTypeContainer::_Files.emplace(ticker, new OptionChain(file.path().string()));
+		}
 	}
 }
 // Overloaded Operators:
@@ -103,6 +114,7 @@ OptionChains& OptionChains::operator=(const OptionChains &chains)
 {
 	if (this != &chains)
 	{
+		this->_IsCalls = chains._IsCalls;
 		this->_Generator = chains._Generator;
 		FileTypeContainer::operator=(chains);
 	}

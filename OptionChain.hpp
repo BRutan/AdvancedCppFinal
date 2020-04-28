@@ -31,10 +31,10 @@ public:
 	double AverageImpliedVolatility() const;
 	const QuantLib::Date& ExpirationDate() const;
 	double GetClosestStrike(double strike) const;
-	const OptionChainRow& GetRow(double strike) const;
+	const OptionChainRow * GetRow(double strike) const;
 	bool HasStrike(double strike) const;
 	const std::string& Ticker() const;
-	const std::vector<double> Strikes() const;
+	const std::vector<double>& Strikes() const;
 	// Mutators:
 	void ParseFile(const std::string & filepath);
 	// Interface Methods:

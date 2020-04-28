@@ -158,10 +158,17 @@ QuantLib::Date OptionChainPathGenerator::StringToDate(const std::string &str, ch
 	QuantLib::Integer year = std::stoul(str.substr(index + 1, 4));
 	return QuantLib::Date(day, OptionChainPathGenerator::_MonthToEnum[month], year);
 }
-
-bool OptionChainPathGenerator::PathExists(const std::string &ticker) const
+bool OptionChainPathGenerator::PathExists(const std::string &ticker)
 {
 	return std::filesystem::exists(this->TickerPath(ticker));
+}
+bool OptionChainPathGenerator::IsCalls(const std::string &path)
+{
+	if (path.find("_Calls.csv") != path.npos)
+	{
+		return true;
+	}
+	return false;
 }
 std::string OptionChainPathGenerator::TickerPath(const std::string &ticker) const
 {
