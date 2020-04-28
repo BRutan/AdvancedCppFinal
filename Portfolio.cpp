@@ -98,5 +98,5 @@ Portfolio& Portfolio::operator=(const Portfolio &port)
 }
 PNLFileRow Portfolio::operator-(const Portfolio &port)
 {
-
+	return PNLFileRow();
 }

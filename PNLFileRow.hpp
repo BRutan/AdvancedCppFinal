@@ -38,7 +38,7 @@ public:
 	friend std::ostream& operator<<(std::ostream &stream, const PNLFileRow &row)
 	{
 		stream << FileType::DateToString(row._ValueDate, '//') << ',' << row._Ticker << ',' << row._Price;
-		stream << ',' << row._ChgPrice << ',' << row._ChgPercent << ',' row._ImpliedCorrel;
+		stream << ',' << row._ChgPrice << ',' << row._ChgPercent << ',' << row._ImpliedCorrel;
 		return stream;
 	}
 };

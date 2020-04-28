@@ -25,12 +25,12 @@ public:
 	void ParseFile(const std::string &path);
 	// Overloaded Operators:
 	PNLFile& operator=(const PNLFile&);
-	friend std::ostream& operator<<(std::ostream&, const PNLFile &file)
+	friend std::ostream& operator<<(std::ostream& stream, const PNLFile &file)
 	{
 		stream << PNLFile::_Headers << '\n';
-		for (auto &row : file.Data())
+		for (auto &row : file.Rows())
 		{
-			stream << std::dynamic_pointer_cast<PNLFileRow>(row.second) << '\n';
+			stream << row.second << '\n';
 		}
 	}
 };
