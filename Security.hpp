@@ -42,8 +42,10 @@ public:
 	virtual ~Security();
 	// Accessors:
 	const std::shared_ptr<SecurityAttributes>& Attributes() const;
-	std::shared_ptr<SecurityAttributes>& Attributes_Mutable();
 	const QuantLib::Date& ValueDate() const;
+	// Mutators:
+	std::shared_ptr<SecurityAttributes>& Attributes_Mutable();
+	void ValueDate(const QuantLib::Date&);
 	// Interface Methods:
 	virtual double Price() const = 0;
 	virtual double Delta() const = 0;

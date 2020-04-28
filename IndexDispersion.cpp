@@ -2,23 +2,29 @@
 
 #pragma region IndexDispersionAttributes:
 #pragma region Private Methods:
-void IndexDispersionAttributes::_SetAttributes()
+void IndexDispersionAttributes::_MakeAttributesConsistent()
 {
 	// Ensure that long/short attributes are set correctly:
 	// (if long index, short constituents, vice versa), expiration and
 	// settlement dates are all the same, risk free rate is all the same, 
-	// and calculate net price of the portfolio.
 	bool indexIsLong = this->_IsLong;
 	double riskFree = std::dynamic_pointer_cast<OptionAttributes>(this->_IndexOption.Attributes())->RiskFreeRate();
 	this->_IndexOption.Attributes_Mutable()->IsLong(this->_IsLong);
 	bool compIsLong = !indexIsLong;
-	double netPrice = this->_IndexOption.Price();
 	for (auto &component : this->_ConstituentOptions)
 	{
 		component.second.first.Attributes_Mutable()->IsLong(compIsLong);
 		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->ExpirationDate(this->_ExpirationDate);
 		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->RiskFreeRate(riskFree);
 		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->SettlementDate(this->_SettlementDate);
+	}
+}
+void IndexDispersionAttributes::_SetAttributes()
+{
+	// Calculate net price of the portfolio.
+	double netPrice = this->_IndexOption.Price();
+	for (auto &component : this->_ConstituentOptions)
+	{
 		netPrice += component.second.first.Price() * component.second.second;
 	}
 	this->_Price = netPrice;
@@ -50,12 +56,13 @@ IndexDispersionAttributes::IndexDispersionAttributes(bool isLong, const std::str
 {
 	this->_InitializeAttributes();
 	this->_IndexOption.Attributes_Mutable()->IsLong(isLong);
-	this->_SetAttributes();
+	this->_MakeAttributesConsistent();
 }
 IndexDispersionAttributes::IndexDispersionAttributes(const IndexDispersionAttributes &attr) : _IndexName(attr._IndexName),
 	_IndexOption(attr._IndexOption), _ConstituentOptions(attr._ConstituentOptions), DerivativeAttributes(attr)
 {
 	this->_InitializeAttributes();
+	this->_MakeAttributesConsistent();
 	this->_SetAttributes();
 }
 IndexDispersionAttributes::~IndexDispersionAttributes()
@@ -94,37 +101,35 @@ void IndexDispersionAttributes::ConstituentOptions(const std::unordered_map<std:
 {
 	this->_ConstituentOptions = constits;
 	this->_InitializeAttributes();
-	this->_SetAttributes();
+	this->_MakeAttributesConsistent();
 }
 void IndexDispersionAttributes::ExpirationDate(const QuantLib::Date& dt)
 {
 	this->_ExpirationDate = dt;
 	this->_InitializeAttributes();
-	this->_SetAttributes();
+	this->_MakeAttributesConsistent();
 }
 void IndexDispersionAttributes::IndexName(const std::string& indexName)
 {
 	this->_IndexName = indexName;
-	this->_InitializeAttributes();
-	this->_SetAttributes();
 }
 void IndexDispersionAttributes::IndexOption(const Option& indexOpt)
 {
 	this->_IndexOption = indexOpt;
 	this->_InitializeAttributes();
-	this->_SetAttributes();
+	this->_MakeAttributesConsistent();
 }
 void IndexDispersionAttributes::RiskFreeRate(double rate)
 {
 	std::dynamic_pointer_cast<OptionAttributes>(this->_IndexOption.Attributes())->RiskFreeRate(rate);
 	this->_InitializeAttributes();
-	this->_SetAttributes();
+	this->_MakeAttributesConsistent();
 }
 void IndexDispersionAttributes::SettlementDate(const QuantLib::Date &dt)
 {
 	this->_SettlementDate = dt;
 	this->_InitializeAttributes();
-	this->_SetAttributes();
+	this->_MakeAttributesConsistent();
 }
 void IndexDispersionAttributes::Generate()
 {
@@ -133,6 +138,7 @@ void IndexDispersionAttributes::Generate()
 	{
 		component.second.first.Generate();
 	}
+	this->_SetAttributes();
 }
 Option& IndexDispersionAttributes::IndexOption_Mutable()
 {

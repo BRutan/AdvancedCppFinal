@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include "FileType.hpp"
+#include "Hashers.hpp"
 #include "PNLFileRow.hpp"
 
 class PNLFile : FileType
@@ -10,7 +11,7 @@ class PNLFile : FileType
 private:
 	std::vector<QuantLib::Date> _SortedDates;
 	static std::string _Headers;
-	std::unordered_map<QuantLib::Date, PNLFileRow> _Rows;
+	std::unordered_map<QuantLib::Date, PNLFileRow, QDateHash> _Rows;
 	void _SortDates();
 public:
 	// Constructors/Destructor:
@@ -19,7 +20,7 @@ public:
 	PNLFile(const PNLFile&);
 	virtual ~PNLFile();
 	// Accessors:
-	const std::unordered_map<QuantLib::Date, PNLFileRow>& Rows() const;
+	const std::unordered_map<QuantLib::Date, PNLFileRow, QDateHash>& Rows() const;
 	// Mutators:
 	void AppendRow(const PNLFileRow &row);
 	void ParseFile(const std::string &path);
@@ -32,6 +33,7 @@ public:
 		{
 			stream << row.second << '\n';
 		}
+		return stream;
 	}
 };
 

@@ -84,7 +84,11 @@ const std::shared_ptr<SecurityAttributes>& Security::Attributes() const
 {
 	return this->_Attributes;
 }
-
+// Mutators:
+void Security::ValueDate(const QuantLib::Date &dt)
+{
+	this->_ValueDate = dt;
+}
 std::shared_ptr<SecurityAttributes>& Security::Attributes_Mutable()
 {
 	return this->_Attributes;

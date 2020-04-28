@@ -29,7 +29,7 @@ PNLFile::~PNLFile()
 
 }
 // Accessors:
-const std::unordered_map<QuantLib::Date, PNLFileRow>& PNLFile::Rows() const
+const std::unordered_map<QuantLib::Date, PNLFileRow, QDateHash>& PNLFile::Rows() const
 {
 	return this->_Rows;
 }
