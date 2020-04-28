@@ -15,17 +15,27 @@ void OptionChain::_ExtractAttributes(const std::string &path)
 	auto year = std::stoul(fileName.substr(firstIDX + 18, 4));
 	this->_ExpDate = QuantLib::Date(day, FileType::MonthToEnum(month), year);
 }
+void OptionChain::_SortStrikes()
+{
+	// Sort by strike:
+	this->_SortedStrikes;
+	for (auto &iter : this->_Data)
+	{
+		this->_SortedStrikes.push_back(iter.first);
+	}
+	std::sort(this->_SortedStrikes.begin(), this->_SortedStrikes.end());
+}
 // Constructors/Destructor:
-OptionChain::OptionChain() : FileType(), _ExpDate(), _Ticker(), _AverageIV(0)
+OptionChain::OptionChain() : FileType(), _ExpDate(), _Ticker(), _AverageIV(0), _SortedStrikes()
 {
 
 }
-OptionChain::OptionChain(const std::string &path) : FileType(), _ExpDate(), _Ticker(), _AverageIV()
+OptionChain::OptionChain(const std::string &path) : FileType(), _ExpDate(), _Ticker(), _AverageIV(), _SortedStrikes()
 {
 	this->ParseFile(path);
 }
 OptionChain::OptionChain(const OptionChain &chain) : FileType(&chain), _ExpDate(chain._ExpDate), _Ticker(chain._Ticker),
-	_AverageIV(chain._AverageIV)
+	_AverageIV(chain._AverageIV), _SortedStrikes(chain._SortedStrikes)
 {
 	
 }
@@ -44,28 +54,19 @@ const QuantLib::Date& OptionChain::ExpirationDate() const
 }
 double OptionChain::GetClosestStrike(double strike) const
 {
-	// Sort by strike:
-	std::vector<double> sorted_strikes(this->_Data.size());
-	std::size_t index = 0;
-	for (auto &iter : this->_Data)
-	{
-		sorted_strikes[index] = iter.first;
-		++index;
-	}
-	std::sort(sorted_strikes.begin(), sorted_strikes.end());
 	// Find closest option chain:
-	for (auto iter = sorted_strikes.begin(); iter != sorted_strikes.end(); ++iter)
+	for (auto iter = this->_SortedStrikes.begin(); iter != this->_SortedStrikes.end(); ++iter)
 	{
 		if (strike < *iter)
 		{
 			return *iter;
 		}
-		else if ((iter + 1) != sorted_strikes.end() && strike < *(iter + 1))
+		else if ((iter + 1) != this->_SortedStrikes.end() && strike < *(iter + 1))
 		{
 			return ((std::abs(*iter - strike) > std::abs(*(iter + 1) - strike)) ? *(iter + 1) : *iter);
 		}
 	}
-	return *(sorted_strikes.end() - 1);
+	return *(this->_SortedStrikes.end() - 1);
 }
 const OptionChainRow& OptionChain::GetRow(double strike) const
 {
@@ -128,6 +129,7 @@ void OptionChain::ParseFile(const std::string & filepath)
 	}
 	file.close();
 	this->_AverageIV /= (double)numIVs;
+	this->_SortStrikes();
 }
 // Interface Methods:
 std::string OptionChain::ExpDateStr() const
@@ -141,6 +143,7 @@ OptionChain& OptionChain::operator=(const OptionChain &chain)
 	{
 		this->_ExpDate = chain._ExpDate;
 		this->_IsCalls = chain._IsCalls;
+		this->_SortedStrikes = chain._SortedStrikes;
 		this->_Ticker = chain._Ticker;
 		FileType::operator=(chain);
 	}

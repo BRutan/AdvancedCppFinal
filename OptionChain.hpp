@@ -18,6 +18,9 @@ private:
 	bool _IsCalls;
 	void _ExtractAttributes(const std::string &path);
 	static std::string _HeaderString;
+	std::vector<double> _SortedStrikes;
+	// Private Methods:
+	void _SortStrikes();
 public:
 	// Constructors/Destructor:
 	OptionChain();
@@ -31,6 +34,7 @@ public:
 	const OptionChainRow& GetRow(double strike) const;
 	bool HasStrike(double strike) const;
 	const std::string& Ticker() const;
+	const std::vector<double> Strikes() const;
 	// Mutators:
 	void ParseFile(const std::string & filepath);
 	// Interface Methods:

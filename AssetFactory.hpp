@@ -42,6 +42,7 @@ public:
 		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
 	IndexDispersion OptimalDispersionTrade(const OptionChainPathGenerator &gen,
 		const IndexDispersionAttributes &attrs, const std::unordered_map<std::string, EquityAttributes>& underlyings, double assumedIV);
+	static double NormCDF(double z);
 	// Overloaded Operators:
 	AssetFactory& operator=(const AssetFactory&);
 };

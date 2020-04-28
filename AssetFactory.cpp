@@ -178,10 +178,10 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 		auto converted = dynamic_cast<OptionChainRow*>(indexRow.second);
 		auto indexStrike = converted->Strike();
 		auto indexIV = converted->ImpliedVol();
-		auto indexApproxDelta = IndexDispersionAttributes::ApproxExerciseDelta(indexFuture, indexIV, tenor, indexStrike);
+		auto indexXVal = IndexDispersionAttributes::ApproxExerciseDelta(indexFuture, indexIV, tenor, indexStrike);
 		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->Strike(indexStrike);
 		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->ImpliedVol(indexIV);
-		std::vector<double> deltas{ indexApproxDelta };
+		std::vector<double> deltas{ AssetFactory::NormCDF(indexXVal) };
 		for (auto component = copy.ConstituentOptions_Mutable().begin();
 			component != copy.ConstituentOptions_Mutable().end(); ++component)
 		{
@@ -196,7 +196,7 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 			auto chain = allchains.GetOptionChain(component->first);
 			auto equityAttr = underlyings.find(component->first)->second;
 			auto futurePrice = equityAttr.Price() * std::exp((riskFree - equityAttr.DividendYield()) * tenor);
-			auto targetStrike = IndexDispersionAttributes::TargetStrike(futurePrice, chain->AverageImpliedVolatility(),tenor,indexApproxDelta);
+			auto targetStrike = IndexDispersionAttributes::TargetStrike(futurePrice, chain->AverageImpliedVolatility(),tenor,indexXVal);
 			targetStrike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(targetStrike);
 			auto weight = component->second.second;
 			if (targetStrike < 0 || targetStrike >= indexStrike)
@@ -216,7 +216,7 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 			auto strike = dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike();
 			auto iv = dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol();
 			auto delta = IndexDispersionAttributes::ApproxExerciseDelta(futurePrice, iv, tenor, strike);
-			deltas.push_back(-delta * weight);
+			deltas.push_back(-AssetFactory::NormCDF(delta) * weight);
 		}
 		// Get implied correlation:
 		impCorr = IndexDispersion::ImpliedCorrelation(copy);
@@ -244,6 +244,10 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 	}
 	out.Generate();
 	return IndexDispersion(out);
+}
+double AssetFactory::NormCDF(double z)
+{
+	return std::erfc(-z/std::sqrt(2))/2;
 }
 // Overloaded Operators:
 AssetFactory& AssetFactory::operator=(const AssetFactory &tg)
