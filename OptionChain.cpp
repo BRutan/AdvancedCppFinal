@@ -16,15 +16,16 @@ void OptionChain::_ExtractAttributes(const std::string &path)
 	this->_ExpDate = QuantLib::Date(day, FileType::MonthToEnum(month), year);
 }
 // Constructors/Destructor:
-OptionChain::OptionChain() : FileType(), _ExpDate(), _Ticker()
+OptionChain::OptionChain() : FileType(), _ExpDate(), _Ticker(), _AverageIV(0)
 {
 
 }
-OptionChain::OptionChain(const std::string &path) : FileType(), _ExpDate(), _Ticker()
+OptionChain::OptionChain(const std::string &path) : FileType(), _ExpDate(), _Ticker(), _AverageIV()
 {
 	this->ParseFile(path);
 }
-OptionChain::OptionChain(const OptionChain &chain) : FileType(&chain), _ExpDate(chain._ExpDate), _Ticker(chain._Ticker)
+OptionChain::OptionChain(const OptionChain &chain) : FileType(&chain), _ExpDate(chain._ExpDate), _Ticker(chain._Ticker),
+	_AverageIV(chain._AverageIV)
 {
 	
 }
@@ -33,6 +34,10 @@ OptionChain::~OptionChain()
 
 }
 // Accessors:
+double OptionChain::AverageImpliedVolatility() const
+{
+	return this->_AverageIV;
+}
 const QuantLib::Date& OptionChain::ExpirationDate() const
 {
 	return this->_ExpDate;
@@ -82,24 +87,26 @@ const std::string& OptionChain::Ticker() const
 // Mutators:
 void OptionChain::ParseFile(const std::string & filepath)
 {
+	std::ifstream file(filepath);
+	if (!file)
+	{
+		throw std::exception("Could not open file.");
+	}
 	if (this->_Data.size())
 	{
 		this->_Data.clear();
 		this->_IsCalls = false;
+		this->_AverageIV = 0;
 	}
 	if (filepath.substr(filepath.length() - 10, 10) == "_Calls.csv")
 	{
 		this->_IsCalls = true;
 	}
 	this->_ExtractAttributes(filepath);
-	std::ifstream file(filepath);
-	if (!file)
-	{
-		throw std::exception("Could not open file.");
-	}
 	// Calculate the option tenor in years:
 	double tenor = (QuantLib::Actual365Fixed().yearFraction(this->_ValueDate, this->_ExpDate));
 	std::string row;
+	std::size_t numIVs = 0;
 	std::getline(file, row);
 	while (!file.eof())
 	{
@@ -107,6 +114,11 @@ void OptionChain::ParseFile(const std::string & filepath)
 		if (row != "")
 		{
 			auto newRow = new OptionChainRow(row, tenor);
+			if (newRow->ImpliedVol() >= 0)
+			{
+				this->_AverageIV += newRow->ImpliedVol();
+				++numIVs;
+			}
 			this->_Data.emplace(newRow->Strike(), newRow);
 		}
 		else
@@ -115,6 +127,7 @@ void OptionChain::ParseFile(const std::string & filepath)
 		}
 	}
 	file.close();
+	this->_AverageIV /= (double)numIVs;
 }
 // Interface Methods:
 std::string OptionChain::ExpDateStr() const

@@ -14,6 +14,7 @@ class OptionChain : public FileType
 private:
 	QuantLib::Date _ExpDate;
 	std::string _Ticker;
+	double _AverageIV;
 	bool _IsCalls;
 	void _ExtractAttributes(const std::string &path);
 	static std::string _HeaderString;
@@ -24,6 +25,7 @@ public:
 	explicit OptionChain(const OptionChain &chain);
 	virtual ~OptionChain();
 	// Accessors:
+	double AverageImpliedVolatility() const;
 	const QuantLib::Date& ExpirationDate() const;
 	double GetClosestStrike(double strike) const;
 	const OptionChainRow& GetRow(double strike) const;

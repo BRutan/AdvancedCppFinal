@@ -196,21 +196,21 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 			auto chain = allchains.GetOptionChain(component->first);
 			auto equityAttr = underlyings.find(component->first)->second;
 			auto futurePrice = equityAttr.Price() * std::exp((riskFree - equityAttr.DividendYield()) * tenor);
-			auto targetStrike = IndexDispersionAttributes::TargetStrike(futurePrice, indexIV, tenor, indexApproxDelta);
+			auto targetStrike = IndexDispersionAttributes::TargetStrike(futurePrice, chain->AverageImpliedVolatility(), tenor, indexApproxDelta);
 			auto targetStrike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(targetStrike);
 			if (targetStrike < 0 || targetStrike >= indexStrike)
 			{
 				// Use estimated implied volatility and compute price using model if price not available:
 				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(equityAttr.Price());
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(assumedIV);
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(chain->AverageImpliedVolatility());
 				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price(0);
 			}
 			else
 			{
-				auto row = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(comp_strike);
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(comp_strike);
+				auto row = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(targetStrike);
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(row.Strike());
 				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(row.ImpliedVol());
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price(row.Bid());
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price((row.Bid() + row.Ask())/2.0);
 			}
 		}
 		// Get implied correlation:
