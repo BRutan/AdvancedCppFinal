@@ -59,15 +59,15 @@ SecurityAttributes& SecurityAttributes::operator=(const SecurityAttributes &attr
 // Security:
 /////////////////
 // Constructors/Destructor:
-Security::Security() : _Attributes(nullptr), _ValueDate()
+Security::Security() : _Attributes(nullptr)
 {
 
 }
-Security::Security(const std::shared_ptr<SecurityAttributes>& attr) : _Attributes(attr), _ValueDate()
+Security::Security(const std::shared_ptr<SecurityAttributes>& attr) : _Attributes(attr)
 {
 
 }
-Security::Security(const Security &sec) : _Attributes(sec._Attributes), _ValueDate(sec._ValueDate)
+Security::Security(const Security &sec) : _Attributes(sec._Attributes)
 {
 
 }
@@ -76,19 +76,11 @@ Security::~Security()
 
 }
 // Accessors:
-const QuantLib::Date& Security::ValueDate() const
-{
-	return this->_ValueDate;
-}
 const std::shared_ptr<SecurityAttributes>& Security::Attributes() const
 {
 	return this->_Attributes;
 }
 // Mutators:
-void Security::ValueDate(const QuantLib::Date &dt)
-{
-	this->_ValueDate = dt;
-}
 std::shared_ptr<SecurityAttributes>& Security::Attributes_Mutable()
 {
 	return this->_Attributes;
