@@ -196,8 +196,9 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 			auto chain = allchains.GetOptionChain(component->first);
 			auto equityAttr = underlyings.find(component->first)->second;
 			auto futurePrice = equityAttr.Price() * std::exp((riskFree - equityAttr.DividendYield()) * tenor);
-			auto targetStrike = IndexDispersionAttributes::TargetStrike(futurePrice, chain->AverageImpliedVolatility(), tenor, indexApproxDelta);
-			auto targetStrike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(targetStrike);
+			auto targetStrike = IndexDispersionAttributes::TargetStrike(futurePrice, chain->AverageImpliedVolatility(),tenor,indexApproxDelta);
+			targetStrike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(targetStrike);
+			auto weight = component->second.second;
 			if (targetStrike < 0 || targetStrike >= indexStrike)
 			{
 				// Use estimated implied volatility and compute price using model if price not available:
@@ -212,9 +213,14 @@ IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenera
 				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(row.ImpliedVol());
 				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Price((row.Bid() + row.Ask())/2.0);
 			}
+			auto strike = dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike();
+			auto iv = dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol();
+			auto delta = IndexDispersionAttributes::ApproxExerciseDelta(futurePrice, iv, tenor, strike);
+			deltas.push_back(-delta * weight);
 		}
 		// Get implied correlation:
 		impCorr = IndexDispersion::ImpliedCorrelation(copy);
+		auto netDelta = std::accumulate(deltas.begin(), deltas.end(), 0);
 		if (std::abs(impCorr) > maxAbsImpCorr)
 		{
 			out = copy;
