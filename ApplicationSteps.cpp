@@ -165,6 +165,13 @@ void ApplicationSteps::CalculatePNLForTradePeriod()
 	for (auto startDate = this->_Gen.ValueDate() + 1; startDate < this->_GUI.EndValueDate(); ++startDate)
 	{
 		this->_Gen.ValueDate(startDate);
+		// Skip value date if folder not present:
+		if (!FileType::PathExists(this->_Gen.ValueDateFolder()) || !FileType::PathExists(this->_Gen.ExpirationDateFolder()))
+		{
+			std::cerr << "Skipping value date " << FileType::DateToString(this->_Gen.ValueDate(), '//') << std::endl;
+			std::cerr << "no data available for " << FileType::DateToString(this->_Gen.ExpirationDate(), '//') << " expiration." << std::endl;
+			continue;
+		}
 		this->_TradeFactory.Settlement(startDate);
 		OptionChains chains(true, this->_Gen);
 		auto newDisp = this->_TradeFactory.GenerateDispersion(chains, copy);
