@@ -52,6 +52,10 @@ const QuantLib::Date& OptionChain::ExpirationDate() const
 {
 	return this->_ExpDate;
 }
+bool OptionChain::HasRow(double strike) const
+{
+	return this->_Data.find(strike) != this->_Data.end();
+}
 double OptionChain::GetClosestStrike(double strike) const
 {
 	// Find closest option chain:

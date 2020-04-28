@@ -31,6 +31,7 @@ public:
 	double AverageImpliedVolatility() const;
 	const QuantLib::Date& ExpirationDate() const;
 	double GetClosestStrike(double strike) const;
+	bool HasRow(double strike) const;
 	const OptionChainRow * GetRow(double strike) const;
 	bool HasStrike(double strike) const;
 	const std::string& Ticker() const;

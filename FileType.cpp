@@ -51,6 +51,10 @@ bool FileType::PathExists(const std::string &path)
 {
 	return std::filesystem::exists(path);
 }
+bool FileType::HasRow(double key) const
+{
+	return this->_Data.find(key) != this->_Data.end();
+}
 std::string FileType::ValueDateStr() const
 {
 	return FileType::DateToString(this->_ValueDate,'//');
