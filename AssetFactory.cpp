@@ -102,7 +102,7 @@ IndexDispersion AssetFactory::GenerateDispersion(const OptionChains& chains, con
 	// Revalue index and components using observed data:
 	auto targetStrike = std::dynamic_pointer_cast<OptionAttributes>(attrs.IndexOption().Attributes())->Strike();
 	auto indexName = attrs.IndexName();
-	if (chains.HasOptionChain(indexName))
+	if (!chains.HasOptionChain(indexName))
 	{
 		throw std::exception("Index is not present in option chains.");
 	}
@@ -148,8 +148,8 @@ IndexDispersion AssetFactory::GenerateDispersion(const OptionChains& chains, con
 		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->ImpliedVol(iv);
 	}
 	copy.RiskFreeRate(this->_RiskFreeCurve.ZeroRate(this->_Settle, this->_Expiry));
+	copy.SettlementDate(this->_Settle);
 	auto out = IndexDispersion(copy);
-	out.ValueDate(this->_Settle);
 	return out;
 }
 IndexDispersion AssetFactory::GenerateDispersion(const std::string &indexSymbol, double indexStrike, const ComponentWeightsFile& weights, const OptionChains& chains,

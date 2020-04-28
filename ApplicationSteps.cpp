@@ -161,7 +161,6 @@ void ApplicationSteps::CalculatePNLForTradePeriod()
 	std::cout << "----- Calculating trade PNL for value dates ----" << std::endl;
 	auto indexStrike = std::dynamic_pointer_cast<OptionAttributes>(this->_OptimalTrade.IndexOption().Attributes())->Strike();
 	auto indexSymbol = std::dynamic_pointer_cast<IndexDispersionAttributes>(this->_OptimalTrade.Attributes())->IndexName();
-	this->_OptimalTrade.ValueDate(this->_GUI.StartValueDate());
 	auto copy = *std::dynamic_pointer_cast<IndexDispersionAttributes>(this->_OptimalTrade.Attributes());
 	for (auto startDate = this->_Gen.ValueDate() + 1; startDate < this->_GUI.EndValueDate(); ++startDate)
 	{
@@ -169,7 +168,6 @@ void ApplicationSteps::CalculatePNLForTradePeriod()
 		this->_TradeFactory.Settlement(startDate);
 		OptionChains chains(true, this->_Gen);
 		auto newDisp = this->_TradeFactory.GenerateDispersion(chains, copy);
-		newDisp.ValueDate(startDate);
 		copy = *std::dynamic_pointer_cast<IndexDispersionAttributes>(newDisp.Attributes());
 		// Calculate PNL:
 		auto row = this->_OptimalTrade - newDisp;

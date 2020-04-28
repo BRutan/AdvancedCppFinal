@@ -33,7 +33,6 @@ class Security
 {
 protected:
 	std::shared_ptr<SecurityAttributes> _Attributes;
-	QuantLib::Date _ValueDate;
 public:
 	// Constructors/Destructor:
 	Security();
@@ -45,7 +44,6 @@ public:
 	const QuantLib::Date& ValueDate() const;
 	// Mutators:
 	std::shared_ptr<SecurityAttributes>& Attributes_Mutable();
-	void ValueDate(const QuantLib::Date&);
 	// Interface Methods:
 	virtual double Price() const = 0;
 	virtual double Delta() const = 0;
