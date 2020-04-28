@@ -1,6 +1,6 @@
 #include "PNLFile.hpp"
 
-std::string PNLFile::_Headers = "ValueDate,Ticker,Price,PriceChg,PercentChg,ImpliedCorrelation";
+std::string PNLFile::_Headers = "ValueDate,Ticker,Price,PriceChg,PercentChg,ImpliedCorrelation,Delta,Gamma,Vega,Rho,Theta";
 
 void PNLFile::_SortDates()
 {

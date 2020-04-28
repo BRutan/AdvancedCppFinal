@@ -123,25 +123,41 @@ IndexDispersion AssetFactory::GenerateDispersion(const OptionChains& chains, con
 		if (!(chains.HasOptionChain(component.first) && chains.GetOptionChain(component.first)->NumRows() != 0 &&
 			chains.GetOptionChain(component.first)->HasRow(strike)))
 		{
-			price = 0;
+			// Use stale prices/data:
+			price = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->Price();
+			iv = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->ImpliedVol();
+		}
+		else if (chains.GetOptionChain(component.first)->HasRow(strike) && chains.GetOptionChain(component.first)->GetRow(strike)->Volume() == 0)
+		{
+			// Use stale prices/data:
+			price = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->Price();
 			iv = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->ImpliedVol();
 		}
 		else if (chains.GetOptionChain(component.first)->HasRow(strike))
 		{
+			// Use new data:
 			row = chains.GetOptionChain(component.first)->GetRow(strike);
-			iv = row->ImpliedVol();
-			if ((row->Ask() == 0 || row->Bid() == 0) && row->LastPrice() != 0)
+			if (row->Ask() == row->Bid() == row->LastPrice() == 0)
+			{
+				// Use stale price:
+				price = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->Price();
+				iv = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->ImpliedVol();
+			}
+			else if ((row->Ask() == 0 || row->Bid() == 0) && row->LastPrice() != 0)
 			{
 				price = row->LastPrice();
+				iv = row->ImpliedVol();
 			}
 			else
 			{
 				price = (row->Ask() + row->Bid()) / 2.0;
+				iv = row->ImpliedVol();
 			}
 		}
 		else
 		{
-			price = 0;
+			// Use stale data:
+			price = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->Price();
 			iv = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->ImpliedVol();
 		}
 		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->Price(price);
@@ -149,6 +165,7 @@ IndexDispersion AssetFactory::GenerateDispersion(const OptionChains& chains, con
 	}
 	copy.RiskFreeRate(this->_RiskFreeCurve.ZeroRate(this->_Settle, this->_Expiry));
 	copy.SettlementDate(this->_Settle);
+	copy.Generate();
 	auto out = IndexDispersion(copy);
 	return out;
 }
