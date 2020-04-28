@@ -324,6 +324,12 @@ PNLFileRow IndexDispersion::operator-(const IndexDispersion &disp)
 	row.ValueDate(disp.Attributes()->SettlementDate());
 	row.Ticker(disp.IndexName());
 	row.ImpliedCorrelation(disp.ImpliedCorrelation());
+	row.Delta(disp.Delta());
+	row.Gamma(disp.Gamma());
+	row.Rho(disp.Rho());
+	row.Theta(disp.Theta());
+	row.Vega(disp.Vega());
+	
 	return row;
 }
 #pragma endregion

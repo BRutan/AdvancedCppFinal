@@ -153,7 +153,7 @@ PNLFileRow& PNLFileRow::operator=(const PNLFileRow &row)
 		this->_ValueDate = row._ValueDate;
 		this->_Delta = row._Delta;
 		this->_Gamma = row._Gamma;
-		this->_Rho = row.Rho;
+		this->_Rho = row._Rho;
 		this->_Theta = row._Theta;
 		this->_Vega = row._Vega;
 	}

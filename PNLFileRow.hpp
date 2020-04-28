@@ -45,8 +45,6 @@ public:
 	void PercentChg(double);
 	void ValueDate(const QuantLib::Date&);
 	void Ticker(const std::string&);
-	void ParseRow(const std::string &row);
-	void Price(double);
 	// Overloaded Operators:
 	PNLFileRow& operator=(const PNLFileRow&);
 	friend std::ostream& operator<<(std::ostream &stream, const PNLFileRow &row)
