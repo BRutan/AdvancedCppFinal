@@ -19,6 +19,7 @@ private:
 	Option _IndexOption;
 	std::unordered_map<std::string, std::pair<Option, double>> _ConstituentOptions;
 	void _SetAttributes();
+	void _InitializeAttributes();
 public:
 	// Constructors/Destructor:
 	IndexDispersionAttributes();
@@ -35,6 +36,7 @@ public:
 	void ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>>&);
 	void IndexName(const std::string&);
 	void IndexOption(const Option&);
+	virtual void IsLong(bool) override;
 	Option& IndexOption_Mutable();
 	std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions_Mutable();
 	// Overloaded Operators:
@@ -56,8 +58,6 @@ public:
 	// Interface Methods:
 	double ImpliedCorrelation() const;
 	static double ImpliedCorrelation(const IndexDispersionAttributes &attr);
-	static std::pair<IndexDispersion, double> OptimalDispersionTrade(const OptionChainPathGenerator &gen, 
-		const IndexDispersionAttributes &attrs, const std::unordered_map<std::string,EquityAttributes>&, double);
 	virtual double Price() const;
 	virtual double Delta() const;
 	virtual double Gamma() const;

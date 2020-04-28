@@ -40,10 +40,9 @@ public:
 		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
 	IndexDispersionAttributes GenerateDispersionAttributes(const std::string &indexSymbol, const ComponentWeightsFile& weights,
 		const std::unordered_map<std::string, EquityAttributes>& underlyings) const;
-	/*
-	template<unsigned long numcols>
-	Equity GenerateEquity(const TimeSeries<numcols> &series, const QuantLib::Date &valueDate);
-	*/
+	IndexDispersion OptimalDispersionTrade(const OptionChainPathGenerator &gen,
+		const IndexDispersionAttributes &attrs, const std::unordered_map<std::string, EquityAttributes>& underlyings, double assumedIV);
+	// Overloaded Operators:
 	AssetFactory& operator=(const AssetFactory&);
 };
 

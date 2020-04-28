@@ -144,19 +144,12 @@ void ApplicationSteps::FindOptimalDispersionTrade()
 	attr.SettlementDate(this->_GUI.StartValueDate());
 	this->_Gen.ExpirationDate(attr.ExpirationDate());
 	this->_Gen.ValueDate(attr.SettlementDate());
-	auto optimal_trade = IndexDispersion::OptimalDispersionTrade(this->_Gen, attr, this->_Underlyings, .3);
-	this->_OptimalTrade = optimal_trade.first;
+	this->_OptimalTrade = this->_TradeFactory.OptimalDispersionTrade(this->_Gen, attr, this->_Underlyings, .3);
 	auto index_attr = dynamic_cast<OptionAttributes*>(this->_OptimalTrade.IndexOption().Attributes().get());
 	auto trade_attr = dynamic_cast<IndexDispersionAttributes*>(this->_OptimalTrade.Attributes().get());
-	std::cout << "Optimal trade has implied correlation of " << std::setprecision(2) << optimal_trade.second << std::endl;
+	std::cout << "Optimal trade has implied correlation of " << std::setprecision(2) << this->_OptimalTrade.ImpliedCorrelation() << std::endl;
 	std::cout << "with index strike " << index_attr->Strike() << std::endl;
 	std::cout << "net premium " << trade_attr->Price() << std::endl;
-	// Pull all option chains for expiration date:
-
-
-	// Find the optimal strikes for the dispersion trade:
-	//IndexDispersion::OptimalDispersionTrade(this->_Gen, );
-
 }
 void ApplicationSteps::CalculatePNLForTradePeriod()
 {

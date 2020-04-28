@@ -26,36 +26,33 @@
 class OptionAttributes : public DerivativeAttributes
 {
 private:
-	double _Strike, _ImpliedVol, _TTM, _DivYield;
-	double _UnderlyingPrice, _RiskFreeRate;
+	double _Strike, _ImpliedVol, _TTM;
+	double _RiskFreeRate;
 	bool _Long, _IsCall;
 	EquityAttributes _Underlying;
 public:
 	// Constructors/Destructor:
 	OptionAttributes();
-	OptionAttributes(bool isCall, bool isLong, double premium, double riskFree, double divYield, double underlyingPrice,
-		const OptionChainRow& row, const QuantLib::Date &settle, const QuantLib::Date &exp);
+	OptionAttributes(bool isCall, bool isLong, double premium, double riskFree, const OptionChainRow& row, 
+		const QuantLib::Date &settle, const QuantLib::Date &exp, const EquityAttributes&);
 	OptionAttributes(const OptionAttributes&);
 	virtual ~OptionAttributes();
 	// Accessors:
-	double DividendYield() const;
 	double ImpliedVol() const;
 	bool IsCall() const;
 	double Price() const;
 	double RiskFreeRate() const;
 	double Strike() const;
 	double TimeToMaturity() const;
-	double UnderlyingPrice() const;
 	const EquityAttributes& Underlying() const;
 	// Mutators:
-	void DividendYield(double);
 	void ImpliedVol(double);
 	void IsCall(bool);
 	void Price(double);
 	void RiskFreeRate(double);
 	void Strike(double);
 	void TimeToMaturity(double);
-	void UnderlyingPrice(double);
+	void Underlying(const EquityAttributes&);
 	// Overloaded Operators:
 	OptionAttributes& operator=(const OptionAttributes&);
 };
@@ -67,12 +64,12 @@ private:
 public:
 	// Constructors/Destructor:
 	Option();
-	Option(const OptionAttributes& attr);
+	Option(const OptionAttributes&);
 	virtual ~Option();
 	// Accessors:
 	virtual double Price() const;
 	// Mutators:
-	void SetAttributes(const std::shared_ptr<OptionAttributes>& attr);
+	void Generate();
 	// Interface Functions:
 	virtual double Delta() const;
 	virtual double Gamma() const;
@@ -85,7 +82,7 @@ public:
 	static double Theta(const OptionAttributes&);
 	static double Vega(const OptionAttributes&);
 	static double Rho(const OptionAttributes&);
-	static std::shared_ptr<QuantLib::VanillaOption> GenerateOptionObj(const OptionAttributes&);
+	static std::shared_ptr<QuantLib::VanillaOption> GenerateOptionObj(const OptionAttributes&, const EquityAttributes&);
 	// Overloaded Operators:
 	Option& operator=(const Option&);
 };

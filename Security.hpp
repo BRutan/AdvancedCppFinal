@@ -22,7 +22,7 @@ public:
 	const QuantLib::Date& SettlementDate() const;
 	double Price() const;
 	// Mutators:
-	void IsLong(bool);
+	virtual void IsLong(bool);
 	void Price(double);
 	void SettlementDate(const QuantLib::Date&);
 	// Overloaded Operators:

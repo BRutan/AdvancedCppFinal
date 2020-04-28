@@ -104,8 +104,15 @@ void OptionChain::ParseFile(const std::string & filepath)
 	while (!file.eof())
 	{
 		std::getline(file, row);
-		auto newRow = new OptionChainRow(row, tenor);
-		this->_Data.emplace(newRow->Strike(), newRow);
+		if (row != "")
+		{
+			auto newRow = new OptionChainRow(row, tenor);
+			this->_Data.emplace(newRow->Strike(), newRow);
+		}
+		else
+		{
+			break;
+		}
 	}
 	file.close();
 }

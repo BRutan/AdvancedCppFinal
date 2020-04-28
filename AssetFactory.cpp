@@ -60,8 +60,8 @@ Option AssetFactory::GenerateOption(bool isCall, const OptionChainRow &data, con
 	// Find closes risk free rate to expiration:
 	double rate = this->_RiskFreeCurve.ZeroRate(this->_Settle, this->_Expiry);
 	double premium = (this->_GenerateLong) ? data.Ask() : data.Bid();
-	OptionAttributes attr(isCall, this->_GenerateLong, premium, rate, underlying.DividendYield(),
-		underlying.Price(), data, this->_Settle, this->_Expiry);
+	OptionAttributes attr(isCall, this->_GenerateLong, premium, rate, 
+		data, this->_Settle, this->_Expiry, underlying);
 	return Option(attr);
 }
 IndexDispersionAttributes AssetFactory::GenerateDispersionAttributes(const std::string &indexSymbol, const ComponentWeightsFile& weights,
@@ -151,7 +151,86 @@ IndexDispersion AssetFactory::GenerateDispersion(const std::string &indexSymbol,
 	attr.ConstituentOptions(comps);
 	return IndexDispersion(attr);
 }
-
+IndexDispersion AssetFactory::OptimalDispersionTrade(const OptionChainPathGenerator &gen,
+	const IndexDispersionAttributes &attrs, const std::unordered_map<std::string, EquityAttributes>& underlyings, double assumedIV)
+{
+	// Get all option chains:
+	OptionChains allchains(gen);
+	auto indexChain = allchains.GetOptionChain(attrs.IndexName());
+	auto chains = allchains.GetOptionChains();
+	IndexDispersionAttributes out, copy(attrs);
+	bool isNegative = false;
+	double maxAbsImpCorr = 0, impCorr;
+	if (copy.IndexOption_Mutable().Attributes_Mutable() == nullptr)
+	{
+		copy.IndexOption_Mutable().Attributes_Mutable() = 
+			std::make_shared<OptionAttributes>(OptionAttributes());
+	}
+	// Set attributes for to feed into ImpliedCorrelation():
+	double temp;
+	for (auto &indexRow : indexChain->Data())
+	{
+		auto converted = dynamic_cast<OptionChainRow*>(indexRow.second);
+		auto indexStrike = converted->Strike();
+		auto indexIV = converted->ImpliedVol();
+		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->Strike(indexStrike);
+		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->ImpliedVol(indexIV);
+		for (auto component = copy.ConstituentOptions_Mutable().begin();
+			component != copy.ConstituentOptions_Mutable().end(); ++component)
+		{
+			if (component->first == attrs.IndexName())
+			{
+				continue;
+			}
+			if (component->second.first.Attributes_Mutable() == nullptr)
+			{
+				component->second.first.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
+			}
+			if (!(chains.find(component->first) != chains.end() && chains[component->first]->NumRows() != 0))
+			{
+			Assume:
+				// Use estimated implied volatility and atm strike price:
+				auto eqPrice = underlyings.find(component->first)->second.Price();
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(eqPrice);
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(assumedIV);
+			}
+			else
+			{
+				auto weight = component->second.second;
+				auto comp_strike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(indexStrike * weight);
+				if (comp_strike < 0)
+				{
+					goto Assume;
+				}
+				auto comp_iv = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(comp_strike).ImpliedVol();
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(comp_strike);
+				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(comp_iv);
+			}
+		}
+		// Get implied correlation:
+		impCorr = IndexDispersion::ImpliedCorrelation(copy);
+		if (std::abs(impCorr) > maxAbsImpCorr)
+		{
+			maxAbsImpCorr = std::abs(impCorr);
+			isNegative = impCorr < 0;
+			temp = impCorr;
+		}
+	}
+	// Generate trade using optimal strikes:
+	copy.IsLong(isNegative);
+	copy.IndexOption_Mutable().Generate();
+	// Set all underlying attributes:
+	dynamic_cast<OptionAttributes*>(
+		copy.IndexOption_Mutable().Attributes_Mutable().get())->Underlying(underlyings.find(copy.IndexName())->second);
+	for (auto component = copy.ConstituentOptions_Mutable().begin(); component != copy.ConstituentOptions_Mutable().end();
+		++component)
+	{
+		dynamic_cast<OptionAttributes*>(
+			component->second.first.Attributes_Mutable().get())->Underlying(underlyings.find(component->first)->second);
+		component->second.first.Generate();
+	}
+	return IndexDispersion(copy);
+}
 // Overloaded Operators:
 AssetFactory& AssetFactory::operator=(const AssetFactory &tg)
 {

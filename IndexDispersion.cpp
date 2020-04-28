@@ -8,43 +8,50 @@ void IndexDispersionAttributes::_SetAttributes()
 	// (if long index, short constituents, vice versa).
 	// Calculate net price of the portfolio.
 	bool indexIsLong = this->_IndexOption.Attributes()->IsLong();
-	bool constIsLong = !indexIsLong;
-	auto attr = dynamic_cast<OptionAttributes*>(this->_IndexOption.Attributes().get());
-	attr->IsLong(indexIsLong);
-	const std::shared_ptr<OptionAttributes> ptr(attr);
-	this->_IndexOption.SetAttributes(ptr);
+	bool compIsLong = !indexIsLong;
 	double netPrice = this->_IndexOption.Price();
 	for (auto &pair : this->_ConstituentOptions)
 	{
-		auto attr = dynamic_cast<OptionAttributes*>(pair.second.first.Attributes().get());
-		attr->IsLong(constIsLong);
-		const std::shared_ptr<OptionAttributes> ptr(attr);
-		pair.second.first.SetAttributes(ptr);
+		pair.second.first.Attributes_Mutable()->IsLong(compIsLong);
 		netPrice += pair.second.first.Price() * pair.second.second;
 	}
+	this->_IsLong = indexIsLong;
 	this->_Price = netPrice;
+}
+void IndexDispersionAttributes::_InitializeAttributes()
+{
+	if (this->_IndexOption.Attributes() == nullptr)
+	{
+		this->_IndexOption.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
+	}
+	for (auto component = this->_ConstituentOptions.begin(); component != this->_ConstituentOptions.end();
+		++component)
+	{
+		if (component->second.first.Attributes() == nullptr)
+		{
+			component->second.first.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
+		}
+	}
 }
 #pragma endregion
 #pragma region Constructors/Destructor:
 IndexDispersionAttributes::IndexDispersionAttributes() : _IndexName(), _IndexOption(), _ConstituentOptions(), DerivativeAttributes()
 {
-
+	this->_InitializeAttributes();
 }
 IndexDispersionAttributes::IndexDispersionAttributes(bool isLong, const std::string& indexName, const Option& indexOption,
 	const std::unordered_map<std::string, std::pair<Option, double>> constitutentOptions, const QuantLib::Date &settle, const QuantLib::Date &exp) : _IndexName(indexName),
 	_IndexOption(indexOption), _ConstituentOptions(constitutentOptions), DerivativeAttributes(0, isLong, settle, exp)
 {
-	this->_IndexOption.Attributes()->IsLong(isLong);
-	// Ensure attributes set correctly, calculate initial NPV:
+	this->_InitializeAttributes();
+	this->_IndexOption.Attributes_Mutable()->IsLong(isLong);
 	this->_SetAttributes();
 }
 IndexDispersionAttributes::IndexDispersionAttributes(const IndexDispersionAttributes &attr) : _IndexName(attr._IndexName),
 	_IndexOption(attr._IndexOption), _ConstituentOptions(attr._ConstituentOptions), DerivativeAttributes(attr)
 {
-	if (this->_IndexOption.Attributes() != nullptr)
-	{
-		this->_SetAttributes();
-	}
+	this->_InitializeAttributes();
+	this->_SetAttributes();
 }
 IndexDispersionAttributes::~IndexDispersionAttributes()
 {
@@ -69,11 +76,8 @@ const std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersio
 void IndexDispersionAttributes::ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>> &constits)
 {
 	this->_ConstituentOptions = constits;
-	// Ensure attributes set correctly:
-	if (this->_IndexOption.Attributes() != nullptr)
-	{
-		this->_SetAttributes();
-	}
+	this->_InitializeAttributes();
+	this->_SetAttributes();
 }
 void IndexDispersionAttributes::IndexName(const std::string& indexName)
 {
@@ -81,15 +85,19 @@ void IndexDispersionAttributes::IndexName(const std::string& indexName)
 }
 void IndexDispersionAttributes::IndexOption(const Option& indexOpt)
 {
+	this->_InitializeAttributes();
 	this->_IndexOption = indexOpt;
-	if (this->_ConstituentOptions.size())
-	{
-		this->_SetAttributes();
-	}
+	this->_SetAttributes();
 }
 Option& IndexDispersionAttributes::IndexOption_Mutable()
 {
 	return this->_IndexOption;
+}
+void IndexDispersionAttributes::IsLong(bool isLong)
+{
+	this->_InitializeAttributes();
+	this->_IndexOption.Attributes_Mutable()->IsLong(isLong);
+	this->_SetAttributes();
 }
 std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersionAttributes::ConstituentOptions_Mutable()
 {
@@ -146,79 +154,6 @@ const std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersio
 }
 #pragma endregion
 #pragma region Interface Methods
-std::pair<IndexDispersion, double> IndexDispersion::OptimalDispersionTrade(const OptionChainPathGenerator &gen, 
-	const IndexDispersionAttributes &attrs, const std::unordered_map<std::string, EquityAttributes>& underlyings, double assumedIV)
-{
-	// Get all option chains:
-	OptionChains allchains(gen);
-	auto indexChain = allchains.GetOptionChain(attrs.IndexName());
-	auto chains = allchains.GetOptionChains();
-	IndexDispersionAttributes out, copy(attrs);
-	bool isNegative = false;
-	double maxAbsImpCorr = 0, impCorr;
-	if (copy.IndexOption_Mutable().Attributes_Mutable() == nullptr)
-	{
-		copy.IndexOption_Mutable().Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
-	}
-	// Set attributes for to feed into ImpliedCorrelation():
-	double temp;
-	for (auto &indexRow : indexChain->Data())
-	{
-		auto converted = dynamic_cast<OptionChainRow*>(indexRow.second);
-		auto indexStrike = converted->Strike();
-		auto indexIV = converted->ImpliedVol();
-		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->Strike(indexStrike);
-		dynamic_cast<OptionAttributes*>(copy.IndexOption_Mutable().Attributes_Mutable().get())->ImpliedVol(indexIV);
-		for (auto component = copy.ConstituentOptions_Mutable().begin(); 
-			component != copy.ConstituentOptions_Mutable().end(); ++component)
-		{
-			if (component->first == attrs.IndexName())
-			{
-				continue;
-			}
-			if (component->second.first.Attributes_Mutable() == nullptr)
-			{
-				component->second.first.Attributes_Mutable() = std::make_shared<OptionAttributes>(OptionAttributes());
-			}
-			if (!(chains.find(component->first) != chains.end() && chains[component->first]->NumRows() != 0))
-			{
-			Assume:
-				// Use estimated implied volatility and atm strike price:
-				auto eqPrice = underlyings.find(component->first)->second.Price();
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(eqPrice);
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(assumedIV);
-			}
-			else
-			{
-				auto weight = component->second.second;
-				auto comp_strike = dynamic_cast<OptionChain*>(chains[component->first])->GetClosestStrike(indexStrike * weight);
-				if (comp_strike < 0)
-				{
-					goto Assume;
-				}
-				auto comp_iv = dynamic_cast<OptionChain*>(chains[component->first])->GetRow(comp_strike).ImpliedVol();
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->Strike(comp_strike);
-				dynamic_cast<OptionAttributes*>(component->second.first.Attributes_Mutable().get())->ImpliedVol(comp_iv);
-			}
-		}
-		// Get implied correlation:
-		impCorr = IndexDispersion::ImpliedCorrelation(copy);
-		if (impCorr > 1 || impCorr < -1)
-		{
-			impCorr = impCorr;
-		}
-		if (std::abs(impCorr) > maxAbsImpCorr)
-		{
-			maxAbsImpCorr = std::abs(impCorr);
-			isNegative = impCorr < 0;
-			temp = impCorr;
-		}
-	}
-	// Generate trade using optimal strikes:
-	IndexDispersion trade(copy);
-	maxAbsImpCorr *= ((isNegative) ? -1 : 1);
-	return std::make_pair(trade, maxAbsImpCorr);
-}
 double IndexDispersion::ImpliedCorrelation(const IndexDispersionAttributes &attr)
 {
 	double numerator = 0, denominator = 0;
