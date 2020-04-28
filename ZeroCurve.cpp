@@ -2,44 +2,50 @@
 
 std::string ZeroCurve::_Header = "Tenor,Yield";
 // Private Helpers:
-void ZeroCurve::_SetInterp(const InterpolationType &interp)
+void ZeroCurve::_SetRatesMapping()
 {
-	std::vector<double> tenors;
-	std::vector<double> rates;
-	tenors.reserve(this->_ZeroRates.size());
-	rates.reserve(this->_ZeroRates.size());
+	this->_Tenors.clear();
+	this->_Rates.clear();
+	this->_Tenors.reserve(this->_ZeroRates.size());
+	this->_Rates.reserve(this->_ZeroRates.size());
 	for (auto &elem : this->_ZeroRates)
 	{
-		tenors.push_back(elem.first);
+		this->_Tenors.push_back(elem.first);
 	}
 	// Sort the tenors for the interpolator:
-	std::sort(tenors.begin(), tenors.end());
-	for (auto &elem : tenors)
+	std::sort(this->_Tenors.begin(),this->_Tenors.end());
+	for (auto &elem : this->_Tenors)
 	{
-		rates.push_back(this->_ZeroRates[elem]);
+		this->_Rates.push_back(this->_ZeroRates[elem]);
 	}
-	switch (interp)
+}
+void ZeroCurve::_SetInterp()
+{
+	switch (this->_InterpType)
 	{
 	case InterpolationType::LINEAR:
 		this->_Interp = std::make_shared<QuantLib::LinearInterpolation>(
-			QuantLib::LinearInterpolation(tenors.begin(), tenors.end(), rates.begin()));
+			QuantLib::LinearInterpolation(this->_Tenors.begin(), this->_Tenors.end(), this->_Rates.begin()));
 		break;
 	case InterpolationType::CUBIC_SPLINE:
 		this->_Interp = std::make_shared<QuantLib::CubicNaturalSpline>(
-			QuantLib::CubicNaturalSpline(tenors.begin(), tenors.end(), rates.begin()));
+			QuantLib::CubicNaturalSpline(this->_Tenors.begin(), this->_Tenors.end(), this->_Rates.begin()));
 		break;
 	}
 }
 // Constructors/Destructor:
-ZeroCurve::ZeroCurve() : _ZeroRates(), _Interp()
+ZeroCurve::ZeroCurve() : _ZeroRates(), _Interp(), _InterpType(InterpolationType::LINEAR), _Rates(), _Tenors()
 {
 
 }
-ZeroCurve::ZeroCurve(const InterpolationType& interp) : _ZeroRates(), _Interp()
+ZeroCurve::ZeroCurve(const std::unordered_map<double, double> &rates, const InterpolationType& interp) : 
+	_ZeroRates(rates), _Interp(), _InterpType(interp), _Rates(), _Tenors()
 {
-
+	this->_SetRatesMapping();
+	this->_SetInterp();
 }
-ZeroCurve::ZeroCurve(const ZeroCurve& crv) : _ZeroRates(crv._ZeroRates), _Interp(crv._Interp)
+ZeroCurve::ZeroCurve(const ZeroCurve& crv) : _ZeroRates(crv._ZeroRates), _Interp(crv._Interp), 
+	_InterpType(crv._InterpType), _Rates(crv._Rates), _Tenors(crv._Tenors)
 {
 
 }
@@ -83,6 +89,8 @@ double ZeroCurve::DiscountFactor(const QuantLib::Date& settle, const QuantLib::D
 void ZeroCurve::ZeroRates(const std::unordered_map<double, double>& crv)
 {
 	this->_ZeroRates = crv;
+	this->_SetRatesMapping();
+	this->_SetInterp();
 }
 void ZeroCurve::AddZeroRate(double rate, const QuantLib::Date& settle, const QuantLib::Date& expiry)
 {
@@ -95,6 +103,8 @@ void ZeroCurve::AddZeroRate(double rate, double tenor)
 	{
 		this->_ZeroRates.emplace(tenor, rate);
 	}
+	this->_SetRatesMapping();
+	this->_SetInterp();
 }
 void ZeroCurve::ParseFile(const std::string &path)
 {
@@ -128,6 +138,8 @@ void ZeroCurve::ParseFile(const std::string &path)
 		rate = std::stod(cell);
 		this->_ZeroRates.emplace(tenor, rate);
 	}
+	this->_SetRatesMapping();
+	this->_SetInterp();
 }
 // Interface Methods:
 double ZeroCurve::DiscountFactor(double rate, double tenor)
@@ -167,6 +179,10 @@ ZeroCurve& ZeroCurve::operator=(const ZeroCurve& curve)
 {
 	if (this != &curve)
 	{
+		this->_InterpType = curve._InterpType;
+		this->_Interp = curve._Interp;
+		this->_Rates = curve._Rates;
+		this->_Tenors = curve._Tenors;
 		this->_ZeroRates = curve._ZeroRates;
 	}
 	return *this;

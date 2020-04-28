@@ -12,7 +12,7 @@ public:
 	// Constructors/Destructor:
 	EquityAttributes();
 	EquityAttributes(double price, const QuantLib::Date &settle, bool isLong, double margin_rate, double dividendYield);
-	explicit EquityAttributes(const EquityAttributes&);
+	EquityAttributes(const EquityAttributes&);
 	// Accessors:
 	double MarginRate() const;
 	double DividendYield() const;

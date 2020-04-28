@@ -5,15 +5,21 @@
 void IndexDispersionAttributes::_SetAttributes()
 {
 	// Ensure that long/short attributes are set correctly:
-	// (if long index, short constituents, vice versa).
-	// Calculate net price of the portfolio.
-	bool indexIsLong = this->_IndexOption.Attributes()->IsLong();
+	// (if long index, short constituents, vice versa), expiration and
+	// settlement dates are all the same, risk free rate is all the same, 
+	// and calculate net price of the portfolio.
+	bool indexIsLong = this->_IsLong;
+	double riskFree = std::dynamic_pointer_cast<OptionAttributes>(this->_IndexOption.Attributes())->RiskFreeRate();
+	this->_IndexOption.Attributes_Mutable()->IsLong(this->_IsLong);
 	bool compIsLong = !indexIsLong;
 	double netPrice = this->_IndexOption.Price();
-	for (auto &pair : this->_ConstituentOptions)
+	for (auto &component : this->_ConstituentOptions)
 	{
-		pair.second.first.Attributes_Mutable()->IsLong(compIsLong);
-		netPrice += pair.second.first.Price() * pair.second.second;
+		component.second.first.Attributes_Mutable()->IsLong(compIsLong);
+		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->ExpirationDate(this->_ExpirationDate);
+		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->RiskFreeRate(riskFree);
+		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->SettlementDate(this->_SettlementDate);
+		netPrice += component.second.first.Price() * component.second.second;
 	}
 	this->_IsLong = indexIsLong;
 	this->_Price = netPrice;
@@ -59,6 +65,10 @@ IndexDispersionAttributes::~IndexDispersionAttributes()
 }
 #pragma endregion
 #pragma region Accessors
+const QuantLib::Date& IndexDispersionAttributes::ExpirationDate() const
+{
+	return this->_ExpirationDate;
+}
 const std::string& IndexDispersionAttributes::IndexName() const
 {
 	return this->_IndexName;
@@ -71,6 +81,14 @@ const std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersio
 {
 	return this->_ConstituentOptions;
 }
+double IndexDispersionAttributes::RiskfreeRate() const
+{
+	return std::dynamic_pointer_cast<OptionAttributes>(this->_IndexOption.Attributes())->RiskFreeRate();
+}
+const QuantLib::Date& IndexDispersionAttributes::SettlementDate() const
+{
+	return this->_SettlementDate;
+}
 #pragma endregion
 #pragma region Mutators
 void IndexDispersionAttributes::ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>> &constits)
@@ -79,15 +97,44 @@ void IndexDispersionAttributes::ConstituentOptions(const std::unordered_map<std:
 	this->_InitializeAttributes();
 	this->_SetAttributes();
 }
+void IndexDispersionAttributes::ExpirationDate(const QuantLib::Date& dt)
+{
+	this->_ExpirationDate = dt;
+	this->_InitializeAttributes();
+	this->_SetAttributes();
+}
 void IndexDispersionAttributes::IndexName(const std::string& indexName)
 {
 	this->_IndexName = indexName;
+	this->_InitializeAttributes();
+	this->_SetAttributes();
 }
 void IndexDispersionAttributes::IndexOption(const Option& indexOpt)
 {
-	this->_InitializeAttributes();
 	this->_IndexOption = indexOpt;
+	this->_InitializeAttributes();
 	this->_SetAttributes();
+}
+void IndexDispersionAttributes::RiskFreeRate(double rate)
+{
+	std::dynamic_pointer_cast<OptionAttributes>(this->_IndexOption.Attributes())->RiskFreeRate(rate);
+	this->_InitializeAttributes();
+	this->_SetAttributes();
+}
+void IndexDispersionAttributes::SettlementDate(const QuantLib::Date &dt)
+{
+	this->_SettlementDate = dt;
+	this->_InitializeAttributes();
+	this->_SetAttributes();
+}
+void IndexDispersionAttributes::Generate()
+{
+	this->_SetAttributes();
+	this->_IndexOption.Generate();
+	for (auto component : this->_ConstituentOptions)
+	{
+		component.second.first.Generate();
+	}
 }
 Option& IndexDispersionAttributes::IndexOption_Mutable()
 {
@@ -95,13 +142,23 @@ Option& IndexDispersionAttributes::IndexOption_Mutable()
 }
 void IndexDispersionAttributes::IsLong(bool isLong)
 {
+	this->_IsLong = isLong;
 	this->_InitializeAttributes();
-	this->_IndexOption.Attributes_Mutable()->IsLong(isLong);
 	this->_SetAttributes();
 }
 std::unordered_map<std::string, std::pair<Option, double>>& IndexDispersionAttributes::ConstituentOptions_Mutable()
 {
 	return this->_ConstituentOptions;
+}
+#pragma endregion
+#pragma region Interface Methods
+double IndexDispersionAttributes::ApproxExerciseDelta(double futurePrice, double iv, double tenor, double strike)
+{
+	return std::log(strike / futurePrice) / (iv * std::sqrt(tenor)) + .5 * iv * std::sqrt(tenor);
+}
+double IndexDispersionAttributes::TargetStrike(double futurePrice, double iv, double tenor, double x)
+{
+	return futurePrice * std::exp(iv * x * std::sqrt(tenor) - .5 * iv * iv *tenor);
 }
 #pragma endregion
 #pragma region Overloaded Operators

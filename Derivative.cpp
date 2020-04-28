@@ -26,6 +26,11 @@ void DerivativeAttributes::ExpirationDate(const QuantLib::Date& dt)
 {
 	this->_ExpirationDate = dt;
 }
+// Interface Methods:
+double DerivativeAttributes::TimeToMaturity() const
+{
+	return QuantLib::Actual365Fixed().yearFraction(this->_ExpirationDate, this->_SettlementDate);
+}
 // Overloaded Operators:
 DerivativeAttributes& DerivativeAttributes::operator=(const DerivativeAttributes& attr)
 {

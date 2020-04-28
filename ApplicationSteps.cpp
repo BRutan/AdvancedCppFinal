@@ -134,16 +134,19 @@ void ApplicationSteps::AcquireAllData()
 void ApplicationSteps::FindOptimalDispersionTrade()
 {
 	// Find expiration with greatest # of options available:
+	this->_TradeFactory.RiskFree(this->_RiskFree);
 	std::cout << "----- Finding expiration with greatest # of component options for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << " value date----" << std::endl;
 	auto result = this->_WeightsFile.AllComponentsAvailable(this->_Gen, &QuantLib::Date(17, QuantLib::April, 2020));
 	std::cout << "Using expiration date: " << FileType::DateToString(result.first.ExpirationDate(), '\\') << std::endl;
 	std::cout << "with " << result.second.size() << " total options." << std::endl;
-	std::cout << "----- Finding optimal disperion trade for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << "----" << std::endl;
 	auto attr = this->_TradeFactory.GenerateDispersionAttributes("^OEX", this->_WeightsFile, this->_Underlyings);
 	attr.ExpirationDate(result.first.ExpirationDate());
 	attr.SettlementDate(this->_GUI.StartValueDate());
+	this->_TradeFactory.Expiration(attr.ExpirationDate());
+	this->_TradeFactory.Settlement(attr.SettlementDate());
 	this->_Gen.ExpirationDate(attr.ExpirationDate());
 	this->_Gen.ValueDate(attr.SettlementDate());
+	std::cout << "----- Finding optimal disperion trade for " << FileType::DateToString(this->_Gen.ValueDate(), '\\') << "----" << std::endl;
 	this->_OptimalTrade = this->_TradeFactory.OptimalDispersionTrade(this->_Gen, attr, this->_Underlyings, .3);
 	auto index_attr = dynamic_cast<OptionAttributes*>(this->_OptimalTrade.IndexOption().Attributes().get());
 	auto trade_attr = dynamic_cast<IndexDispersionAttributes*>(this->_OptimalTrade.Attributes().get());

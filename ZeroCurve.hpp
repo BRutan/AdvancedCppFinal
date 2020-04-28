@@ -21,11 +21,14 @@ private:
 	static std::string _Header;
 	std::shared_ptr<QuantLib::Interpolation> _Interp;
 	std::unordered_map<double, double> _ZeroRates;
-	void _SetInterp(const InterpolationType&);
+	std::vector<double> _Tenors, _Rates;
+	InterpolationType _InterpType;
+	void _SetInterp();
+	void _SetRatesMapping();
 public:
 	// Constructors/Destructor:
 	ZeroCurve();
-	ZeroCurve(const InterpolationType&);
+	ZeroCurve(const std::unordered_map<double, double>&, const InterpolationType&);
 	ZeroCurve(const ZeroCurve&);
 	virtual ~ZeroCurve();
 	// Accessors:

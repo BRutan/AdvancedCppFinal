@@ -6,7 +6,6 @@
 #include <string>
 #include <ql/pricingengines/vanilla/bjerksundstenslandengine.hpp>
 #include <ql/pricingengines/vanilla/fdblackscholesvanillaengine.hpp>
-#include <ql/time/daycounters/actual360.hpp>
 #include <ql/instruments/vanillaoption.hpp>
 #include <ql/pricingengines/vanilla/baroneadesiwhaleyengine.hpp>
 #include <ql/pricingengines/vanilla/bjerksundstenslandengine.hpp>
@@ -14,6 +13,7 @@
 #include <ql/pricingengines/vanilla/fdblackscholesvanillaengine.hpp>
 #include <ql/pricingengines/vanilla/fdshoutengine.hpp>
 #include <ql/time/date.hpp>
+#include <ql/time/daycounters/actual360.hpp>
 #include <ql/time/calendars/unitedstates.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
@@ -25,8 +25,8 @@
 
 class OptionAttributes : public DerivativeAttributes
 {
-private:
-	double _Strike, _ImpliedVol, _TTM;
+protected:
+	double _Strike, _ImpliedVol;
 	double _RiskFreeRate;
 	bool _Long, _IsCall;
 	EquityAttributes _Underlying;
@@ -43,7 +43,6 @@ public:
 	double Price() const;
 	double RiskFreeRate() const;
 	double Strike() const;
-	double TimeToMaturity() const;
 	const EquityAttributes& Underlying() const;
 	// Mutators:
 	void ImpliedVol(double);
@@ -51,7 +50,6 @@ public:
 	void Price(double);
 	void RiskFreeRate(double);
 	void Strike(double);
-	void TimeToMaturity(double);
 	void Underlying(const EquityAttributes&);
 	// Overloaded Operators:
 	OptionAttributes& operator=(const OptionAttributes&);
@@ -73,6 +71,7 @@ public:
 	// Interface Functions:
 	virtual double Delta() const;
 	virtual double Gamma() const;
+	virtual double ImpliedVolatility() const;
 	virtual double Theta() const;
 	virtual double Vega() const;
 	virtual double Rho() const;
@@ -82,7 +81,7 @@ public:
 	static double Theta(const OptionAttributes&);
 	static double Vega(const OptionAttributes&);
 	static double Rho(const OptionAttributes&);
-	static std::shared_ptr<QuantLib::VanillaOption> GenerateOptionObj(const OptionAttributes&, const EquityAttributes&);
+	static std::shared_ptr<QuantLib::VanillaOption> GenerateOptionObj(const OptionAttributes&);
 	// Overloaded Operators:
 	Option& operator=(const Option&);
 };

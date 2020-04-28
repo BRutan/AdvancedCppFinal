@@ -29,16 +29,26 @@ public:
 	IndexDispersionAttributes(const IndexDispersionAttributes&);
 	virtual ~IndexDispersionAttributes();
 	// Accessors:
+	const std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions() const;
+	const QuantLib::Date& ExpirationDate() const;
 	const std::string& IndexName() const;
 	const Option& IndexOption() const;
-	const std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions() const;
+	const QuantLib::Date& SettlementDate() const;
+	double RiskfreeRate() const;
 	// Mutators:
 	void ConstituentOptions(const std::unordered_map<std::string, std::pair<Option, double>>&);
+	void ExpirationDate(const QuantLib::Date&);
 	void IndexName(const std::string&);
 	void IndexOption(const Option&);
 	virtual void IsLong(bool) override;
+	void RiskFreeRate(double);
+	void SettlementDate(const QuantLib::Date&);
+	void Generate();
 	Option& IndexOption_Mutable();
 	std::unordered_map<std::string, std::pair<Option, double>>& ConstituentOptions_Mutable();
+	// Interface Methods:
+	static double ApproxExerciseDelta(double futurePrice, double iv, double tenor, double strike);
+	static double TargetStrike(double futurePrice, double iv, double tenor, double x);
 	// Overloaded Operators:
 	IndexDispersionAttributes& operator=(const IndexDispersionAttributes&);
 };

@@ -2,12 +2,13 @@
 #define CONTRACT_HPP
 
 #include <ql/time/date.hpp>
+#include <ql/time/daycounters/all.hpp>
 #include <memory>
 #include "Security.hpp"
 
 class DerivativeAttributes : public SecurityAttributes
 {
-private:
+protected:
 	QuantLib::Date _ExpirationDate;
 public:
 	// Constructors/Destructor:
@@ -18,6 +19,8 @@ public:
 	const QuantLib::Date& ExpirationDate() const;
 	// Mutators:
 	void ExpirationDate(const QuantLib::Date& dt);
+	// Interface Methods:
+	double TimeToMaturity() const;
 	// Overloaded Operators:
 	DerivativeAttributes& operator=(const DerivativeAttributes&);
 };
