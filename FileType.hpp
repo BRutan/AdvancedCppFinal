@@ -28,7 +28,7 @@ public:
 	// Mutators:
 	virtual void ParseFile(const std::string &path) = 0;
 	// Interface Methods:
-	bool HasRow(double key) const;
+	virtual bool HasRow(double key) const;
 	std::string ValueDateStr() const;
 	static bool PathExists(const std::string &path);
 	static QuantLib::Month MonthToEnum(unsigned month);

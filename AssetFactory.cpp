@@ -100,13 +100,18 @@ IndexDispersionAttributes AssetFactory::GenerateDispersionAttributes(const std::
 IndexDispersion AssetFactory::GenerateDispersion(const OptionChains& chains, const IndexDispersionAttributes& attrs) const
 {
 	// Revalue index and components using observed data:
-	if (chains.HasOptionChain(attrs.IndexName()))
+	auto targetStrike = std::dynamic_pointer_cast<OptionAttributes>(attrs.IndexOption().Attributes())->Strike();
+	auto indexName = attrs.IndexName();
+	if (chains.HasOptionChain(indexName))
 	{
 		throw std::exception("Index is not present in option chains.");
 	}
-	auto copy = attrs;
+	else if (!chains.GetOptionChain(indexName)->HasRow(targetStrike))
+	{
+		throw std::exception("Could not find strike in Index option chain.");
+	}
 	auto indexChain = chains.GetOptionChain(attrs.IndexName());
-	auto targetStrike = std::dynamic_pointer_cast<OptionAttributes>(attrs.IndexOption().Attributes())->Strike();
+	auto copy = attrs;
 	auto row = indexChain->GetRow(targetStrike);
 	std::dynamic_pointer_cast<OptionAttributes>(copy.IndexOption_Mutable().Attributes_Mutable())->Price(
 		(row->Ask() == 0 || row->Bid() == 0) ? row->LastPrice() : (row->Ask() + row->Bid()) / 2.0);
@@ -114,19 +119,38 @@ IndexDispersion AssetFactory::GenerateDispersion(const OptionChains& chains, con
 	for (auto &component : copy.ConstituentOptions_Mutable())
 	{
 		// Use stored pricing procedure if price not available:
+		auto strike = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->Strike();
 		if (!(chains.HasOptionChain(component.first) && chains.GetOptionChain(component.first)->NumRows() != 0 &&
-			chains.GetOptionChain(component.first)->GetRow(std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->Strike())))
+			chains.GetOptionChain(component.first)->HasRow(strike)))
 		{
-
+			price = 0;
+			iv = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->ImpliedVol();
+		}
+		else if (chains.GetOptionChain(component.first)->HasRow(strike))
+		{
+			row = chains.GetOptionChain(component.first)->GetRow(strike);
+			iv = row->ImpliedVol();
+			if ((row->Ask() == 0 || row->Bid() == 0) && row->LastPrice() != 0)
+			{
+				price = row->LastPrice();
+			}
+			else
+			{
+				price = (row->Ask() + row->Bid()) / 2.0;
+			}
 		}
 		else
 		{
-
+			price = 0;
+			iv = std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes())->ImpliedVol();
 		}
-		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->Price();
+		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->Price(price);
+		std::dynamic_pointer_cast<OptionAttributes>(component.second.first.Attributes_Mutable())->ImpliedVol(iv);
 	}
-
-	return IndexDispersion(copy);
+	copy.RiskFreeRate(this->_RiskFreeCurve.ZeroRate(this->_Settle, this->_Expiry));
+	auto out = IndexDispersion(copy);
+	out.ValueDate(this->_Settle);
+	return out;
 }
 IndexDispersion AssetFactory::GenerateDispersion(const std::string &indexSymbol, double indexStrike, const ComponentWeightsFile& weights, const OptionChains& chains,
 	const std::unordered_map<std::string, EquityAttributes>& underlyings) const
