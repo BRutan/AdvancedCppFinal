@@ -321,7 +321,7 @@ PNLFileRow IndexDispersion::operator-(const IndexDispersion &disp)
 	row.Price(disp.Price());
 	row.PriceChg(disp.Price() - this->Price());
 	row.PercentChg(row.PriceChg() / disp.Price());
-	row.ValueDate(disp.ValueDate());
+	row.ValueDate(disp.Attributes()->SettlementDate());
 	row.Ticker(disp.IndexName());
 	row.ImpliedCorrelation(disp.ImpliedCorrelation());
 	return row;
